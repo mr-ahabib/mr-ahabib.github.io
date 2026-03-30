@@ -1,7 +1,5 @@
 import { motion } from "framer-motion";
-import { Mail, Phone, MapPin, Github, Send, Globe, Linkedin } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+import { Mail, Phone, MapPin, Github, Globe, Linkedin } from "lucide-react";
 
 const CONTACT_LINKS = [
   {
@@ -43,150 +41,67 @@ const CONTACT_LINKS = [
 ];
 
 export function Contact() {
-  const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      toast({
-        title: "Message Sent!",
-        description: "Thank you for reaching out. I'll get back to you soon.",
-      });
-      (e.target as HTMLFormElement).reset();
-    }, 1000);
-  };
-
   return (
     <section id="contact" className="py-20 sm:py-24 relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-12 sm:mb-16"
+          className="text-center mb-12 sm:mb-14"
         >
           <p className="text-primary font-semibold tracking-widest text-sm uppercase mb-3">Contact</p>
           <h2 className="text-3xl md:text-5xl font-display font-bold mb-4 text-foreground">
             Get In <span className="text-gradient">Touch</span>
           </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded-full" />
+          <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded-full mb-5" />
+          <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
+            Whether you have a question, a project idea, or just want to say hi — I'd love to hear from you.
+          </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20">
-          {/* Contact links */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-          >
-            <h3 className="text-xl sm:text-2xl font-display font-bold mb-3 text-foreground">Let's Connect</h3>
-            <p className="text-muted-foreground mb-8 leading-relaxed text-sm sm:text-base">
-              Whether you have a question, a project idea, or just want to say hi — I'd love to hear from you.
-            </p>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {CONTACT_LINKS.map((item, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.07 }}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+          {CONTACT_LINKS.map((item, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.07 }}
+              whileHover={{ y: -3 }}
+            >
+              {item.href ? (
+                <a
+                  href={item.href}
+                  target={item.href.startsWith("http") ? "_blank" : undefined}
+                  rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                  className="flex items-center gap-4 p-4 rounded-2xl glass-card hover:border-primary/35 hover:shadow-lg group transition-all duration-200"
                 >
-                  {item.href ? (
-                    <a
-                      href={item.href}
-                      target={item.href.startsWith("http") ? "_blank" : undefined}
-                      rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                      className="flex items-center gap-3 p-3.5 rounded-xl glass-card hover:border-primary/30 hover:shadow-md group transition-all duration-200"
-                    >
-                      <div className="w-9 h-9 rounded-lg bg-primary/10 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-200 shrink-0">
-                        {item.icon}
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-xs text-muted-foreground">{item.label}</p>
-                        <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors truncate">{item.value}</p>
-                      </div>
-                    </a>
-                  ) : (
-                    <div className="flex items-center gap-3 p-3.5 rounded-xl glass-card">
-                      <div className="w-9 h-9 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                        {item.icon}
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-xs text-muted-foreground">{item.label}</p>
-                        <p className="text-sm font-medium text-foreground truncate">{item.value}</p>
-                      </div>
-                    </div>
-                  )}
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Message form */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="glass-card p-6 sm:p-8 md:p-10 rounded-3xl"
-          >
-            <h3 className="text-xl sm:text-2xl font-display font-bold mb-6 sm:mb-8 text-foreground">Send me a message</h3>
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-muted-foreground mb-2">
-                  Your Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  required
-                  className="w-full px-4 py-3 rounded-xl bg-white/80 border border-border text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all duration-200 text-sm"
-                  placeholder="John Doe"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-muted-foreground mb-2">
-                  Your Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  required
-                  className="w-full px-4 py-3 rounded-xl bg-white/80 border border-border text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all duration-200 text-sm"
-                  placeholder="john@example.com"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium text-muted-foreground mb-2">
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  required
-                  rows={5}
-                  className="w-full px-4 py-3 rounded-xl bg-white/80 border border-border text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all duration-200 resize-none text-sm"
-                  placeholder="Tell me about your project or idea..."
-                ></textarea>
-              </div>
-
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full px-6 py-3.5 rounded-xl font-bold bg-primary text-primary-foreground shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-70 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2 text-sm sm:text-base"
-              >
-                {isSubmitting ? "Sending..." : "Send Message"}
-                {!isSubmitting && <Send size={16} />}
-              </button>
-            </form>
-          </motion.div>
+                  <div className="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-250 shrink-0 shadow-sm">
+                    {item.icon}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs text-muted-foreground mb-0.5">{item.label}</p>
+                    <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors truncate">
+                      {item.value}
+                    </p>
+                  </div>
+                </a>
+              ) : (
+                <div className="flex items-center gap-4 p-4 rounded-2xl glass-card">
+                  <div className="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 shadow-sm">
+                    {item.icon}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs text-muted-foreground mb-0.5">{item.label}</p>
+                    <p className="text-sm font-semibold text-foreground truncate">{item.value}</p>
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>
