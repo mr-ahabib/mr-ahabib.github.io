@@ -41,7 +41,7 @@ const EDUCATION_DATA = [
 
 export function Education() {
   return (
-    <section id="education" className="py-24 bg-background">
+    <section id="education" className="py-24 relative">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

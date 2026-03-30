@@ -62,9 +62,11 @@
   }
   html {
     scroll-behavior: smooth;
+    background-color: #ffffff;
   }
   body {
-    @apply bg-background text-foreground antialiased font-sans selection:bg-primary/30 selection:text-primary-foreground;
+    background: transparent;
+    @apply text-foreground antialiased font-sans selection:bg-primary/30 selection:text-primary-foreground;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
@@ -77,12 +79,22 @@
     box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
   }
   .glass-card {
-    background: white;
-    border: 1px solid hsl(var(--border));
+    background: rgba(255, 255, 255, 0.80);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(79, 70, 229, 0.10);
     border-radius: 1rem;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06), 0 8px 24px rgba(79,70,229,0.06);
   }
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent;
+  }
+  /* Alternate section tint — subtle enough to let the animated bg through */
+  section:nth-child(even) {
+    background: rgba(241, 245, 249, 0.35);
+    backdrop-filter: blur(0px);
+  }
+  section:nth-child(odd) {
+    background: transparent;
   }
 }

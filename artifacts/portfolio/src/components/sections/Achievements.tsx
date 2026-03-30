@@ -35,7 +35,7 @@ const ACHIEVEMENTS = [
 
 export function Achievements() {
   return (
-    <section id="achievements" className="py-24 bg-background relative">
+    <section id="achievements" className="py-24 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

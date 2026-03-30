@@ -13,7 +13,7 @@ export function Hero() {
   const typedText = useTypingEffect(PHRASES, 100, 50, 2000);
 
   return (
-    <section id="home" className="relative min-h-screen flex items-center pt-20 overflow-hidden bg-background">
+    <section id="home" className="relative min-h-screen flex items-center pt-20 overflow-hidden">
       <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: "radial-gradient(#4f46e5 1px, transparent 1px)", backgroundSize: "32px 32px" }}></div>
       <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/5 to-transparent pointer-events-none"></div>
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-[100px] pointer-events-none"></div>
@@ -34,7 +34,7 @@ export function Hero() {
             >
               <span className="px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium border border-primary/20 shadow-sm flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                AI/ML Engineer at Ethics Advance Technology
+                AI Project Co-ordinator at Qanun Limited
               </span>
             </motion.div>
 
@@ -101,7 +101,7 @@ export function Hero() {
                   <Github size={20} />
                 </a>
                 <a
-                  href="https://www.linkedin.com/in/mr-ahabib/"
+                  href="https://www.linkedin.com/in/md-ahashan-habib-9a81212a5/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-3 rounded-full bg-white border border-border text-muted-foreground hover:text-primary hover:border-primary/50 hover:bg-primary/5 shadow-sm transition-all duration-300"
