@@ -193,13 +193,6 @@ export function Hero() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/10 to-transparent"></div>
               </div>
-              {/* Available badge */}
-              <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 whitespace-nowrap">
-                <span className="px-4 py-2 rounded-full bg-white border border-border text-sm font-semibold shadow-lg flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                  Available for Freelance
-                </span>
-              </div>
             </div>
           </motion.div>
         </div>

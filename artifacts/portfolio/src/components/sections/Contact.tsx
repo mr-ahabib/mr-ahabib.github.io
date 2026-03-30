@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Mail, Phone, MapPin, Github, Send, Briefcase } from "lucide-react";
+import { Mail, Phone, MapPin, Github, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 
@@ -89,15 +89,6 @@ export function Contact() {
               </a>
             </div>
 
-            <div className="p-6 rounded-2xl glass-card border-primary/20 bg-primary/5 flex items-center gap-4">
-              <div className="p-3 bg-primary/10 rounded-full text-primary animate-pulse">
-                <Briefcase size={24} />
-              </div>
-              <div>
-                <h4 className="font-bold text-foreground">Available for Freelancing</h4>
-                <p className="text-sm text-muted-foreground">Ready to take on new projects</p>
-              </div>
-            </div>
           </motion.div>
 
           <motion.div

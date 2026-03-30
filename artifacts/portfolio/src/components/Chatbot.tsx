@@ -78,9 +78,6 @@ export function Chatbot() {
     if (text.match(/\b(github)\b/)) {
       return "Check out Ahashan's projects on GitHub: github.com/mr-ahabib";
     }
-    if (text.match(/\b(freelance|hire|available)\b/)) {
-      return "Yes! Ahashan is available for freelance work. Feel free to reach out at mr.ahashan261@gmail.com";
-    }
     
     return "I'm not sure about that. Try asking about Ahashan's experience, skills, projects, education, or contact info!";
   };
