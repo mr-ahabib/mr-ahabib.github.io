@@ -1,0 +1,13 @@
+packages:
+  "framer-motion": "For premium smooth scroll animations, section reveals, and the typewriter effect"
+
+images:
+  - path: "artifacts/portfolio/public/images/hero-bg.png"
+    description: "Abstract deep dark navy and electric blue gradient mesh, subtle tech geometric patterns, deep space, glowing nodes"
+    aspect_ratio: "16:9"
+  - path: "artifacts/portfolio/public/images/avatar.png"
+    description: "Professional stylized male avatar, tech researcher, dark navy background, minimal 3d aesthetic, subtle electric blue rim lighting"
+    aspect_ratio: "1:1"
+
+notes:
+  - This is a static portfolio, no backend required. The contact form uses a UI mock with a toast notification.
