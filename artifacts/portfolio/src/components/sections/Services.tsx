@@ -36,10 +36,10 @@ const SERVICES = [
 
 export function Services() {
   return (
-    <section id="services" className="py-24 relative overflow-hidden">
+    <section id="services" className="py-24 relative overflow-hidden bg-background">
       {/* Decorative gradients */}
-      <div className="absolute top-1/4 -right-64 w-96 h-96 bg-primary/20 rounded-full blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-1/4 -left-64 w-96 h-96 bg-accent/20 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute top-1/4 -right-64 w-96 h-96 bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-1/4 -left-64 w-96 h-96 bg-accent/5 rounded-full blur-[100px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
@@ -48,7 +48,7 @@ export function Services() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl md:text-5xl font-display font-bold mb-4">My <span className="text-gradient">Services</span></h2>
+          <h2 className="text-3xl md:text-5xl font-display font-bold mb-4 text-foreground">My <span className="text-gradient">Services</span></h2>
           <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded-full" />
         </motion.div>
 
@@ -60,13 +60,13 @@ export function Services() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ delay: index * 0.1 }}
-              className="glass-card p-8 rounded-2xl group hover:border-primary/50 transition-all duration-300 hover:-translate-y-2 relative overflow-hidden"
+              className="glass-card p-8 rounded-2xl group hover:border-primary/30 transition-all duration-300 hover:-translate-y-2 hover:shadow-lg relative overflow-hidden bg-white"
             >
               {/* Hover effect background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               
               <div className="relative z-10">
-                <div className="w-16 h-16 rounded-2xl bg-background/50 border border-white/10 flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                <div className="w-16 h-16 rounded-2xl bg-secondary border border-border flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform duration-300 shadow-sm">
                   {service.icon}
                 </div>
                 <h3 className="text-xl font-display font-bold text-foreground mb-3">{service.title}</h3>

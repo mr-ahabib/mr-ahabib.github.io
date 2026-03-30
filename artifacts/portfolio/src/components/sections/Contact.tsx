@@ -22,17 +22,17 @@ export function Contact() {
   };
 
   return (
-    <section id="contact" className="py-24 relative overflow-hidden">
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+    <section id="contact" className="py-24 relative overflow-hidden bg-background">
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent" />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl md:text-5xl font-display font-bold mb-4">Get In <span className="text-gradient">Touch</span></h2>
+          <h2 className="text-3xl md:text-5xl font-display font-bold mb-4 text-foreground">Get In <span className="text-gradient">Touch</span></h2>
           <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded-full" />
         </motion.div>
 
@@ -49,7 +49,7 @@ export function Contact() {
 
             <div className="space-y-6 mb-10">
               <a href="mailto:mr.ahashan261@gmail.com" className="flex items-center gap-4 group">
-                <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+                <div className="w-12 h-12 rounded-xl bg-secondary border border-border flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300 shadow-sm">
                   <Mail size={20} />
                 </div>
                 <div>
@@ -59,7 +59,7 @@ export function Contact() {
               </a>
               
               <a href="tel:+8801709180782" className="flex items-center gap-4 group">
-                <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+                <div className="w-12 h-12 rounded-xl bg-secondary border border-border flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300 shadow-sm">
                   <Phone size={20} />
                 </div>
                 <div>
@@ -69,7 +69,7 @@ export function Contact() {
               </a>
 
               <div className="flex items-center gap-4 group">
-                <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-primary">
+                <div className="w-12 h-12 rounded-xl bg-secondary border border-border flex items-center justify-center text-primary shadow-sm">
                   <MapPin size={20} />
                 </div>
                 <div>
@@ -79,7 +79,7 @@ export function Contact() {
               </div>
 
               <a href="https://github.com/mr-ahabib" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 group">
-                <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+                <div className="w-12 h-12 rounded-xl bg-secondary border border-border flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300 shadow-sm">
                   <Github size={20} />
                 </div>
                 <div>
@@ -90,7 +90,7 @@ export function Contact() {
             </div>
 
             <div className="p-6 rounded-2xl glass-card border-primary/20 bg-primary/5 flex items-center gap-4">
-              <div className="p-3 bg-primary/20 rounded-full text-primary animate-pulse">
+              <div className="p-3 bg-primary/10 rounded-full text-primary animate-pulse">
                 <Briefcase size={24} />
               </div>
               <div>
@@ -104,9 +104,9 @@ export function Contact() {
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="glass-card p-8 md:p-10 rounded-3xl"
+            className="glass-card p-8 md:p-10 rounded-3xl bg-white shadow-lg shadow-black/5"
           >
-            <h3 className="text-2xl font-display font-bold mb-8">Send me a message</h3>
+            <h3 className="text-2xl font-display font-bold mb-8 text-foreground">Send me a message</h3>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-muted-foreground mb-2">Your Name</label>
@@ -114,7 +114,7 @@ export function Contact() {
                   type="text"
                   id="name"
                   required
-                  className="w-full px-4 py-3 rounded-xl bg-background border border-white/10 text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all duration-200"
+                  className="w-full px-4 py-3 rounded-xl bg-background border border-border text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all duration-200"
                   placeholder="John Doe"
                 />
               </div>
@@ -125,7 +125,7 @@ export function Contact() {
                   type="email"
                   id="email"
                   required
-                  className="w-full px-4 py-3 rounded-xl bg-background border border-white/10 text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all duration-200"
+                  className="w-full px-4 py-3 rounded-xl bg-background border border-border text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all duration-200"
                   placeholder="john@example.com"
                 />
               </div>
@@ -136,7 +136,7 @@ export function Contact() {
                   id="message"
                   required
                   rows={5}
-                  className="w-full px-4 py-3 rounded-xl bg-background border border-white/10 text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all duration-200 resize-none"
+                  className="w-full px-4 py-3 rounded-xl bg-background border border-border text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all duration-200 resize-none"
                   placeholder="Tell me about your project..."
                 ></textarea>
               </div>
@@ -144,7 +144,7 @@ export function Contact() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full px-6 py-4 rounded-xl font-bold bg-gradient-to-r from-primary to-accent text-primary-foreground shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-70 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2"
+                className="w-full px-6 py-4 rounded-xl font-bold bg-primary text-primary-foreground shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-70 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2"
               >
                 {isSubmitting ? "Sending..." : "Send Message"}
                 {!isSubmitting && <Send size={18} />}

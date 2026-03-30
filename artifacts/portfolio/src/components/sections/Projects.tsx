@@ -3,46 +3,46 @@ import { Github, ExternalLink, FolderGit2 } from "lucide-react";
 
 const PROJECTS = [
   {
-    title: "Student Assignment Auto Grading",
-    description: "Django-based automated grading system utilizing Large Language Models to evaluate student code submissions.",
-    tags: ["Django", "LLM", "Python", "Education"],
-    link: "https://github.com/mr-ahabib/Django-App-LLM"
+    title: "Bangla PDF RAG System",
+    description: "An intelligent system that reads Bangla PDFs and provides accurate answers by combining OCR, semantic search, and AI-powered language understanding.",
+    tags: ["FastAPI", "RAG", "React", "FAISS", "OCR"],
+    link: "https://github.com/mr-ahabib"
   },
   {
-    title: "Patient Prescription Management",
-    description: "Healthcare platform seamlessly integrating a React Native mobile app with Express and Flask backend APIs.",
-    tags: ["React Native", "Express", "Flask", "Healthcare"],
+    title: "RAG Q&A and MCQ Generator",
+    description: "A RAG system that answers questions, supports chat, and generates MCQs from documents.",
+    tags: ["FastAPI", "FAISS", "RAG", "React", "Llama"],
+    link: "https://github.com/mr-ahabib"
+  },
+  {
+    title: "Book Critic App",
+    description: "Mobile app for discovering, reviewing, and discussing books with Redux state management and reusable components.",
+    tags: ["React Native", "TypeScript", "Express.js", "Redux", "Expo"],
+    link: "https://github.com/mr-ahabib"
+  },
+  {
+    title: "DocLink",
+    description: "Medical app that enables users to manage health records, receive condition insights through symptom-based disease classification, and scan documents.",
+    tags: ["TypeScript", "React Native", "MySQL", "Express", "OCR"],
     link: "https://github.com/mr-ahabib/DocLink"
   },
   {
-    title: "Little Library DBMS",
-    description: "Collaborative database management system designed to assist students and teaching assistants efficiently.",
-    tags: ["DBMS", "SQL", "Web", "Academic"],
-    link: "https://github.com/mr-ahabib/Little-Library"
+    title: "ShopSphere",
+    description: "Eco-themed mobile shopping app featuring product browsing, wishlist, cart functionality, and smooth animated UI.",
+    tags: ["React Native", "TypeScript", "Expo"],
+    link: "https://github.com/mr-ahabib"
   },
   {
-    title: "FYDP Horizons",
-    description: "Comprehensive Final Year Project Management System streamlining the project lifecycle for university students.",
-    tags: ["Project Management", "Full Stack", "Web"],
-    link: "https://github.com/mr-ahabib/fydp-horizons"
-  },
-  {
-    title: "Django Note Taking",
-    description: "A robust, scalable note-taking web application built with the Django framework for fast organization.",
-    tags: ["Django", "Python", "CRUD", "Productivity"],
-    link: "https://github.com/mr-ahabib/Django-Note"
-  },
-  {
-    title: "UIU Innovative Horizons",
-    description: "Desktop GUI application developed in Java tailored for university-specific management functions.",
-    tags: ["Java", "GUI", "Desktop App", "OOP"],
-    link: "https://github.com/mr-ahabib/UIU-INNOVATIVE-HORIZONS"
+    title: "Django LMS",
+    description: "LMS backend with role-based access control, JWT authentication, Stripe payments, and REST APIs.",
+    tags: ["Django", "Python", "Stripe", "MySQL"],
+    link: "https://github.com/mr-ahabib"
   }
 ];
 
 export function Projects() {
   return (
-    <section id="projects" className="py-24 relative">
+    <section id="projects" className="py-24 relative bg-secondary/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -50,7 +50,7 @@ export function Projects() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl md:text-5xl font-display font-bold mb-4">Featured <span className="text-gradient">Projects</span></h2>
+          <h2 className="text-3xl md:text-5xl font-display font-bold mb-4 text-foreground">Featured <span className="text-gradient">Projects</span></h2>
           <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded-full" />
         </motion.div>
 
@@ -62,11 +62,11 @@ export function Projects() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ delay: index * 0.1 }}
-              className="glass-card p-8 rounded-2xl flex flex-col h-full group hover:border-primary/40 transition-all duration-300 hover:-translate-y-2 cursor-pointer"
+              className="glass-card p-8 rounded-2xl flex flex-col h-full group hover:border-primary/40 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 cursor-pointer bg-white"
               onClick={() => window.open(project.link, "_blank")}
             >
               <div className="flex justify-between items-start mb-6">
-                <div className="p-3 rounded-xl bg-primary/10 text-primary">
+                <div className="p-3 rounded-xl bg-primary/10 text-primary group-hover:scale-110 transition-transform duration-300">
                   <FolderGit2 size={28} />
                 </div>
                 <div className="flex gap-3 text-muted-foreground group-hover:text-primary transition-colors">
@@ -84,7 +84,7 @@ export function Projects() {
               
               <div className="flex flex-wrap gap-2 mt-auto">
                 {project.tags.map(tag => (
-                  <span key={tag} className="text-xs font-medium px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-muted-foreground group-hover:border-white/20 transition-colors">
+                  <span key={tag} className="text-xs font-medium px-2.5 py-1 rounded-md bg-secondary text-secondary-foreground border border-border group-hover:border-primary/20 transition-colors">
                     {tag}
                   </span>
                 ))}
