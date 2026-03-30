@@ -1,59 +1,65 @@
 import { motion } from "framer-motion";
-import { Download, Mail, Github, Linkedin } from "lucide-react";
+import { Download, Mail, Github, Linkedin, Globe } from "lucide-react";
 import { useTypingEffect } from "@/hooks/use-typing";
 
 const PHRASES = [
   "I'm Md. Ahashan Habib",
   "An AI/ML Engineer",
-  "A Full-Stack Developer",
-  "A Machine Learning Researcher"
+  "A Backend Developer",
+  "A Machine Learning Researcher",
 ];
 
 export function Hero() {
-  const typedText = useTypingEffect(PHRASES, 100, 50, 2000);
+  const typedText = useTypingEffect(PHRASES, 90, 45, 2000);
 
   return (
-    <section id="home" className="relative min-h-screen flex items-center pt-20 overflow-hidden">
-      <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: "radial-gradient(#4f46e5 1px, transparent 1px)", backgroundSize: "32px 32px" }}></div>
-      <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/5 to-transparent pointer-events-none"></div>
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-[100px] pointer-events-none"></div>
+    <section id="home" className="relative min-h-screen flex items-center pt-20 sm:pt-24 overflow-hidden">
+      {/* Section-level subtle elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/[0.04] to-transparent" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/[0.05] rounded-full blur-[80px]" />
+      </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Left Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full py-10 sm:py-14">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+
+          {/* ── Left Content ── */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
+            className="order-2 lg:order-1"
           >
+            {/* Role badge */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.1 }}
-              className="inline-block mb-6"
+              className="inline-block mb-5 sm:mb-6"
             >
-              <span className="px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium border border-primary/20 shadow-sm flex items-center gap-2">
+              <span className="px-4 py-2 rounded-full bg-primary/10 text-primary text-xs sm:text-sm font-medium border border-primary/20 shadow-sm flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
                 AI Project Co-ordinator at Qanun Limited
               </span>
             </motion.div>
 
-            <motion.h2
+            <motion.p
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-foreground font-medium tracking-wide mb-4 text-lg md:text-xl"
+              className="text-muted-foreground font-medium tracking-wide mb-3 text-sm sm:text-base"
             >
               Welcome to my portfolio
-            </motion.h2>
+            </motion.p>
 
             <motion.h1
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="text-5xl sm:text-6xl lg:text-6xl font-display font-bold leading-tight mb-6 text-foreground"
+              className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold leading-tight mb-5 sm:mb-6 text-foreground"
             >
-              Hello, <br />
+              Hello,{" "}
+              <br />
               <span className="text-gradient min-h-[1.2em] inline-block">
                 {typedText}
                 <span className="animate-pulse font-light text-primary">|</span>
@@ -64,58 +70,51 @@ export function Hero() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="text-lg text-muted-foreground mb-8 max-w-xl leading-relaxed"
+              className="text-sm sm:text-base lg:text-lg text-muted-foreground mb-7 sm:mb-8 max-w-xl leading-relaxed"
             >
               Building production AI systems with LLMs, RAG, and deep learning. Full-stack developer passionate about scalable ML applications and cutting-edge research.
             </motion.p>
 
+            {/* CTA buttons */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="flex flex-wrap gap-4 items-center"
+              className="flex flex-wrap gap-3 items-center"
             >
               <a
                 href="https://mr-ahabib.github.io/images/AhashanHabib.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-6 py-3 rounded-xl font-semibold bg-primary text-primary-foreground shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-2"
+                className="px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl font-semibold bg-primary text-primary-foreground shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-2 text-sm sm:text-base"
               >
-                <Download size={20} />
+                <Download size={18} />
                 Download CV
               </a>
               <a
                 href="#contact"
-                className="px-6 py-3 rounded-xl font-semibold bg-white border border-border text-foreground hover:bg-secondary hover:-translate-y-0.5 transition-all duration-300 shadow-sm"
+                className="px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl font-semibold bg-white/80 border border-border text-foreground hover:bg-white hover:border-primary/30 hover:-translate-y-0.5 transition-all duration-300 shadow-sm text-sm sm:text-base"
               >
                 Contact Me
               </a>
-              <div className="flex gap-3">
-                <a
-                  href="https://github.com/mr-ahabib"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-3 rounded-full bg-white border border-border text-muted-foreground hover:text-primary hover:border-primary/50 hover:bg-primary/5 shadow-sm transition-all duration-300"
-                  title="GitHub"
-                >
-                  <Github size={20} />
-                </a>
-                <a
-                  href="https://www.linkedin.com/in/md-ahashan-habib-9a81212a5/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-3 rounded-full bg-white border border-border text-muted-foreground hover:text-primary hover:border-primary/50 hover:bg-primary/5 shadow-sm transition-all duration-300"
-                  title="LinkedIn"
-                >
-                  <Linkedin size={20} />
-                </a>
-                <a
-                  href="mailto:mr.ahashan261@gmail.com"
-                  className="p-3 rounded-full bg-white border border-border text-muted-foreground hover:text-primary hover:border-primary/50 hover:bg-primary/5 shadow-sm transition-all duration-300"
-                  title="Email"
-                >
-                  <Mail size={20} />
-                </a>
+              <div className="flex gap-2.5">
+                {[
+                  { href: "https://github.com/mr-ahabib", icon: <Github size={18} />, label: "GitHub" },
+                  { href: "https://www.linkedin.com/in/md-ahashan-habib-9a81212a5/", icon: <Linkedin size={18} />, label: "LinkedIn" },
+                  { href: "https://mr-ahabib.github.io/", icon: <Globe size={18} />, label: "Website" },
+                  { href: "mailto:mr.ahashan261@gmail.com", icon: <Mail size={18} />, label: "Email" },
+                ].map((social) => (
+                  <a
+                    key={social.label}
+                    href={social.href}
+                    target={social.href.startsWith("http") ? "_blank" : undefined}
+                    rel={social.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                    className="p-2.5 rounded-full bg-white/80 border border-border text-muted-foreground hover:text-primary hover:border-primary/50 hover:bg-primary/5 shadow-sm transition-all duration-300"
+                    title={social.label}
+                  >
+                    {social.icon}
+                  </a>
+                ))}
               </div>
             </motion.div>
 
@@ -124,7 +123,7 @@ export function Hero() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
-              className="mt-12 flex gap-8"
+              className="mt-10 flex gap-8 sm:gap-10"
             >
               {[
                 { label: "Publications", value: "3+" },
@@ -132,58 +131,58 @@ export function Hero() {
                 { label: "Experience", value: "1yr+" },
               ].map((stat) => (
                 <div key={stat.label} className="text-center">
-                  <div className="text-2xl font-display font-bold text-primary">{stat.value}</div>
-                  <div className="text-xs text-muted-foreground mt-1 font-medium">{stat.label}</div>
+                  <div className="text-xl sm:text-2xl font-display font-bold text-primary">{stat.value}</div>
+                  <div className="text-xs text-muted-foreground mt-0.5 font-medium">{stat.label}</div>
                 </div>
               ))}
             </motion.div>
           </motion.div>
 
-          {/* Right — Profile Photo */}
+          {/* ── Right — Profile Photo ── */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="hidden lg:flex items-center justify-center relative"
+            className="order-1 lg:order-2 flex items-center justify-center relative"
           >
             {/* Decorative rings */}
             <motion.div
               animate={{ rotate: 360 }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              className="absolute w-[400px] h-[400px] rounded-full border-2 border-dashed border-primary/15"
+              transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
+              className="absolute w-[280px] h-[280px] sm:w-[360px] sm:h-[360px] lg:w-[420px] lg:h-[420px] rounded-full border-2 border-dashed border-primary/15"
             />
             <motion.div
               animate={{ rotate: -360 }}
-              transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-              className="absolute w-[480px] h-[480px] rounded-full border border-dashed border-primary/10"
+              transition={{ duration: 32, repeat: Infinity, ease: "linear" }}
+              className="absolute w-[330px] h-[330px] sm:w-[420px] sm:h-[420px] lg:w-[500px] lg:h-[500px] rounded-full border border-dashed border-primary/08"
             />
 
-            {/* Floating skill badges */}
+            {/* Floating badges — only on sm+ */}
             <motion.div
               animate={{ y: [-8, 8, -8] }}
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute top-4 right-4 px-3 py-1.5 bg-white rounded-full shadow-lg border border-border text-xs font-semibold text-primary flex items-center gap-1.5"
+              className="absolute top-2 right-2 sm:top-4 sm:right-4 px-2.5 py-1.5 bg-white rounded-full shadow-lg border border-border text-xs font-semibold text-primary flex items-center gap-1.5 z-10"
             >
-              <span className="w-2 h-2 rounded-full bg-green-400"></span>
+              <span className="w-1.5 h-1.5 rounded-full bg-green-400"></span>
               AI/ML Engineer
             </motion.div>
             <motion.div
               animate={{ y: [8, -8, 8] }}
               transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-              className="absolute bottom-16 left-0 px-3 py-1.5 bg-white rounded-full shadow-lg border border-border text-xs font-semibold text-foreground"
+              className="absolute bottom-12 sm:bottom-16 left-0 sm:-left-2 px-2.5 py-1.5 bg-white rounded-full shadow-lg border border-border text-xs font-semibold text-foreground z-10"
             >
               🎓 CGPA 3.62
             </motion.div>
             <motion.div
               animate={{ y: [-6, 6, -6] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-              className="absolute top-16 left-2 px-3 py-1.5 bg-white rounded-full shadow-lg border border-border text-xs font-semibold text-foreground"
+              className="absolute top-12 sm:top-16 left-0 sm:left-2 px-2.5 py-1.5 bg-white rounded-full shadow-lg border border-border text-xs font-semibold text-foreground z-10"
             >
               🏆 Kaggle Champion
             </motion.div>
 
             {/* Photo container */}
-            <div className="relative w-72 h-80 lg:w-80 lg:h-96">
+            <div className="relative w-56 h-64 sm:w-72 sm:h-80 lg:w-80 lg:h-96">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20 rounded-3xl transform rotate-3"></div>
               <div className="relative w-full h-full rounded-3xl overflow-hidden border-4 border-white shadow-2xl shadow-primary/15">
                 <img
@@ -195,12 +194,13 @@ export function Hero() {
               </div>
             </div>
           </motion.div>
+
         </div>
       </div>
 
       {/* Scroll indicator */}
       <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+        className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 hidden sm:flex flex-col items-center gap-2"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2, duration: 1 }}
@@ -209,7 +209,7 @@ export function Hero() {
         <div className="w-1 h-8 rounded-full bg-border relative overflow-hidden">
           <motion.div
             className="absolute top-0 left-0 w-full h-1/2 bg-primary rounded-full"
-            animate={{ top: ['-50%', '100%'] }}
+            animate={{ top: ["-50%", "100%"] }}
             transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
           />
         </div>

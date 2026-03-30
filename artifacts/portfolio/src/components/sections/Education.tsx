@@ -1,92 +1,103 @@
 import { motion } from "framer-motion";
-import { GraduationCap, Award } from "lucide-react";
+import { GraduationCap, BookOpen } from "lucide-react";
 
 const EDUCATION_DATA = [
   {
-    year: "2019 - 2023",
-    title: "BSc in Computer Science & Engineering",
+    period: "Jan 2020 – Dec 2024",
+    degree: "Bachelor of Science",
+    field: "Computer Science and Engineering",
     institution: "United International University",
-    details: "CGPA 3.62/4.00 | Software Champion",
-    icon: <GraduationCap size={20} />
+    location: "Dhaka, Bangladesh",
+    details: "Final Grade: CGPA 3.62 / 4.00 · EQF Level 6",
+    thesis: "A Secure Blockchain Based Brain Tumor Prediction By Using Swin Transformer",
+    color: "from-primary/20 to-accent/10",
+    icon: <GraduationCap size={22} />,
   },
   {
-    year: "2017 - 2019",
-    title: "Higher Secondary Certificate (HSC)",
-    institution: "Govt. Azizul Haque College, Bogura",
-    details: "GPA 4.83",
-    icon: <GraduationCap size={20} />
+    period: "Jul 2017 – Apr 2019",
+    degree: "Higher Secondary Certificate (HSC)",
+    field: "Science",
+    institution: "Govt. Azizul Haque College, Bogra",
+    location: "Bogra, Bangladesh",
+    details: "EQF Level 4",
+    thesis: null,
+    color: "from-blue-500/20 to-indigo-500/10",
+    icon: <BookOpen size={22} />,
   },
-  {
-    year: "2015 - 2016",
-    title: "Secondary School Certificate (SSC)",
-    institution: "BIAM Model School and College, Bogura",
-    details: "GPA 5.00 | Scholarship",
-    icon: <GraduationCap size={20} />
-  },
-  {
-    year: "2014",
-    title: "Junior School Certificate (JSC)",
-    institution: "BIAM Model School and College, Bogura",
-    details: "GPA 5.00 | 13th in Bogura Sadar | Scholarship",
-    icon: <Award size={20} />
-  },
-  {
-    year: "2011",
-    title: "Primary School Certificate (PSC)",
-    institution: "Model Govt. Primary School, Dupchanchia",
-    details: "Scholarship",
-    icon: <Award size={20} />
-  }
 ];
 
 export function Education() {
   return (
-    <section id="education" className="py-24 relative">
+    <section id="education" className="py-20 sm:py-24 relative">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-12 sm:mb-16"
         >
-          <h2 className="text-3xl md:text-5xl font-display font-bold mb-4 text-foreground">Academic <span className="text-gradient">Background</span></h2>
+          <p className="text-primary font-semibold tracking-widest text-sm uppercase mb-3">Academic</p>
+          <h2 className="text-3xl md:text-5xl font-display font-bold mb-4 text-foreground">
+            Academic <span className="text-gradient">Background</span>
+          </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded-full" />
         </motion.div>
 
-        <div className="relative border-l-2 border-primary/20 pl-8 ml-4 md:ml-0 md:pl-0 md:border-none">
-          {/* Central vertical line for desktop */}
-          <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-0.5 bg-primary/20 -translate-x-1/2" />
+        <div className="space-y-8">
+          {EDUCATION_DATA.map((item, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ delay: index * 0.15, duration: 0.5 }}
+              whileHover={{ y: -4 }}
+            >
+              <div className="glass-card rounded-2xl p-6 sm:p-8 hover:shadow-lg hover:border-primary/30 transition-all duration-300 relative overflow-hidden">
+                {/* Gradient accent top bar */}
+                <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${item.color}`} />
 
-          {EDUCATION_DATA.map((item, index) => {
-            const isEven = index % 2 === 0;
-            return (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ delay: index * 0.1 }}
-                className={`mb-12 relative md:w-1/2 ${isEven ? "md:pr-12 md:ml-0" : "md:pl-12 md:ml-auto"}`}
-              >
-                {/* Timeline Dot */}
-                <div className={`absolute top-6 w-12 h-12 rounded-full bg-white border-4 border-primary flex items-center justify-center text-primary shadow-lg z-10 
-                  -left-14 md:top-6 ${isEven ? "md:-right-6 md:left-auto" : "md:-left-6"}`}>
-                  {item.icon}
-                </div>
+                <div className="flex flex-col sm:flex-row sm:items-start gap-5">
+                  {/* Icon */}
+                  <div className={`shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br ${item.color} flex items-center justify-center text-primary shadow-sm`}>
+                    {item.icon}
+                  </div>
 
-                <div className="glass-card p-6 rounded-2xl hover:-translate-y-1 hover:shadow-md transition-all duration-300">
-                  <span className="inline-block px-3 py-1 rounded-md bg-primary/10 text-primary text-sm font-semibold mb-3">
-                    {item.year}
-                  </span>
-                  <h3 className="text-xl font-display font-bold text-foreground mb-1">{item.title}</h3>
-                  <h4 className="text-muted-foreground font-medium mb-3">{item.institution}</h4>
-                  <p className="text-sm text-foreground/80 bg-secondary inline-block px-3 py-1 rounded border border-border">
-                    {item.details}
-                  </p>
+                  <div className="flex-1 min-w-0">
+                    {/* Period badge */}
+                    <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-3 border border-primary/20">
+                      {item.period}
+                    </span>
+
+                    <h3 className="text-lg sm:text-xl font-display font-bold text-foreground leading-tight">
+                      {item.degree}
+                    </h3>
+                    <p className="text-primary font-semibold text-sm mt-0.5">{item.field}</p>
+
+                    <div className="mt-2 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-sm text-muted-foreground">
+                      <span className="font-medium">{item.institution}</span>
+                      <span className="hidden sm:block w-1 h-1 rounded-full bg-border" />
+                      <span>{item.location}</span>
+                    </div>
+
+                    <p className="mt-3 text-sm text-foreground/70 bg-secondary/60 inline-block px-3 py-1.5 rounded-lg border border-border/60">
+                      {item.details}
+                    </p>
+
+                    {item.thesis && (
+                      <div className="mt-4 flex items-start gap-2.5 p-3.5 rounded-xl bg-primary/5 border border-primary/15">
+                        <BookOpen size={15} className="text-primary shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-xs text-primary font-semibold mb-0.5">Thesis</p>
+                          <p className="text-sm text-foreground/80 leading-relaxed italic">"{item.thesis}"</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </motion.div>
-            );
-          })}
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>
