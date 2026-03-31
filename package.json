@@ -8,7 +8,7 @@
     "scripts"
   ],
   "scripts": {
-    "dev": "PORT=3000 BASE_PATH=/ npm run --workspace @workspace/portfolio dev",
+    "dev": "PORT=3000 BASE_PATH=/my-portfolio/ npm run --workspace @workspace/portfolio dev",
     "build": "npm run typecheck && npm run -ws --if-present build",
     "typecheck:libs": "tsc --build",
     "typecheck": "npm run typecheck:libs && npm run --workspace @workspace/api-server --if-present typecheck && npm run --workspace @workspace/mockup-sandbox --if-present typecheck && npm run --workspace @workspace/portfolio --if-present typecheck && npm run --workspace @workspace/scripts --if-present typecheck"

@@ -10,12 +10,12 @@ name = "API Server"
 paths = ["/api"]
 
 [services.development]
-run = "pnpm --filter @workspace/api-server run dev"
+run = "npm run --workspace @workspace/api-server dev"
 
 [services.production]
 
 [services.production.build]
-args = ["pnpm", "--filter", "@workspace/api-server", "run", "build"]
+args = ["npm", "run", "--workspace", "@workspace/api-server", "build"]
 
 [services.production.build.env]
 NODE_ENV = "production"
