@@ -57,7 +57,7 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           <a href="#home" className="text-xl sm:text-2xl font-display font-bold text-foreground flex items-center shrink-0">
-            Ahashan Habib<span className="text-primary text-2xl sm:text-3xl leading-none">.</span>
+            AHASHAN HABIB<span className="text-primary text-2xl sm:text-3xl leading-none">.</span>
           </a>
 
           {/* Desktop Nav */}
