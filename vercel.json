@@ -1,5 +1,11 @@
 {
-  "buildCommand": "npm run build --workspace=@workspace/api-server",
+  "buildCommand": "npm run build --workspace=@workspace/portfolio",
   "installCommand": "npm install",
-  "outputDirectory": ""
+  "outputDirectory": "artifacts/portfolio/dist",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
 }
