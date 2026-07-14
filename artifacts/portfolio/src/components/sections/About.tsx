@@ -26,6 +26,17 @@ export function About() {
             className="lg:col-span-5"
           >
             <div className="relative max-w-sm mx-auto lg:max-w-none">
+              {/* Cyberpunk neon grid backdrop */}
+              <div
+                className="pointer-events-none absolute -inset-6 -z-10 opacity-[0.18]"
+                style={{
+                  backgroundImage:
+                    "linear-gradient(hsl(var(--primary)/0.6) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)/0.6) 1px, transparent 1px)",
+                  backgroundSize: "26px 26px",
+                  maskImage: "radial-gradient(circle, black, transparent 72%)",
+                  WebkitMaskImage: "radial-gradient(circle, black, transparent 72%)",
+                }}
+              />
               {/* Neon-outlined frame */}
               <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border-2 border-primary/70 bg-card shadow-[0_0_2px_hsl(var(--primary)),0_0_40px_hsl(var(--primary)/0.4)]">
                 <img
@@ -33,9 +44,10 @@ export function About() {
                   alt="Md. Ahashan Habib"
                   className="w-full h-full object-cover object-top"
                 />
-                {/* holographic tint + scanlines */}
+                {/* holographic tint + scanlines + scan bar */}
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/30 via-transparent to-accent/15 mix-blend-screen" />
                 <div className="holo-scanlines absolute inset-0 opacity-30" />
+                <div className="holo-scanbar absolute left-0 h-12 w-full bg-gradient-to-b from-transparent via-primary/40 to-transparent" />
                 {/* HUD corner brackets */}
                 <span className="pointer-events-none absolute left-3 top-3 h-6 w-6 border-l-2 border-t-2 border-primary" />
                 <span className="pointer-events-none absolute right-3 top-3 h-6 w-6 border-r-2 border-t-2 border-primary" />
@@ -69,6 +81,27 @@ export function About() {
             <p className="mt-4 text-muted-foreground leading-relaxed text-base sm:text-lg">
               What keeps me interested is the distance between a promising result and a product someone can actually depend on. I like owning that whole path: shaping the data, training and evaluating the model, and building the APIs and interfaces that put it in front of real users. These days I'm doing exactly that as an AI Project Co-ordinator at Qanun Limited.
             </p>
+
+            {/* Cyberpunk HUD data readout */}
+            <div className="mt-8 rounded-xl border border-primary/40 bg-card/60 p-5 font-mono text-sm backdrop-blur shadow-[0_0_20px_hsl(var(--primary)/0.15)]">
+              {[
+                { k: "role", v: "AI/ML Engineer · Backend Dev" },
+                { k: "stack", v: "Python · PyTorch · RAG · React" },
+                { k: "location", v: "Dhaka, Bangladesh" },
+              ].map((row) => (
+                <div key={row.k} className="flex items-center justify-between gap-4 border-b border-border/40 py-2">
+                  <span className="text-primary">&gt; {row.k}</span>
+                  <span className="truncate text-muted-foreground">{row.v}</span>
+                </div>
+              ))}
+              <div className="flex items-center justify-between gap-4 pt-2">
+                <span className="text-primary">&gt; status</span>
+                <span className="flex items-center gap-1.5 text-emerald-400">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  available for work
+                </span>
+              </div>
+            </div>
           </motion.div>
         </div>
       </div>
