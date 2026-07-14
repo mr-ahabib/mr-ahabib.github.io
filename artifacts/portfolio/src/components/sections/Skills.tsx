@@ -40,10 +40,10 @@ const CATEGORIES = [
 
 const KEY_SKILLS = [
   { skill: "Python", value: 92 },
-  { skill: "Machine Learning", value: 88 },
+  { skill: "ML", value: 88 },
   { skill: "React", value: 85 },
-  { skill: "LLM / RAG", value: 90 },
-  { skill: "Backend Dev", value: 83 },
+  { skill: "LLM/RAG", value: 90 },
+  { skill: "Backend", value: 83 },
   { skill: "Research", value: 86 },
 ];
 
@@ -59,14 +59,14 @@ function CapabilityRadar() {
 
         <div className="mb-2 flex items-center justify-between">
           <span className="eyebrow">capability_matrix</span>
-          <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+          <span className="hidden sm:inline font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
             6 vectors tracked
           </span>
         </div>
 
         <div className="h-[320px] w-full sm:h-[380px]">
           <ResponsiveContainer width="100%" height="100%">
-            <RadarChart data={KEY_SKILLS} outerRadius="72%">
+            <RadarChart data={KEY_SKILLS} outerRadius="65%" margin={{ top: 10, right: 30, bottom: 10, left: 30 }}>
               <defs>
                 <linearGradient id="radarFill" x1="0" y1="0" x2="1" y2="1">
                   <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.55} />
