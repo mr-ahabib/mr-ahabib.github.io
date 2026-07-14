@@ -18,12 +18,14 @@ function OrbitTitle({ text, phase, rx, ry }: { text: string; phase: number; rx: 
   const zIndex = useTransform(depth, (d) => (d > 0.5 ? 20 : 5));
 
   return (
+    // no backdrop-blur here — recomputing a blurred backdrop every frame of
+    // the orbit causes visible shimmer; will-change keeps it on the GPU
     <motion.span
       aria-hidden="true"
       style={{ x, y, scale, opacity, zIndex }}
-      className="pointer-events-none absolute left-1/2 top-1/2"
+      className="pointer-events-none absolute left-1/2 top-1/2 will-change-transform"
     >
-      <span className="flex -translate-x-1/2 -translate-y-1/2 items-center gap-1.5 whitespace-nowrap rounded-full border border-primary/40 bg-card/80 px-2.5 py-1 font-mono text-[10px] text-primary backdrop-blur sm:text-xs">
+      <span className="flex -translate-x-1/2 -translate-y-1/2 items-center gap-1.5 whitespace-nowrap rounded-full border border-primary/40 bg-card/95 px-2.5 py-1 font-mono text-[10px] text-primary sm:text-xs">
         <span className="h-1.5 w-1.5 rounded-full bg-primary" />
         {text}
       </span>
