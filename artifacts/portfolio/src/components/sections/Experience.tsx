@@ -94,9 +94,9 @@ export function Experience() {
                 <motion.div
                   whileHover={{ y: -4 }}
                   transition={{ duration: 0.2 }}
-                  className="group relative rounded-2xl bg-gradient-to-br from-primary/40 via-border/50 to-accent/40 p-px shadow-xl shadow-primary/10 transition-all duration-300 hover:from-primary/70 hover:to-accent/70"
+                  className="neon-glow-sm group relative rounded-2xl border border-primary/50 bg-card/80 backdrop-blur-xl transition-colors duration-300 hover:border-primary"
                 >
-                  <div className="relative overflow-hidden rounded-[calc(1rem-1px)] bg-card/80 p-6 md:p-8 backdrop-blur-xl">
+                  <div className="relative overflow-hidden rounded-2xl p-6 md:p-8">
                     {/* Left accent bar */}
                     <div className="absolute top-0 left-0 h-full w-1 bg-gradient-to-b from-primary to-accent" />
                     {/* HUD corner bracket */}
