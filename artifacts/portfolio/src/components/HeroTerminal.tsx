@@ -115,35 +115,52 @@ export function HeroTerminal() {
   let offset = 0;
 
   return (
-    <div className="w-full max-w-xl overflow-hidden rounded-xl border border-border bg-card/70 font-mono text-sm shadow-2xl shadow-primary/10 backdrop-blur">
-      {/* Title bar */}
-      <div className="flex items-center gap-2 border-b border-border bg-background/40 px-4 py-2.5">
-        <span className="h-3 w-3 rounded-full bg-red-400/80" />
-        <span className="h-3 w-3 rounded-full bg-yellow-400/80" />
-        <span className="h-3 w-3 rounded-full bg-emerald-400/80" />
-        <span className="ml-2 text-xs text-muted-foreground">ahashan@portfolio: ~</span>
-      </div>
+    <div className="relative w-full max-w-xl">
+      {/* Ambient halo behind the panel */}
+      <div className="pointer-events-none absolute -inset-5 rounded-[2rem] bg-gradient-to-br from-primary/25 via-transparent to-accent/25 opacity-70 blur-2xl" />
 
-      {/* Body — all lines are always rendered (reserving height) so the
-          panel size is fixed; only the revealed characters are shown. */}
-      <div className="space-y-1.5 p-5 leading-relaxed sm:p-6">
-        {LINES.map((line, i) => {
-          const full = fullText(line);
-          const start = offset;
-          offset += full.length + 1;
+      {/* Gradient border wrapper */}
+      <div className="relative rounded-2xl bg-gradient-to-br from-primary/60 via-border/50 to-accent/60 p-px shadow-2xl shadow-primary/20">
+        <div className="relative overflow-hidden rounded-[calc(1rem-1px)] bg-card/85 font-mono text-sm backdrop-blur-xl">
+          {/* Glassy top sheen */}
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+          {/* Faint CRT scanline texture */}
+          <div className="holo-scanlines pointer-events-none absolute inset-0 opacity-[0.04]" />
 
-          const shown =
-            revealed <= start ? "" : full.slice(0, Math.min(full.length, revealed - start));
-          const showCursor = i === cursorLine;
-          return (
-            <div
-              key={i}
-              className={`whitespace-pre-wrap break-words ${LINE_MIN_H[line.kind]}`}
-            >
-              {renderLine(line, shown, showCursor)}
-            </div>
-          );
-        })}
+          {/* Title bar */}
+          <div className="relative flex items-center gap-2 border-b border-border/70 bg-background/50 px-4 py-3">
+            <span className="h-3 w-3 rounded-full bg-red-400/90 ring-1 ring-inset ring-black/10" />
+            <span className="h-3 w-3 rounded-full bg-yellow-400/90 ring-1 ring-inset ring-black/10" />
+            <span className="h-3 w-3 rounded-full bg-emerald-400/90 ring-1 ring-inset ring-black/10" />
+            <span className="ml-3 text-xs text-muted-foreground">ahashan@ai — ~/portfolio</span>
+            <span className="ml-auto flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.15em] text-emerald-400/90">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              online
+            </span>
+          </div>
+
+          {/* Body — all lines are always rendered (reserving height) so the
+              panel size is fixed; only the revealed characters are shown. */}
+          <div className="relative space-y-1.5 p-5 leading-relaxed sm:p-6">
+            {LINES.map((line, i) => {
+              const full = fullText(line);
+              const start = offset;
+              offset += full.length + 1;
+
+              const shown =
+                revealed <= start ? "" : full.slice(0, Math.min(full.length, revealed - start));
+              const showCursor = i === cursorLine;
+              return (
+                <div
+                  key={i}
+                  className={`whitespace-pre-wrap break-words ${LINE_MIN_H[line.kind]}`}
+                >
+                  {renderLine(line, shown, showCursor)}
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </div>
   );
