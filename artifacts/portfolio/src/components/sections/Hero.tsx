@@ -1,6 +1,84 @@
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { motion, useReducedMotion, useTime, useTransform } from "framer-motion";
 import { Download, ArrowRight } from "lucide-react";
 import { HeroTerminal } from "@/components/HeroTerminal";
+
+const ORBIT_TITLES = ["AI Engineer", "Software Engineer", "Researcher"];
+
+/** One title riding the tilted orbit — bright in front, dim behind the avatar. */
+function OrbitTitle({ text, phase, rx, ry }: { text: string; phase: number; rx: number; ry: number }) {
+  const time = useTime();
+  // one full orbit every 26s, matching the inner ring's spin
+  const angle = useTransform(time, (t) => (t / 26000) * Math.PI * 2 + phase);
+  const x = useTransform(angle, (a) => Math.cos(a) * rx);
+  const y = useTransform(angle, (a) => Math.sin(a) * ry);
+  const depth = useTransform(angle, (a) => (Math.sin(a) + 1) / 2); // 0 = behind, 1 = in front
+  const scale = useTransform(depth, [0, 1], [0.78, 1.05]);
+  const opacity = useTransform(depth, [0, 1], [0.35, 1]);
+  const zIndex = useTransform(depth, (d) => (d > 0.5 ? 20 : 5));
+
+  return (
+    <motion.span
+      aria-hidden="true"
+      style={{ x, y, scale, opacity, zIndex }}
+      className="pointer-events-none absolute left-1/2 top-1/2"
+    >
+      <span className="flex -translate-x-1/2 -translate-y-1/2 items-center gap-1.5 whitespace-nowrap rounded-full border border-primary/40 bg-card/80 px-2.5 py-1 font-mono text-[10px] text-primary backdrop-blur sm:text-xs">
+        <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+        {text}
+      </span>
+    </motion.span>
+  );
+}
+
+/** The three titles spaced 120° apart on the avatar's orbit ring. */
+function OrbitingTitles() {
+  const reduced = useReducedMotion();
+  const [small, setSmall] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 640px)");
+    const update = () => setSmall(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+  // ellipse matching the visible ring (circle tilted ~72°)
+  const rx = small ? 140 : 215;
+  const ry = small ? 46 : 66;
+
+  if (reduced) {
+    const spots = [
+      { x: -rx, y: 0 },
+      { x: rx, y: 0 },
+      { x: 0, y: ry },
+    ];
+    return (
+      <>
+        {ORBIT_TITLES.map((t, i) => (
+          <span
+            key={t}
+            aria-hidden="true"
+            className="pointer-events-none absolute left-1/2 top-1/2 z-20"
+            style={{ transform: `translate(${spots[i].x}px, ${spots[i].y}px)` }}
+          >
+            <span className="flex -translate-x-1/2 -translate-y-1/2 items-center gap-1.5 whitespace-nowrap rounded-full border border-primary/40 bg-card/80 px-2.5 py-1 font-mono text-[10px] text-primary backdrop-blur sm:text-xs">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+              {t}
+            </span>
+          </span>
+        ))}
+      </>
+    );
+  }
+
+  return (
+    <>
+      {ORBIT_TITLES.map((t, i) => (
+        <OrbitTitle key={t} text={t} phase={(i * Math.PI * 2) / 3} rx={rx} ry={ry} />
+      ))}
+    </>
+  );
+}
 
 export function Hero() {
   return (
@@ -61,6 +139,9 @@ export function Hero() {
                 />
               </div>
             </div>
+
+            {/* Titles orbiting the avatar like planets */}
+            <OrbitingTitles />
 
             {/* Pedestal — crisp neon lines (no glow bloom) */}
             <div className="pointer-events-none absolute bottom-10 left-1/2 -translate-x-1/2 w-64 sm:w-80">
