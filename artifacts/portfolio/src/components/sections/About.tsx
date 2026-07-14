@@ -29,7 +29,7 @@ export function About() {
               {/* Neon-outlined frame */}
               <div className="neon-glow relative aspect-[4/5] overflow-hidden rounded-3xl border-2 border-primary bg-card">
                 <img
-                  src={`${import.meta.env.BASE_URL}images/avatar.png`}
+                  src={`${import.meta.env.BASE_URL}images/avatar.webp`}
                   alt="Md. Ahashan Habib"
                   className="w-full h-full object-cover object-top"
                 />

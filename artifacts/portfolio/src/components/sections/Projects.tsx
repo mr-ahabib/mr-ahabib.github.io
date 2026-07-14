@@ -82,7 +82,7 @@ export function Projects() {
               variants={cardVariants}
               whileHover={{ y: -6, transition: { duration: 0.2 } }}
               className="neon-glow-sm group relative flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-primary/45 bg-card/80 p-7 backdrop-blur-xl transition-colors duration-300 hover:border-primary"
-              onClick={() => window.open(project.link, "_blank")}
+              onClick={() => window.open(project.link, "_blank", "noopener,noreferrer")}
             >
               {/* HUD corner bracket */}
               <span className="pointer-events-none absolute right-4 top-4 h-4 w-4 border-r-2 border-t-2 border-primary/40" />

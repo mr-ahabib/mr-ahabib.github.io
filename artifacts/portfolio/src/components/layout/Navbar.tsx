@@ -54,13 +54,16 @@ export function Navbar() {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
 
+    // A section is "active" when it crosses a thin band around the viewport's
+    // middle — unlike a visibility threshold, this works for sections much
+    // taller than the viewport (e.g. Projects on mobile).
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) setActiveSection(entry.target.id);
         });
       },
-      { threshold: 0.4 }
+      { rootMargin: "-45% 0px -50% 0px", threshold: 0 }
     );
 
     const sections = document.querySelectorAll("section[id]");

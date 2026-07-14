@@ -83,7 +83,7 @@ export function Hero() {
                   }}
                 >
                   <img
-                    src={`${import.meta.env.BASE_URL}images/avatar.png`}
+                    src={`${import.meta.env.BASE_URL}images/avatar.webp`}
                     alt="Md. Ahashan Habib"
                     className="w-full h-full object-cover object-top"
                   />
