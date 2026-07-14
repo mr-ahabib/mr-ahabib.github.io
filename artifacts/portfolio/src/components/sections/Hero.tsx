@@ -12,63 +12,17 @@ export function Hero() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full py-10 sm:py-14">
+        {/* Terminal + holographic avatar share a centered row so they line up */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
 
-          {/* ── Left Content ── */}
+          {/* ── Terminal intro ── */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="order-2 lg:order-1 w-full max-w-xl"
+            className="order-2 lg:order-1 w-full"
           >
-            {/* Terminal intro (streams in on load) */}
             <HeroTerminal />
-
-            {/* CTA buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="mt-7 flex flex-wrap gap-3 items-center"
-            >
-              <a
-                href="https://mr-ahabib.github.io/images/AhashanHabib.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-primary/30 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/40"
-              >
-                {/* sheen sweep on hover */}
-                <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
-                <Download size={18} className="transition-transform duration-300 group-hover:translate-y-0.5" />
-                Download CV
-              </a>
-              <a
-                href="#contact"
-                className="group inline-flex items-center gap-2 rounded-full border border-border bg-card/40 px-6 py-3 text-sm font-semibold text-foreground backdrop-blur transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/60 hover:bg-primary/10"
-              >
-                Contact Me
-                <ArrowRight size={17} className="transition-transform duration-300 group-hover:translate-x-1" />
-              </a>
-            </motion.div>
-
-            {/* Stats row */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-              className="mt-10 flex gap-8 sm:gap-10"
-            >
-              {[
-                { label: "Publications", value: "3+" },
-                { label: "Projects", value: "10+" },
-                { label: "Experience", value: "1yr+" },
-              ].map((stat) => (
-                <div key={stat.label}>
-                  <div className="text-xl sm:text-2xl font-display font-bold text-primary">{stat.value}</div>
-                  <div className="text-xs text-muted-foreground mt-0.5 font-medium font-mono uppercase tracking-wider">{stat.label}</div>
-                </div>
-              ))}
-            </motion.div>
           </motion.div>
 
           {/* ── Right — Holographic Avatar ── */}
@@ -76,7 +30,7 @@ export function Hero() {
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="order-1 lg:order-2 relative flex items-center justify-center min-h-[440px] sm:min-h-[540px]"
+            className="order-1 lg:order-2 relative flex items-center justify-center min-h-[420px] sm:min-h-[480px]"
           >
             {/* Orbiting perspective rings */}
             <div className="pointer-events-none absolute inset-0 grid place-items-center [perspective:1000px]">
@@ -142,6 +96,48 @@ export function Hero() {
           </motion.div>
 
         </div>
+
+        {/* CTA + stats — sit below the terminal, sharing its left edge */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.5 }}
+          className="mt-9 lg:mt-12 w-full max-w-xl"
+        >
+          <div className="flex flex-wrap items-center gap-3">
+            <a
+              href="https://mr-ahabib.github.io/images/AhashanHabib.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-primary/30 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/40"
+            >
+              {/* sheen sweep on hover */}
+              <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+              <Download size={18} className="transition-transform duration-300 group-hover:translate-y-0.5" />
+              Download CV
+            </a>
+            <a
+              href="#contact"
+              className="group inline-flex items-center gap-2 rounded-full border border-border bg-card/40 px-6 py-3 text-sm font-semibold text-foreground backdrop-blur transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/60 hover:bg-primary/10"
+            >
+              Contact Me
+              <ArrowRight size={17} className="transition-transform duration-300 group-hover:translate-x-1" />
+            </a>
+          </div>
+
+          <div className="mt-8 flex gap-10 border-t border-border/60 pt-6">
+            {[
+              { label: "Publications", value: "3+" },
+              { label: "Projects", value: "10+" },
+              { label: "Experience", value: "1yr+" },
+            ].map((stat) => (
+              <div key={stat.label}>
+                <div className="text-xl sm:text-2xl font-display font-bold text-primary">{stat.value}</div>
+                <div className="mt-0.5 font-mono text-xs uppercase tracking-wider text-muted-foreground">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
       </div>
 
       {/* Scroll indicator */}

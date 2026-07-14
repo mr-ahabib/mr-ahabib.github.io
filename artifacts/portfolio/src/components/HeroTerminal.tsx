@@ -26,6 +26,15 @@ const Cursor = () => (
   <span className="ml-0.5 inline-block h-[1.05em] w-[0.5ch] translate-y-[0.15em] bg-primary align-baseline animate-pulse" />
 );
 
+// Each line reserves its full height from the start (rendered even before its
+// text is revealed) so the terminal never grows/shrinks while streaming.
+const LINE_MIN_H: Record<Line["kind"], string> = {
+  comment: "min-h-[1.5rem]",
+  cmd: "min-h-[1.5rem]",
+  name: "min-h-[1.9rem] sm:min-h-[2.1rem]",
+  out: "min-h-[1.5rem]",
+};
+
 function renderLine(line: Line, shown: string, showCursor: boolean) {
   const cursor = showCursor ? <Cursor /> : null;
 
@@ -83,8 +92,6 @@ export function HeroTerminal() {
     return () => clearInterval(id);
   }, []);
 
-  const done = revealed >= TOTAL;
-
   // Index of the last line that has any characters revealed (where the caret sits).
   let cursorLine = -1;
   {
@@ -108,24 +115,26 @@ export function HeroTerminal() {
         <span className="ml-2 text-xs text-muted-foreground">ahashan@portfolio: ~</span>
       </div>
 
-      {/* Body */}
-      <div className="min-h-[230px] space-y-1.5 p-5 leading-relaxed sm:p-6">
+      {/* Body — all lines are always rendered (reserving height) so the
+          panel size is fixed; only the revealed characters are shown. */}
+      <div className="space-y-1.5 p-5 leading-relaxed sm:p-6">
         {LINES.map((line, i) => {
           const full = fullText(line);
           const start = offset;
           offset += full.length + 1;
 
-          if (revealed <= start) return null;
-          const shown = full.slice(0, Math.min(full.length, revealed - start));
+          const shown =
+            revealed <= start ? "" : full.slice(0, Math.min(full.length, revealed - start));
           const showCursor = i === cursorLine;
           return (
-            <div key={i} className="whitespace-pre-wrap break-words">
+            <div
+              key={i}
+              className={`whitespace-pre-wrap break-words ${LINE_MIN_H[line.kind]}`}
+            >
               {renderLine(line, shown, showCursor)}
             </div>
           );
         })}
-        {/* Keep a caret visible on the final prompt once streaming completes */}
-        {done && cursorLine !== LINES.length - 1 && <Cursor />}
       </div>
     </div>
   );
