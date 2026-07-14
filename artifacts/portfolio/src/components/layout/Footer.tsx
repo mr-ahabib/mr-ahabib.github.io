@@ -28,9 +28,6 @@ export function Footer() {
               <span className="text-primary">~/</span>
               <span className="text-foreground">ahashan-habib</span>
             </a>
-            <p className="mt-3 font-mono text-xs text-muted-foreground">
-              © {year} Md. Ahashan Habib — all rights reserved
-            </p>
           </div>
 
           {/* Socials + scroll-to-top */}
@@ -58,8 +55,8 @@ export function Footer() {
         </div>
 
         {/* Bottom line */}
-        <div className="mt-8 border-t border-border/40 pt-5 text-center font-mono text-[11px] tracking-wider text-muted-foreground/70">
-          <span className="text-primary/70">&gt;</span> built with React · Tailwind · framer-motion
+        <div className="mt-8 border-t border-border/40 pt-5 text-center font-mono text-xs tracking-wider text-muted-foreground">
+          © {year} Md. Ahashan Habib — all rights reserved
         </div>
       </div>
     </footer>
