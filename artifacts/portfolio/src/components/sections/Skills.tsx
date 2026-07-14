@@ -49,8 +49,8 @@ const KEY_SKILLS = [
 
 function CapabilityRadar() {
   return (
-    <div className="relative mx-auto mb-16 sm:mb-20 max-w-3xl rounded-2xl bg-gradient-to-br from-primary/40 via-border/50 to-accent/40 p-px shadow-xl shadow-primary/10">
-      <div className="relative overflow-hidden rounded-[calc(1rem-1px)] bg-card/80 p-5 sm:p-7 backdrop-blur-xl">
+    <div className="neon-glow-sm relative mx-auto mb-16 sm:mb-20 max-w-3xl rounded-2xl border border-primary/50 bg-card/80 backdrop-blur-xl">
+      <div className="relative overflow-hidden rounded-2xl p-5 sm:p-7">
         {/* HUD corner brackets */}
         <span className="pointer-events-none absolute left-4 top-4 h-4 w-4 border-l-2 border-t-2 border-primary/40" />
         <span className="pointer-events-none absolute right-4 top-4 h-4 w-4 border-r-2 border-t-2 border-primary/40" />
@@ -161,9 +161,9 @@ export function Skills() {
               viewport={{ once: true, margin: "-50px" }}
               transition={{ delay: index * 0.1 }}
               whileHover={{ y: -4 }}
-              className="group relative rounded-2xl bg-gradient-to-br from-primary/40 via-border/50 to-accent/40 p-px shadow-lg shadow-primary/10 transition-all duration-300 hover:from-primary/70 hover:to-accent/70"
+              className="neon-glow-sm group relative rounded-2xl border border-primary/50 bg-card/80 backdrop-blur-xl transition-colors duration-300 hover:border-primary"
             >
-              <div className="relative h-full overflow-hidden rounded-[calc(1rem-1px)] bg-card/80 p-5 sm:p-6 backdrop-blur-xl">
+              <div className="relative h-full overflow-hidden rounded-2xl p-5 sm:p-6">
                 {/* Gradient top accent */}
                 <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary to-accent" />
                 {/* HUD corner bracket */}

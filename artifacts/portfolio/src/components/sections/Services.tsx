@@ -63,9 +63,9 @@ export function Services() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ delay: index * 0.1 }}
-              className="group relative rounded-2xl bg-gradient-to-br from-primary/40 via-border/50 to-accent/40 p-px shadow-lg shadow-primary/10 transition-all duration-300 hover:-translate-y-2 hover:from-primary/70 hover:to-accent/70"
+              className="neon-glow-sm group relative rounded-2xl border border-primary/50 bg-card/80 backdrop-blur-xl transition-all duration-300 hover:-translate-y-2 hover:border-primary"
             >
-              <div className="relative h-full overflow-hidden rounded-[calc(1rem-1px)] bg-card/80 p-8 backdrop-blur-xl">
+              <div className="relative h-full overflow-hidden rounded-2xl p-8">
                 {/* Hover glow */}
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/8 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                 {/* HUD corner bracket */}
