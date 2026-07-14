@@ -156,6 +156,17 @@
       0 12px
     );
   }
+  /* Smaller cut for compact controls (nav panel, toggle) */
+  .clip-hud-sm {
+    clip-path: polygon(
+      8px 0,
+      100% 0,
+      100% calc(100% - 8px),
+      calc(100% - 8px) 100%,
+      0 100%,
+      0 8px
+    );
+  }
 
   /* Barely-there alternating section tint that works in both themes */
   section:nth-child(even) {

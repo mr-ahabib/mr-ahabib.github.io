@@ -26,8 +26,11 @@ function ThemeToggle() {
     <button
       onClick={() => setTheme(isDark ? "light" : "dark")}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-      className="relative grid h-9 w-9 place-items-center rounded-lg border border-border text-muted-foreground transition-colors hover:border-primary/50 hover:text-primary"
+      className="group relative grid h-9 w-9 place-items-center text-muted-foreground transition-colors hover:text-primary"
     >
+      {/* angular gradient border + fill */}
+      <span className="clip-hud-sm absolute inset-0 bg-gradient-to-br from-primary/50 via-border/60 to-accent/50 transition-all duration-300 group-hover:from-primary group-hover:to-accent" />
+      <span className="clip-hud-sm absolute inset-px bg-card/70 backdrop-blur transition-colors duration-300 group-hover:bg-primary/10" />
       {/* Render nothing decisive until mounted to avoid a hydration flash */}
       <AnimatePresence mode="wait" initial={false}>
         <motion.span
@@ -36,6 +39,7 @@ function ThemeToggle() {
           animate={{ rotate: 0, opacity: 1 }}
           exit={{ rotate: 90, opacity: 0 }}
           transition={{ duration: 0.18 }}
+          className="relative"
         >
           {mounted && isDark ? <Moon size={17} /> : <Sun size={17} />}
         </motion.span>
@@ -82,10 +86,16 @@ export function Navbar() {
     <header
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-background/75 backdrop-blur-lg border-b border-border py-3 shadow-[0_8px_30px_hsl(var(--background)/0.6)]"
+          ? "bg-background/75 backdrop-blur-lg py-3 shadow-[0_8px_30px_hsl(var(--background)/0.6)]"
           : "bg-transparent py-5"
       }`}
     >
+      {/* Futuristic gradient glow line at the bottom edge when scrolled */}
+      <span
+        className={`pointer-events-none absolute bottom-0 left-0 h-px w-full bg-gradient-to-r from-transparent via-primary/70 to-transparent transition-opacity duration-300 ${
+          isScrolled ? "opacity-100" : "opacity-0"
+        }`}
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           <a
@@ -103,33 +113,37 @@ export function Navbar() {
             </span>
           </a>
 
-          <div className="flex items-center gap-2">
-            {/* Desktop Nav */}
-            <nav className="hidden lg:flex gap-2">
-              {NAV_LINKS.map((link) => {
-                const isActive = activeSection === link.href.substring(1);
-                return (
-                  <a
-                    key={link.name}
-                    href={link.href}
-                    className={`group relative px-1.5 py-2 text-sm font-medium transition-colors duration-200 ${
-                      isActive
-                        ? "text-primary"
-                        : "text-muted-foreground hover:text-primary"
-                    }`}
-                  >
-                    {link.name}
-                    <span
-                      className={`pointer-events-none absolute -bottom-0.5 left-1.5 right-1.5 h-0.5 origin-left rounded-full bg-primary transition-transform duration-300 ease-out ${
+          <div className="flex items-center gap-3">
+            {/* Desktop Nav — angular HUD panel */}
+            <div className="relative hidden lg:block">
+              <span className="clip-hud-sm absolute inset-0 bg-gradient-to-r from-primary/40 via-border/60 to-accent/40" />
+              <span className="clip-hud-sm absolute inset-px bg-card/50 backdrop-blur-md" />
+              <nav className="clip-hud-sm relative flex gap-1 px-3 py-1.5">
+                {NAV_LINKS.map((link) => {
+                  const isActive = activeSection === link.href.substring(1);
+                  return (
+                    <a
+                      key={link.name}
+                      href={link.href}
+                      className={`group relative px-2 py-1.5 text-sm font-medium transition-colors duration-200 ${
                         isActive
-                          ? "scale-x-100 shadow-[0_0_8px_hsl(var(--primary))]"
-                          : "scale-x-0 group-hover:scale-x-100"
+                          ? "text-primary"
+                          : "text-muted-foreground hover:text-primary"
                       }`}
-                    />
-                  </a>
-                );
-              })}
-            </nav>
+                    >
+                      {link.name}
+                      <span
+                        className={`pointer-events-none absolute -bottom-0.5 left-2 right-2 h-0.5 origin-left rounded-full bg-gradient-to-r from-primary to-accent transition-transform duration-300 ease-out ${
+                          isActive
+                            ? "scale-x-100"
+                            : "scale-x-0 group-hover:scale-x-100"
+                        }`}
+                      />
+                    </a>
+                  );
+                })}
+              </nav>
+            </div>
 
             <ThemeToggle />
 
