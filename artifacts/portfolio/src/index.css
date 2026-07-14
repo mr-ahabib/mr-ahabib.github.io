@@ -223,9 +223,78 @@
   93% { opacity: 1; }
 }
 
+/* ---- Bug-hunt easter egg ---- */
+.bug-legs {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.bug-legs-a {
+  animation: bug-legs-a 0.16s linear infinite;
+}
+.bug-legs-b {
+  animation: bug-legs-b 0.16s linear infinite;
+}
+[data-walking="false"] .bug-legs-a,
+[data-walking="false"] .bug-legs-b {
+  animation-play-state: paused;
+}
+.hammer-idle {
+  transform: rotate(-20deg);
+}
+.hammer-swing {
+  animation: hammer-swing 0.32s ease-in-out;
+}
+.bug-splat {
+  animation:
+    bug-splat-in 0.25s ease-out,
+    bug-splat-out 0.6s ease-in 3.4s forwards;
+}
+.bug-impact {
+  animation: bug-impact 0.45s ease-out forwards;
+}
+.bug-leg-twitch {
+  transform-box: fill-box;
+  transform-origin: 0% 50%;
+  animation: bug-leg-twitch 0.5s ease-in-out 2;
+}
+
+@keyframes bug-legs-a {
+  0%, 100% { transform: rotate(9deg); }
+  50% { transform: rotate(-9deg); }
+}
+@keyframes bug-legs-b {
+  0%, 100% { transform: rotate(-9deg); }
+  50% { transform: rotate(9deg); }
+}
+@keyframes hammer-swing {
+  0% { transform: rotate(-20deg); }
+  35% { transform: rotate(-100deg); }
+  65% { transform: rotate(14deg); }
+  100% { transform: rotate(-20deg); }
+}
+@keyframes bug-splat-in {
+  0% { transform: scale(0.3); opacity: 0; }
+  55% { transform: scale(1.25); opacity: 1; }
+  100% { transform: scale(1); }
+}
+@keyframes bug-splat-out {
+  to { opacity: 0; transform: scale(0.9); }
+}
+@keyframes bug-impact {
+  from { transform: scale(0.2); opacity: 0.9; }
+  to { transform: scale(1.9); opacity: 0; }
+}
+@keyframes bug-leg-twitch {
+  0%, 100% { transform: rotate(0deg); }
+  40% { transform: rotate(24deg); }
+  70% { transform: rotate(-9deg); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .holo-scanbar,
-  .holo-flicker {
+  .holo-flicker,
+  .bug-legs-a,
+  .bug-legs-b {
     animation: none;
   }
 }
