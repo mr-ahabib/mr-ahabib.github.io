@@ -257,6 +257,12 @@
   transform-origin: 0% 50%;
   animation: bug-leg-twitch 0.5s ease-in-out 2;
 }
+.bug-bubble {
+  animation: bug-bubble-in 0.18s ease-out;
+}
+@keyframes bug-bubble-in {
+  from { opacity: 0; }
+}
 
 @keyframes bug-legs-a {
   0%, 100% { transform: rotate(9deg); }

@@ -16,6 +16,35 @@ const SIZE = 30; // sprite box in px
 
 const rand = (a: number, b: number) => a + Math.random() * (b - a);
 const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
+const pick = <T,>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
+
+/** Cocky lines the bug drops while wandering. */
+const TAUNTS = [
+  "follow me if you dare 🐛",
+  "hire him — or I multiply",
+  "I will vanish you 😈",
+  "you can't debug me",
+  "I live in production",
+  "catch me, mortal",
+  "I deleted a semicolon once",
+  "your firewall can't stop me",
+];
+/** Yelled while running from the cursor. */
+const PANICS = [
+  "too slow, human!",
+  "nope nope nope 🏃",
+  "can't touch this",
+  "MOVE MOVE MOVE",
+  "nice try 😏",
+];
+/** Random last words on the corpse. */
+const LAST_WORDS = [
+  "bug_fixed ✓",
+  "segfault (core dumped)",
+  "exit code 137",
+  "tell my larvae…",
+  "rm -rf /bug ✓",
+];
 
 /** Short synthesized "squish": filtered noise crunch + low pitch-drop thud. */
 function playSquish() {
@@ -169,12 +198,16 @@ function SplatSprite() {
 
 export function BugGame() {
   const [alive, setAlive] = useState(false);
-  const [corpse, setCorpse] = useState<{ x: number; y: number } | null>(null);
+  const [corpse, setCorpse] = useState<{ x: number; y: number; label: string } | null>(null);
   const [hovered, setHovered] = useState(false);
   const [swing, setSwing] = useState(false);
+  const [bubble, setBubble] = useState<string | null>(null);
 
   const bugElRef = useRef<HTMLDivElement | null>(null);
   const hammerElRef = useRef<HTMLDivElement | null>(null);
+  const bubbleElRef = useRef<HTMLDivElement | null>(null);
+  const cursor = useRef({ x: -9999, y: -9999 });
+  const lastPanic = useRef(0);
   const state = useRef({
     x: 0,
     y: 0,
@@ -247,6 +280,26 @@ export function BugGame() {
         );
       }
 
+      // evasive maneuvers — sprint away from a stalking cursor
+      if (!s.fleeing) {
+        const c = cursor.current;
+        const d = Math.hypot(s.x - c.x, s.y - c.y);
+        if (d < 95) {
+          const away = Math.atan2(s.y - c.y, s.x - c.x) + rand(-0.5, 0.5);
+          s.target = {
+            x: clamp(s.x + Math.cos(away) * 170, 24, w - 24),
+            y: clamp(s.y + Math.sin(away) * 170, 24, h - 24),
+          };
+          s.speed = 210;
+          s.pauseUntil = 0;
+          if (now - lastPanic.current > 4500) {
+            lastPanic.current = now;
+            setBubble(pick(PANICS));
+            pushTimer(window.setTimeout(() => setBubble(null), 1600));
+          }
+        }
+      }
+
       const paused = now < s.pauseUntil && !s.fleeing;
       if (!paused) {
         const dx = s.target.x - s.x;
@@ -282,12 +335,55 @@ export function BugGame() {
         el.style.transform = `translate3d(${s.x - SIZE / 2}px, ${s.y - SIZE / 2}px, 0) rotate(${s.angle + 90}deg)`;
         el.dataset.walking = paused ? "false" : "true";
       }
+      const bEl = bubbleElRef.current;
+      if (bEl) {
+        bEl.style.transform = `translate3d(${s.x}px, ${Math.max(s.y - SIZE / 2 - 6, 34)}px, 0)`;
+      }
       raf = requestAnimationFrame(step);
     };
 
     raf = requestAnimationFrame(step);
     return () => cancelAnimationFrame(raf);
   }, [alive, scheduleSpawn]);
+
+  // Track the cursor globally while a bug is alive (it dodges anything close).
+  useEffect(() => {
+    if (!alive) return;
+    const onMove = (e: MouseEvent) => {
+      cursor.current = { x: e.clientX, y: e.clientY };
+    };
+    window.addEventListener("mousemove", onMove);
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      cursor.current = { x: -9999, y: -9999 };
+    };
+  }, [alive]);
+
+  // Random cocky taunts while wandering.
+  useEffect(() => {
+    if (!alive) {
+      setBubble(null);
+      return;
+    }
+    let cancelled = false;
+    let t = 0;
+    const loop = (delay: number) => {
+      t = window.setTimeout(() => {
+        if (cancelled) return;
+        setBubble(pick(TAUNTS));
+        window.setTimeout(() => {
+          if (!cancelled) setBubble(null);
+        }, 2800);
+        loop(rand(5000, 9000));
+      }, delay);
+    };
+    loop(rand(1500, 3000));
+    return () => {
+      cancelled = true;
+      clearTimeout(t);
+      setBubble(null);
+    };
+  }, [alive]);
 
   // First spawn + dev hook. Auto-spawns respect prefers-reduced-motion.
   useEffect(() => {
@@ -318,27 +414,13 @@ export function BugGame() {
     playSquish();
     moveHammer(e.clientX || s.x, e.clientY || s.y);
     setSwing(true);
-    setCorpse({ x: s.x, y: s.y });
+    setCorpse({ x: s.x, y: s.y, label: pick(LAST_WORDS) });
     setAlive(false);
     setHovered(false);
+    setBubble(null);
     pushTimer(window.setTimeout(() => setSwing(false), 340));
     pushTimer(window.setTimeout(() => setCorpse(null), 4200));
     scheduleSpawn(RESPAWN_MS);
-  };
-
-  const startle = () => {
-    // 50/50 the bug panics and dashes — makes the hunt feel alive
-    const s = state.current;
-    if (s.fleeing || Math.random() < 0.5) return;
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-    const a = rand(0, Math.PI * 2);
-    s.target = {
-      x: clamp(s.x + Math.cos(a) * 150, 30, w - 30),
-      y: clamp(s.y + Math.sin(a) * 150, 30, h - 30),
-    };
-    s.speed = 175;
-    s.pauseUntil = 0;
   };
 
   return (
@@ -351,7 +433,6 @@ export function BugGame() {
           onMouseEnter={(e) => {
             setHovered(true);
             moveHammer(e.clientX, e.clientY);
-            startle();
           }}
           onMouseMove={(e) => moveHammer(e.clientX, e.clientY)}
           onMouseLeave={() => setHovered(false)}
@@ -370,9 +451,23 @@ export function BugGame() {
             <span className="bug-impact absolute inset-1 rounded-full border-2 border-primary" />
             <SplatSprite />
             <p className="absolute -top-5 left-1/2 -translate-x-1/2 whitespace-nowrap font-mono text-[10px] font-semibold text-primary">
-              bug_fixed ✓
+              {corpse.label}
             </p>
           </div>
+        </div>
+      )}
+
+      {alive && bubble && (
+        <div
+          ref={bubbleElRef}
+          className="absolute left-0 top-0 will-change-transform"
+          style={{
+            transform: `translate3d(${state.current.x}px, ${Math.max(state.current.y - SIZE / 2 - 6, 34)}px, 0)`,
+          }}
+        >
+          <span className="bug-bubble neon-glow-sm relative block -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-lg border border-primary/60 bg-card/95 px-2.5 py-1 font-mono text-[11px] font-medium text-primary backdrop-blur after:absolute after:left-1/2 after:top-full after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-primary/60 after:content-['']">
+            {bubble}
+          </span>
         </div>
       )}
 
