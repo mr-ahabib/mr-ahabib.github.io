@@ -80,16 +80,25 @@ export function HeroTerminal() {
       setRevealed(TOTAL);
       return;
     }
-    const id = setInterval(() => {
-      setRevealed((r) => {
-        if (r >= TOTAL) {
-          clearInterval(id);
-          return r;
-        }
-        return r + 1;
-      });
-    }, 26);
-    return () => clearInterval(id);
+    // Loop forever: type all lines, hold, clear, then retype.
+    let n = 0;
+    let timer: ReturnType<typeof setTimeout>;
+    const step = () => {
+      if (n < TOTAL) {
+        n += 1;
+        setRevealed(n);
+        timer = setTimeout(step, 26);
+      } else {
+        // Hold the finished state, then reset and start again.
+        timer = setTimeout(() => {
+          n = 0;
+          setRevealed(0);
+          timer = setTimeout(step, 600);
+        }, 2600);
+      }
+    };
+    timer = setTimeout(step, 26);
+    return () => clearTimeout(timer);
   }, []);
 
   // Index of the last line that has any characters revealed (where the caret sits).
