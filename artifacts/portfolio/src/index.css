@@ -42,8 +42,8 @@
   --popover: 222 44% 8%;
   --popover-foreground: 210 40% 96%;
 
-  --primary: 189 94% 55%;
-  --primary-foreground: 222 47% 6%;
+  --primary: 217 91% 60%;
+  --primary-foreground: 0 0% 100%;
 
   --secondary: 222 30% 16%;
   --secondary-foreground: 210 40% 96%;
@@ -51,15 +51,15 @@
   --muted: 222 30% 14%;
   --muted-foreground: 215 20% 62%;
 
-  --accent: 205 100% 62%;
-  --accent-foreground: 222 47% 6%;
+  --accent: 258 90% 66%;
+  --accent-foreground: 0 0% 100%;
 
   --destructive: 0 72% 55%;
   --destructive-foreground: 210 40% 98%;
 
-  --border: 200 30% 20%;
-  --input: 200 30% 20%;
-  --ring: 189 94% 55%;
+  --border: 217 30% 22%;
+  --input: 217 30% 22%;
+  --ring: 217 91% 60%;
 
   --radius: 0.75rem;
 }
@@ -75,7 +75,7 @@
   --popover: 0 0% 100%;
   --popover-foreground: 222 47% 11%;
 
-  --primary: 189 90% 40%;
+  --primary: 221 83% 53%;
   --primary-foreground: 0 0% 100%;
 
   --secondary: 210 40% 96%;
@@ -84,7 +84,7 @@
   --muted: 210 40% 96%;
   --muted-foreground: 215 16% 42%;
 
-  --accent: 205 90% 48%;
+  --accent: 258 80% 60%;
   --accent-foreground: 0 0% 100%;
 
   --destructive: 0 84% 55%;
@@ -92,7 +92,7 @@
 
   --border: 214 32% 88%;
   --input: 214 32% 88%;
-  --ring: 189 90% 40%;
+  --ring: 221 83% 53%;
 
   --radius: 0.75rem;
 }
@@ -151,5 +151,46 @@
   }
   section:nth-child(odd) {
     background: transparent;
+  }
+
+  /* ---- Holographic avatar projection ---- */
+  .holo-scanlines {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      hsl(var(--primary) / 0.12) 0px,
+      hsl(var(--primary) / 0.12) 1px,
+      transparent 2px,
+      transparent 4px
+    );
+  }
+  .holo-scanbar {
+    animation: holo-scanbar 3.4s ease-in-out infinite;
+  }
+  .holo-flicker {
+    animation: holo-flicker 5s ease-in-out infinite;
+  }
+}
+
+@keyframes holo-scanbar {
+  0% { top: -12%; opacity: 0; }
+  12% { opacity: 0.8; }
+  88% { opacity: 0.8; }
+  100% { top: 108%; opacity: 0; }
+}
+
+@keyframes holo-flicker {
+  0%, 100% { opacity: 0.94; }
+  48% { opacity: 1; }
+  50% { opacity: 0.86; }
+  52% { opacity: 1; }
+  91% { opacity: 1; }
+  92% { opacity: 0.8; }
+  93% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .holo-scanbar,
+  .holo-flicker {
+    animation: none;
   }
 }
