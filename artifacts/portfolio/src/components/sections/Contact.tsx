@@ -52,7 +52,9 @@ export function Contact() {
           viewport={{ once: true }}
           className="text-center mb-12 sm:mb-14"
         >
-          <p className="text-primary font-semibold tracking-widest text-sm uppercase mb-3">Contact</p>
+          <div className="flex justify-center mb-3">
+            <span className="eyebrow">Contact</span>
+          </div>
           <h2 className="text-3xl md:text-5xl font-display font-bold mb-4 text-foreground">
             Get In <span className="text-gradient">Touch</span>
           </h2>
@@ -77,25 +79,25 @@ export function Contact() {
                   href={item.href}
                   target={item.href.startsWith("http") ? "_blank" : undefined}
                   rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                  className="flex items-center gap-4 p-4 rounded-2xl glass-card hover:border-primary/35 hover:shadow-lg group transition-all duration-200"
+                  className="neon-glow-sm group flex items-center gap-4 rounded-2xl border border-primary/40 bg-card/80 p-4 backdrop-blur transition-colors duration-200 hover:border-primary"
                 >
-                  <div className="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-250 shrink-0 shadow-sm">
+                  <div className="clip-hud-sm grid h-11 w-11 shrink-0 place-items-center bg-primary/12 text-primary transition-all duration-200 group-hover:bg-primary group-hover:text-primary-foreground">
                     {item.icon}
                   </div>
                   <div className="min-w-0">
-                    <p className="text-xs text-muted-foreground mb-0.5">{item.label}</p>
+                    <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-0.5">{item.label}</p>
                     <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors truncate">
                       {item.value}
                     </p>
                   </div>
                 </a>
               ) : (
-                <div className="flex items-center gap-4 p-4 rounded-2xl glass-card">
-                  <div className="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 shadow-sm">
+                <div className="neon-glow-sm flex items-center gap-4 rounded-2xl border border-primary/40 bg-card/80 p-4 backdrop-blur">
+                  <div className="clip-hud-sm grid h-11 w-11 shrink-0 place-items-center bg-primary/12 text-primary">
                     {item.icon}
                   </div>
                   <div className="min-w-0">
-                    <p className="text-xs text-muted-foreground mb-0.5">{item.label}</p>
+                    <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-0.5">{item.label}</p>
                     <p className="text-sm font-semibold text-foreground truncate">{item.value}</p>
                   </div>
                 </div>
