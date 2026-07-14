@@ -1,13 +1,6 @@
 import { motion } from "framer-motion";
 import { Download, Mail, Github, Linkedin, Globe } from "lucide-react";
-import { useTypingEffect } from "@/hooks/use-typing";
-
-const PHRASES = [
-  "I'm Md. Ahashan Habib",
-  "An AI/ML Engineer",
-  "A Backend Developer",
-  "A Machine Learning Researcher",
-];
+import { HeroTerminal } from "@/components/HeroTerminal";
 
 const SOCIALS = [
   { href: "https://github.com/mr-ahabib", icon: <Github size={18} />, label: "GitHub" },
@@ -17,8 +10,6 @@ const SOCIALS = [
 ];
 
 export function Hero() {
-  const typedText = useTypingEffect(PHRASES, 90, 45, 2000);
-
   return (
     <section id="home" className="relative min-h-screen flex items-center pt-20 sm:pt-24 overflow-hidden">
       {/* Section-level ambient tints */}
@@ -32,62 +23,20 @@ export function Hero() {
 
           {/* ── Left Content ── */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
             className="order-2 lg:order-1"
           >
-            {/* Role badge */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.1 }}
-              className="inline-block mb-5 sm:mb-6"
-            >
-              <span className="px-4 py-2 rounded-full bg-primary/10 text-primary text-xs sm:text-sm font-medium border border-primary/25 flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                AI Project Co-ordinator at Qanun Limited
-              </span>
-            </motion.div>
-
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="eyebrow mb-3"
-            >
-              Welcome to my portfolio
-            </motion.p>
-
-            <motion.h1
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold leading-tight mb-5 sm:mb-6 text-foreground"
-            >
-              Hello,{" "}
-              <br />
-              <span className="text-gradient min-h-[1.2em] inline-block">
-                {typedText}
-                <span className="animate-pulse font-light text-primary">|</span>
-              </span>
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="text-sm sm:text-base lg:text-lg text-muted-foreground mb-7 sm:mb-8 max-w-xl leading-relaxed"
-            >
-              Building production AI systems with LLMs, RAG, and deep learning. Full-stack developer passionate about scalable ML applications and cutting-edge research.
-            </motion.p>
+            {/* Terminal intro (streams in on load) */}
+            <HeroTerminal />
 
             {/* CTA buttons */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="flex flex-wrap gap-3 items-center"
+              className="mt-7 flex flex-wrap gap-3 items-center"
             >
               <a
                 href="https://mr-ahabib.github.io/images/AhashanHabib.pdf"
