@@ -105,26 +105,27 @@ export function Navbar() {
 
           <div className="flex items-center gap-2">
             {/* Desktop Nav */}
-            <nav className="hidden lg:flex gap-1">
+            <nav className="hidden lg:flex gap-2">
               {NAV_LINKS.map((link) => {
                 const isActive = activeSection === link.href.substring(1);
                 return (
                   <a
                     key={link.name}
                     href={link.href}
-                    className={`relative px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                    className={`group relative px-1.5 py-2 text-sm font-medium transition-colors duration-200 ${
                       isActive
-                        ? "text-primary bg-primary/10"
-                        : "text-muted-foreground hover:text-primary hover:bg-primary/5"
+                        ? "text-primary"
+                        : "text-muted-foreground hover:text-primary"
                     }`}
                   >
                     {link.name}
-                    {isActive && (
-                      <motion.span
-                        layoutId="nav-active"
-                        className="absolute bottom-1 left-1/2 -translate-x-1/2 w-4 h-0.5 bg-primary rounded-full shadow-[0_0_8px_hsl(var(--primary))]"
-                      />
-                    )}
+                    <span
+                      className={`pointer-events-none absolute -bottom-0.5 left-1.5 right-1.5 h-0.5 origin-left rounded-full bg-primary transition-transform duration-300 ease-out ${
+                        isActive
+                          ? "scale-x-100 shadow-[0_0_8px_hsl(var(--primary))]"
+                          : "scale-x-0 group-hover:scale-x-100"
+                      }`}
+                    />
                   </a>
                 );
               })}
