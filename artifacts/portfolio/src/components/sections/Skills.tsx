@@ -4,32 +4,27 @@ import { Code2, Database, Layers, Brain, Wrench } from "lucide-react";
 const CATEGORIES = [
   {
     title: "Languages",
-    icon: <Code2 size={22} />,
-    color: "from-indigo-500/20 to-violet-500/10",
+    icon: <Code2 size={20} />,
     skills: ["Python", "Java", "TypeScript", "JavaScript", "C", "C++", "Solidity"],
   },
   {
     title: "Frameworks",
-    icon: <Layers size={22} />,
-    color: "from-blue-500/20 to-cyan-500/10",
+    icon: <Layers size={20} />,
     skills: ["FastAPI", "Django", "React", "React Native", "Node.js (Express.js)"],
   },
   {
     title: "Databases",
-    icon: <Database size={22} />,
-    color: "from-emerald-500/20 to-green-500/10",
+    icon: <Database size={20} />,
     skills: ["MySQL", "PostgreSQL"],
   },
   {
     title: "AI / ML",
-    icon: <Brain size={22} />,
-    color: "from-rose-500/20 to-pink-500/10",
+    icon: <Brain size={20} />,
     skills: ["LLMs", "NLP", "Machine Learning", "Deep Learning", "RAG", "Transformers", "Hugging Face", "PyTorch", "TensorFlow", "LangChain"],
   },
   {
     title: "Technologies",
-    icon: <Wrench size={22} />,
-    color: "from-amber-500/20 to-orange-500/10",
+    icon: <Wrench size={20} />,
     skills: ["Blockchain", "Data Structures & Algorithms", "Digital Image Processing", "Git / GitHub"],
   },
 ];
@@ -47,6 +42,7 @@ function CircularProgress({ name, value, index }: { name: string; value: number;
   const radius = 36;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (value / 100) * circumference;
+  const gradId = `ring-grad-${index}`;
 
   return (
     <motion.div
@@ -57,8 +53,14 @@ function CircularProgress({ name, value, index }: { name: string; value: number;
       className="flex flex-col items-center gap-2"
     >
       <div className="relative w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center">
-        <svg className="w-full h-full transform -rotate-90">
-          <circle cx="50%" cy="50%" r={radius} stroke="currentColor" strokeWidth="7" fill="transparent" className="text-primary/10" />
+        <svg className="w-full h-full -rotate-90">
+          <defs>
+            <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="hsl(var(--primary))" />
+              <stop offset="100%" stopColor="hsl(var(--accent))" />
+            </linearGradient>
+          </defs>
+          <circle cx="50%" cy="50%" r={radius} stroke="currentColor" strokeWidth="6" fill="transparent" className="text-primary/10" />
           <motion.circle
             initial={{ strokeDashoffset: circumference }}
             whileInView={{ strokeDashoffset }}
@@ -67,17 +69,17 @@ function CircularProgress({ name, value, index }: { name: string; value: number;
             cx="50%"
             cy="50%"
             r={radius}
-            stroke="currentColor"
-            strokeWidth="7"
+            stroke={`url(#${gradId})`}
+            strokeWidth="6"
             fill="transparent"
             strokeDasharray={circumference}
             strokeLinecap="round"
-            className="text-primary"
+            style={{ filter: "drop-shadow(0 0 5px hsl(var(--primary) / 0.5))" }}
           />
         </svg>
-        <span className="absolute text-xs sm:text-sm font-bold text-foreground">{value}%</span>
+        <span className="absolute text-sm font-display font-bold text-gradient">{value}%</span>
       </div>
-      <span className="text-xs sm:text-sm font-medium text-muted-foreground text-center leading-tight px-1">{name}</span>
+      <span className="font-mono text-[11px] sm:text-xs text-muted-foreground text-center leading-tight px-1">{name}</span>
     </motion.div>
   );
 }
@@ -92,7 +94,9 @@ export function Skills() {
           viewport={{ once: true }}
           className="text-center mb-12 sm:mb-16"
         >
-          <p className="text-primary font-semibold tracking-widest text-sm uppercase mb-3">Expertise</p>
+          <div className="flex justify-center mb-3">
+            <span className="eyebrow">Expertise</span>
+          </div>
           <h2 className="text-3xl md:text-5xl font-display font-bold mb-4 text-foreground">
             Technical <span className="text-gradient">Proficiency</span>
           </h2>
@@ -116,31 +120,35 @@ export function Skills() {
               viewport={{ once: true, margin: "-50px" }}
               transition={{ delay: index * 0.1 }}
               whileHover={{ y: -4 }}
-              className="glass-card p-5 sm:p-6 rounded-2xl hover:shadow-lg hover:border-primary/25 transition-all duration-300 relative overflow-hidden"
+              className="group relative rounded-2xl bg-gradient-to-br from-primary/40 via-border/50 to-accent/40 p-px shadow-lg shadow-primary/10 transition-all duration-300 hover:from-primary/70 hover:to-accent/70"
             >
-              {/* Gradient top accent */}
-              <div className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${category.color}`} />
+              <div className="relative h-full overflow-hidden rounded-[calc(1rem-1px)] bg-card/80 p-5 sm:p-6 backdrop-blur-xl">
+                {/* Gradient top accent */}
+                <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary to-accent" />
+                {/* HUD corner bracket */}
+                <span className="pointer-events-none absolute right-4 top-4 h-4 w-4 border-r-2 border-t-2 border-primary/40" />
 
-              <div className="flex items-center gap-3 mb-5">
-                <div className={`p-2.5 bg-gradient-to-br ${category.color} text-primary rounded-xl`}>
-                  {category.icon}
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="clip-hud-sm grid h-11 w-11 place-items-center bg-primary/15 text-primary">
+                    {category.icon}
+                  </div>
+                  <h3 className="text-lg font-display font-bold text-foreground">{category.title}</h3>
                 </div>
-                <h3 className="text-lg font-display font-bold text-foreground">{category.title}</h3>
-              </div>
 
-              <div className="flex flex-wrap gap-2">
-                {category.skills.map((skill, i) => (
-                  <motion.span
-                    key={i}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.05 + i * 0.04 }}
-                    className="px-2.5 py-1.5 bg-white/70 text-secondary-foreground text-xs sm:text-sm font-medium rounded-lg border border-border/60 hover:border-primary/40 hover:bg-primary/5 hover:text-primary transition-all cursor-default"
-                  >
-                    {skill}
-                  </motion.span>
-                ))}
+                <div className="flex flex-wrap gap-2">
+                  {category.skills.map((skill, i) => (
+                    <motion.span
+                      key={i}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.05 + i * 0.04 }}
+                      className="clip-hud-sm border border-border/70 bg-secondary/50 px-2.5 py-1.5 font-mono text-xs text-muted-foreground transition-colors hover:border-primary/50 hover:text-primary cursor-default"
+                    >
+                      {skill}
+                    </motion.span>
+                  ))}
+                </div>
               </div>
             </motion.div>
           ))}
