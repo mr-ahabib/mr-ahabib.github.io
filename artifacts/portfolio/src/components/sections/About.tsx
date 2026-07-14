@@ -26,31 +26,27 @@ export function About() {
             className="lg:col-span-5"
           >
             <div className="relative max-w-sm mx-auto lg:max-w-none">
-              {/* ambient glow */}
-              <div className="pointer-events-none absolute -inset-4 rounded-[2rem] bg-gradient-to-br from-primary/25 via-transparent to-accent/25 opacity-60 blur-2xl" />
-              {/* gradient border frame */}
-              <div className="relative rounded-3xl bg-gradient-to-br from-primary/60 via-border/50 to-accent/60 p-px shadow-2xl shadow-primary/20">
-                <div className="relative aspect-[4/5] overflow-hidden rounded-[calc(1.5rem-1px)] bg-card">
-                  <img
-                    src={`${import.meta.env.BASE_URL}images/avatar.png`}
-                    alt="Md. Ahashan Habib"
-                    className="w-full h-full object-cover object-top"
-                  />
-                  {/* holographic tint + scanlines */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-primary/30 via-transparent to-accent/15 mix-blend-screen" />
-                  <div className="holo-scanlines absolute inset-0 opacity-30" />
-                  {/* HUD corner brackets */}
-                  <span className="pointer-events-none absolute left-3 top-3 h-6 w-6 border-l-2 border-t-2 border-primary/70" />
-                  <span className="pointer-events-none absolute right-3 top-3 h-6 w-6 border-r-2 border-t-2 border-primary/70" />
-                  <span className="pointer-events-none absolute bottom-3 left-3 h-6 w-6 border-b-2 border-l-2 border-primary/70" />
-                  <span className="pointer-events-none absolute bottom-3 right-3 h-6 w-6 border-b-2 border-r-2 border-primary/70" />
-                  {/* status badge */}
-                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 whitespace-nowrap">
-                    <span className="flex items-center gap-2 rounded-full border border-primary/30 bg-card/80 px-4 py-2 text-xs font-medium text-foreground shadow-lg backdrop-blur-md">
-                      <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                      Currently at Qanun Limited
-                    </span>
-                  </div>
+              {/* Neon-outlined frame */}
+              <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border-2 border-primary/70 bg-card shadow-[0_0_2px_hsl(var(--primary)),0_0_40px_hsl(var(--primary)/0.4)]">
+                <img
+                  src={`${import.meta.env.BASE_URL}images/avatar.png`}
+                  alt="Md. Ahashan Habib"
+                  className="w-full h-full object-cover object-top"
+                />
+                {/* holographic tint + scanlines */}
+                <div className="absolute inset-0 bg-gradient-to-t from-primary/30 via-transparent to-accent/15 mix-blend-screen" />
+                <div className="holo-scanlines absolute inset-0 opacity-30" />
+                {/* HUD corner brackets */}
+                <span className="pointer-events-none absolute left-3 top-3 h-6 w-6 border-l-2 border-t-2 border-primary" />
+                <span className="pointer-events-none absolute right-3 top-3 h-6 w-6 border-r-2 border-t-2 border-primary" />
+                <span className="pointer-events-none absolute bottom-3 left-3 h-6 w-6 border-b-2 border-l-2 border-primary" />
+                <span className="pointer-events-none absolute bottom-3 right-3 h-6 w-6 border-b-2 border-r-2 border-primary" />
+                {/* status badge */}
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 whitespace-nowrap">
+                  <span className="flex items-center gap-2 rounded-full border border-primary/50 bg-card/80 px-4 py-2 text-xs font-medium text-foreground shadow-[0_0_16px_hsl(var(--primary)/0.3)] backdrop-blur-md">
+                    <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                    Currently at Qanun Limited
+                  </span>
                 </div>
               </div>
             </div>
@@ -68,10 +64,10 @@ export function About() {
               AI/ML Engineer &amp; Backend Developer
             </h3>
             <p className="text-muted-foreground leading-relaxed text-base sm:text-lg">
-              AI/ML Engineer building production systems with LLMs, RAG, and deep learning. Full-stack developer experienced in scalable ML applications, medical AI platforms, and research. I bring together clean software engineering and cutting-edge AI.
+              I'm an AI/ML engineer who cares about the part most people skip — getting models out of the notebook and into production. Over the past year I've worked hands-on with LLMs, retrieval-augmented generation, and deep learning, including medical AI platforms, while building and maintaining the backend that keeps it all running reliably.
             </p>
             <p className="mt-4 text-muted-foreground leading-relaxed text-base sm:text-lg">
-              I care about turning research into reliable, scalable products — from data pipelines and model training to the APIs and interfaces that put them in front of real users.
+              What keeps me interested is the distance between a promising result and a product someone can actually depend on. I like owning that whole path: shaping the data, training and evaluating the model, and building the APIs and interfaces that put it in front of real users. These days I'm doing exactly that as an AI Project Co-ordinator at Qanun Limited.
             </p>
           </motion.div>
         </div>
