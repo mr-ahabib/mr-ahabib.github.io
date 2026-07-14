@@ -9,8 +9,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
  * `window.__spawnBug()` in the console to force a bug to appear.
  */
 const FIRST_SPAWN_MS: [number, number] = [25_000, 50_000];
-const RESPAWN_MS: [number, number] = [35_000, 45_000];
-const MAX_SPAWNS = 5; // per page load
+const RESPAWN_MS: [number, number] = [20_000, 30_000];
+const MAX_SPAWNS = 10; // per page load
 const LIFETIME_MS = 70_000; // after this the bug scurries off-screen
 const SIZE = 30; // sprite box in px
 
