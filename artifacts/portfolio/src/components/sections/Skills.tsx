@@ -1,5 +1,14 @@
 import { motion } from "framer-motion";
 import { Code2, Database, Layers, Brain, Wrench } from "lucide-react";
+import {
+  Radar,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  ResponsiveContainer,
+  Tooltip,
+} from "recharts";
 
 const CATEGORIES = [
   {
@@ -30,57 +39,87 @@ const CATEGORIES = [
 ];
 
 const KEY_SKILLS = [
-  { name: "Python", value: 92 },
-  { name: "Machine Learning", value: 88 },
-  { name: "React", value: 85 },
-  { name: "LLM / RAG", value: 90 },
-  { name: "Backend Dev", value: 83 },
-  { name: "Research", value: 86 },
+  { skill: "Python", value: 92 },
+  { skill: "Machine Learning", value: 88 },
+  { skill: "React", value: 85 },
+  { skill: "LLM / RAG", value: 90 },
+  { skill: "Backend Dev", value: 83 },
+  { skill: "Research", value: 86 },
 ];
 
-function CircularProgress({ name, value, index }: { name: string; value: number; index: number }) {
-  const radius = 36;
-  const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference - (value / 100) * circumference;
-  const gradId = `ring-grad-${index}`;
-
+function CapabilityRadar() {
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.8 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.1 }}
-      className="flex flex-col items-center gap-2"
-    >
-      <div className="relative w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center">
-        <svg className="w-full h-full -rotate-90">
-          <defs>
-            <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="hsl(var(--primary))" />
-              <stop offset="100%" stopColor="hsl(var(--accent))" />
-            </linearGradient>
-          </defs>
-          <circle cx="50%" cy="50%" r={radius} stroke="currentColor" strokeWidth="6" fill="transparent" className="text-primary/10" />
-          <motion.circle
-            initial={{ strokeDashoffset: circumference }}
-            whileInView={{ strokeDashoffset }}
-            viewport={{ once: true }}
-            transition={{ duration: 1.5, ease: "easeOut", delay: index * 0.1 + 0.2 }}
-            cx="50%"
-            cy="50%"
-            r={radius}
-            stroke={`url(#${gradId})`}
-            strokeWidth="6"
-            fill="transparent"
-            strokeDasharray={circumference}
-            strokeLinecap="round"
-            style={{ filter: "drop-shadow(0 0 5px hsl(var(--primary) / 0.5))" }}
-          />
-        </svg>
-        <span className="absolute text-sm font-display font-bold text-gradient">{value}%</span>
+    <div className="relative mx-auto mb-16 sm:mb-20 max-w-3xl rounded-2xl bg-gradient-to-br from-primary/40 via-border/50 to-accent/40 p-px shadow-xl shadow-primary/10">
+      <div className="relative overflow-hidden rounded-[calc(1rem-1px)] bg-card/80 p-5 sm:p-7 backdrop-blur-xl">
+        {/* HUD corner brackets */}
+        <span className="pointer-events-none absolute left-4 top-4 h-4 w-4 border-l-2 border-t-2 border-primary/40" />
+        <span className="pointer-events-none absolute right-4 top-4 h-4 w-4 border-r-2 border-t-2 border-primary/40" />
+        <span className="pointer-events-none absolute bottom-4 left-4 h-4 w-4 border-b-2 border-l-2 border-primary/40" />
+        <span className="pointer-events-none absolute bottom-4 right-4 h-4 w-4 border-b-2 border-r-2 border-primary/40" />
+
+        <div className="mb-2 flex items-center justify-between">
+          <span className="eyebrow">capability_matrix</span>
+          <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+            6 vectors tracked
+          </span>
+        </div>
+
+        <div className="h-[320px] w-full sm:h-[380px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <RadarChart data={KEY_SKILLS} outerRadius="72%">
+              <defs>
+                <linearGradient id="radarFill" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.55} />
+                  <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity={0.55} />
+                </linearGradient>
+              </defs>
+              <PolarGrid stroke="hsl(var(--border))" strokeOpacity={0.6} />
+              <PolarAngleAxis
+                dataKey="skill"
+                tick={{
+                  fill: "hsl(var(--muted-foreground))",
+                  fontSize: 11,
+                  fontFamily: "var(--font-mono)",
+                }}
+              />
+              <PolarRadiusAxis domain={[0, 100]} tick={false} axisLine={false} />
+              <Radar
+                dataKey="value"
+                stroke="hsl(var(--primary))"
+                strokeWidth={2}
+                fill="url(#radarFill)"
+                fillOpacity={0.65}
+                dot={{ r: 3, fill: "hsl(var(--primary))", strokeWidth: 0 }}
+                isAnimationActive
+                animationDuration={1200}
+              />
+              <Tooltip
+                cursor={false}
+                contentStyle={{
+                  background: "hsl(var(--card))",
+                  border: "1px solid hsl(var(--border))",
+                  borderRadius: 10,
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 12,
+                }}
+                labelStyle={{ color: "hsl(var(--foreground))" }}
+                itemStyle={{ color: "hsl(var(--primary))" }}
+                formatter={(v: number) => [`${v}%`, "proficiency"]}
+              />
+            </RadarChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Numeric legend */}
+        <div className="mt-2 flex flex-wrap justify-center gap-x-5 gap-y-2 font-mono text-xs text-muted-foreground">
+          {KEY_SKILLS.map((s) => (
+            <span key={s.skill}>
+              <span className="text-primary font-semibold">{s.value}%</span> {s.skill}
+            </span>
+          ))}
+        </div>
       </div>
-      <span className="font-mono text-[11px] sm:text-xs text-muted-foreground text-center leading-tight px-1">{name}</span>
-    </motion.div>
+    </div>
   );
 }
 
@@ -103,12 +142,14 @@ export function Skills() {
           <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded-full" />
         </motion.div>
 
-        {/* Key skill rings */}
-        <div className="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6 mb-16 sm:mb-20">
-          {KEY_SKILLS.map((skill, index) => (
-            <CircularProgress key={skill.name} name={skill.name} value={skill.value} index={index} />
-          ))}
-        </div>
+        {/* Capability radar */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          <CapabilityRadar />
+        </motion.div>
 
         {/* Skill category cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-7">
