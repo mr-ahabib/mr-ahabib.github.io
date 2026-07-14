@@ -50,7 +50,7 @@ function renderLine(line: Line, shown: string, showCursor: boolean) {
   if (line.kind === "name") {
     return (
       <>
-        <span className="text-gradient text-lg font-semibold sm:text-xl">{shown}</span>
+        <span className="text-gradient text-lg font-semibold sm:text-xl [filter:drop-shadow(0_0_9px_hsl(var(--primary)/0.55))]">{shown}</span>
         {cursor}
       </>
     );
@@ -116,19 +116,15 @@ export function HeroTerminal() {
 
   return (
     <div className="relative w-full max-w-xl">
-      {/* Ambient halo behind the panel */}
-      <div className="pointer-events-none absolute -inset-5 rounded-[2rem] bg-gradient-to-br from-primary/25 via-transparent to-accent/25 opacity-70 blur-2xl" />
-
-      {/* Gradient border wrapper */}
-      <div className="relative rounded-2xl bg-gradient-to-br from-primary/60 via-border/50 to-accent/60 p-px shadow-2xl shadow-primary/20">
-        <div className="relative overflow-hidden rounded-[calc(1rem-1px)] bg-card/85 font-mono text-sm backdrop-blur-xl">
+      {/* Neon-outlined panel */}
+      <div className="relative overflow-hidden rounded-2xl border border-primary/70 bg-card/85 font-mono text-sm backdrop-blur-xl shadow-[0_0_2px_hsl(var(--primary)),0_0_24px_hsl(var(--primary)/0.35),inset_0_0_30px_hsl(var(--primary)/0.06)]">
           {/* Glassy top sheen */}
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
           {/* Faint CRT scanline texture */}
-          <div className="holo-scanlines pointer-events-none absolute inset-0 opacity-[0.04]" />
+          <div className="holo-scanlines pointer-events-none absolute inset-0 opacity-[0.05]" />
 
           {/* Title bar */}
-          <div className="relative flex items-center gap-2 border-b border-border/70 bg-background/50 px-4 py-3">
+          <div className="relative flex items-center gap-2 border-b border-primary/25 bg-background/50 px-4 py-3">
             <span className="h-3 w-3 rounded-full bg-red-400/90 ring-1 ring-inset ring-black/10" />
             <span className="h-3 w-3 rounded-full bg-yellow-400/90 ring-1 ring-inset ring-black/10" />
             <span className="h-3 w-3 rounded-full bg-emerald-400/90 ring-1 ring-inset ring-black/10" />
@@ -160,7 +156,6 @@ export function HeroTerminal() {
               );
             })}
           </div>
-        </div>
       </div>
     </div>
   );

@@ -11,6 +11,24 @@ export function Hero() {
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/[0.06] rounded-full blur-[80px]" />
       </div>
 
+      {/* Cyberpunk neon grid floor */}
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-56 overflow-hidden [perspective:340px]"
+        style={{
+          maskImage: "linear-gradient(to top, black, transparent)",
+          WebkitMaskImage: "linear-gradient(to top, black, transparent)",
+        }}
+      >
+        <div
+          className="absolute inset-x-[-50%] bottom-[-40%] h-[180%] opacity-50 [transform:rotateX(74deg)]"
+          style={{
+            backgroundImage:
+              "linear-gradient(hsl(var(--primary)/0.55) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)/0.55) 1px, transparent 1px)",
+            backgroundSize: "44px 44px",
+          }}
+        />
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full py-10 sm:py-14">
         {/* Terminal + holographic avatar share a centered row so they line up */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
@@ -70,10 +88,8 @@ export function Hero() {
               className="holo-flicker relative z-10"
             >
               <div className="relative w-56 h-72 sm:w-72 sm:h-96">
-                {/* glow frame */}
-                <div className="absolute -inset-3 rounded-3xl bg-gradient-to-br from-primary/40 to-accent/40 blur-2xl opacity-50" />
                 <div
-                  className="relative w-full h-full rounded-3xl overflow-hidden border border-primary/40 shadow-[0_0_45px_hsl(var(--primary)/0.28)]"
+                  className="relative w-full h-full rounded-3xl overflow-hidden border-2 border-primary/80 shadow-[0_0_2px_hsl(var(--primary)),0_0_38px_hsl(var(--primary)/0.5)]"
                   style={{
                     maskImage: "linear-gradient(to bottom, black 66%, transparent 99%)",
                     WebkitMaskImage: "linear-gradient(to bottom, black 66%, transparent 99%)",
