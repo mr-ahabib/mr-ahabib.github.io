@@ -41,9 +41,11 @@ export function Achievements() {
           viewport={{ once: true }}
           className="text-center mb-12 sm:mb-16"
         >
-          <p className="text-primary font-semibold tracking-widest text-sm uppercase mb-3">Honours</p>
+          <div className="flex justify-center mb-3">
+            <span className="eyebrow">Honours</span>
+          </div>
           <h2 className="text-3xl md:text-5xl font-display font-bold mb-4 text-foreground">
-            Awards & <span className="text-gradient">Achievements</span>
+            Awards &amp; <span className="text-gradient">Achievements</span>
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded-full" />
         </motion.div>
@@ -57,9 +59,12 @@ export function Achievements() {
               viewport={{ once: true }}
               transition={{ delay: index * 0.12 }}
               whileHover={{ y: -6 }}
-              className={`glass-card rounded-2xl p-6 flex flex-col gap-4 border ${item.accent} hover:shadow-lg transition-all duration-300`}
+              className="neon-glow-sm group relative flex flex-col gap-4 rounded-2xl border border-primary/45 bg-card/80 p-6 backdrop-blur-xl transition-colors duration-300 hover:border-primary"
             >
-              <div className="w-14 h-14 rounded-2xl bg-white/80 shadow-sm flex items-center justify-center border border-border/40">
+              {/* HUD corner bracket */}
+              <span className="pointer-events-none absolute right-4 top-4 h-4 w-4 border-r-2 border-t-2 border-primary/40" />
+
+              <div className="clip-hud-sm grid h-14 w-14 place-items-center bg-primary/12">
                 {item.icon}
               </div>
 
@@ -71,7 +76,7 @@ export function Achievements() {
                 <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
               </div>
 
-              <span className={`self-start text-xs font-semibold px-3 py-1 rounded-full border ${item.badge}`}>
+              <span className="clip-hud-sm self-start border border-primary/30 bg-primary/10 px-3 py-1 font-mono text-xs text-primary">
                 {item.date}
               </span>
             </motion.div>

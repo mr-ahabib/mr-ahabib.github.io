@@ -52,7 +52,7 @@ export function Chatbot() {
       return "Hi there! 👋 I'm Ahashan's assistant. You can ask me about his experience, skills, projects, publications, education, or contact info!";
     }
     if (text.match(/\b(experience|work|job)\b/)) {
-      return "Ahashan is currently an AI Project Co-ordinator at Qanun Limited (Feb 2026 – Present). Previously he was an AI/ML Engineer at Ethics Advance Innovation Hub Ltd. (Feb 2025 – Jan 2026) and a Research Assistant at United International University (Aug–Jan 2025).";
+      return "Ahashan is currently an AI & Software Engineer at As-Sunnah Foundation (May 2026 – Present). Previously he was an AI Project Co-ordinator at Qanun Limited (Feb–Apr 2026), an AI/ML Engineer at Ethics Advance Innovation Hub Ltd. (Feb 2025 – Jan 2026), and a Research Assistant at United International University (Aug 2024 – Jan 2025).";
     }
     if (text.match(/\b(skills|technology|tech)\b/)) {
       return "Ahashan is proficient in Python, TypeScript, Java, C++, and more. He specializes in AI/ML: LLMs, RAG, LangChain, PyTorch, TensorFlow. Frameworks: FastAPI, Django, React, Next.js, React Native, Node.js.";
@@ -91,51 +91,64 @@ export function Chatbot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="fixed bottom-24 right-6 w-[350px] max-w-[calc(100vw-3rem)] bg-white rounded-2xl shadow-2xl border border-border z-50 overflow-hidden flex flex-col h-[500px] max-h-[60vh]"
+            className="neon-glow fixed bottom-24 right-6 z-50 flex h-[500px] max-h-[60vh] w-[350px] max-w-[calc(100vw-3rem)] flex-col overflow-hidden rounded-2xl border border-primary/60 bg-card/95 backdrop-blur-xl"
           >
             {/* Header */}
-            <div className="bg-primary p-4 text-primary-foreground flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <Bot size={20} />
-                <h3 className="font-semibold">Ask about Ahashan</h3>
+            <div className="flex items-center justify-between border-b border-primary/25 bg-background/60 px-4 py-3">
+              <div className="flex items-center gap-2 font-mono text-sm">
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+                </span>
+                <span className="text-primary">~/</span>
+                <span className="font-semibold text-foreground">assistant</span>
               </div>
-              <button 
+              <button
                 onClick={() => setIsOpen(false)}
-                className="text-primary-foreground/80 hover:text-white transition-colors"
+                aria-label="Close assistant"
+                className="text-muted-foreground transition-colors hover:text-primary"
               >
-                <X size={20} />
+                <X size={18} />
               </button>
             </div>
 
             {/* Messages */}
-            <div className="flex-grow p-4 overflow-y-auto bg-secondary/30 flex flex-col gap-4">
+            <div className="flex flex-grow flex-col gap-4 overflow-y-auto bg-background/40 p-4">
               {messages.map((msg) => (
-                <div 
-                  key={msg.id} 
+                <div
+                  key={msg.id}
                   className={`flex gap-2 max-w-[85%] ${msg.sender === "user" ? "ml-auto flex-row-reverse" : "mr-auto"}`}
                 >
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${msg.sender === "user" ? "bg-primary text-white" : "bg-white border border-border text-primary"}`}>
+                  <div
+                    className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg ${
+                      msg.sender === "user"
+                        ? "bg-primary text-primary-foreground"
+                        : "border border-primary/50 bg-card text-primary"
+                    }`}
+                  >
                     {msg.sender === "user" ? <User size={16} /> : <Bot size={16} />}
                   </div>
-                  <div className={`p-3 rounded-2xl text-sm ${
-                    msg.sender === "user" 
-                      ? "bg-primary text-white rounded-tr-none" 
-                      : "bg-white border border-border text-foreground rounded-tl-none"
-                  }`}>
+                  <div
+                    className={`rounded-2xl p-3 text-sm leading-relaxed ${
+                      msg.sender === "user"
+                        ? "rounded-tr-none bg-primary text-primary-foreground"
+                        : "rounded-tl-none border border-primary/25 bg-card/80 text-foreground"
+                    }`}
+                  >
                     {msg.text}
                   </div>
                 </div>
               ))}
-              
+
               {isTyping && (
-                <div className="flex gap-2 mr-auto max-w-[85%]">
-                  <div className="w-8 h-8 rounded-full bg-white border border-border text-primary flex items-center justify-center flex-shrink-0">
+                <div className="mr-auto flex max-w-[85%] gap-2">
+                  <div className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-primary/50 bg-card text-primary">
                     <Bot size={16} />
                   </div>
-                  <div className="p-4 rounded-2xl rounded-tl-none bg-white border border-border flex gap-1 items-center">
-                    <motion.div className="w-2 h-2 bg-primary/40 rounded-full" animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0 }} />
-                    <motion.div className="w-2 h-2 bg-primary/60 rounded-full" animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0.2 }} />
-                    <motion.div className="w-2 h-2 bg-primary/80 rounded-full" animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0.4 }} />
+                  <div className="flex items-center gap-1 rounded-2xl rounded-tl-none border border-primary/25 bg-card/80 p-4">
+                    <motion.div className="h-2 w-2 rounded-full bg-primary/50" animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0 }} />
+                    <motion.div className="h-2 w-2 rounded-full bg-primary/70" animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0.2 }} />
+                    <motion.div className="h-2 w-2 rounded-full bg-primary" animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0.4 }} />
                   </div>
                 </div>
               )}
@@ -143,20 +156,21 @@ export function Chatbot() {
             </div>
 
             {/* Input */}
-            <form onSubmit={handleSend} className="p-3 bg-white border-t border-border flex gap-2">
+            <form onSubmit={handleSend} className="flex gap-2 border-t border-primary/25 bg-background/60 p-3">
               <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask me anything..."
-                className="flex-grow px-4 py-2 bg-secondary rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 text-foreground"
+                placeholder="ask me anything..."
+                className="flex-grow rounded-xl border border-border bg-secondary/40 px-4 py-2 font-mono text-sm text-foreground placeholder:text-muted-foreground/60 focus:border-primary focus:outline-none"
               />
-              <button 
+              <button
                 type="submit"
                 disabled={!input.trim()}
-                className="p-2 bg-primary text-white rounded-xl hover:bg-primary/90 transition-colors disabled:opacity-50 flex-shrink-0"
+                aria-label="Send"
+                className="neon-glow-sm grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-40"
               >
-                <Send size={18} />
+                <Send size={17} />
               </button>
             </form>
           </motion.div>
@@ -168,7 +182,8 @@ export function Chatbot() {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 w-14 h-14 bg-primary text-white rounded-full shadow-lg shadow-primary/30 flex items-center justify-center z-50 hover:shadow-xl transition-shadow"
+        aria-label={isOpen ? "Close assistant" : "Open assistant"}
+        className="neon-glow fixed bottom-6 right-6 z-50 grid h-14 w-14 place-items-center rounded-full border border-primary/60 bg-primary text-primary-foreground"
       >
         {isOpen ? <X size={24} /> : <MessageSquare size={24} />}
       </motion.button>

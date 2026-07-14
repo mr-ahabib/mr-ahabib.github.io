@@ -12,6 +12,7 @@ import { Achievements } from "@/components/sections/Achievements";
 import { Publications } from "@/components/sections/Publications";
 import { Contact } from "@/components/sections/Contact";
 import { Chatbot } from "@/components/Chatbot";
+import { BugGame } from "@/components/BugGame";
 
 export default function Portfolio() {
   return (
@@ -40,6 +41,7 @@ export default function Portfolio() {
       </div>
 
       <Chatbot />
+      <BugGame />
     </div>
   );
 }

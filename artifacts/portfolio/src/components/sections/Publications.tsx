@@ -50,13 +50,15 @@ export function Publications() {
           viewport={{ once: true }}
           className="text-center mb-12 sm:mb-16"
         >
-          <p className="text-primary font-semibold tracking-widest text-sm uppercase mb-3">Research</p>
+          <div className="flex justify-center mb-3">
+            <span className="eyebrow">Research</span>
+          </div>
           <h2 className="text-3xl md:text-5xl font-display font-bold mb-4 text-foreground">
             Research <span className="text-gradient">Publications</span>
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded-full" />
-          <p className="text-muted-foreground mt-4 text-sm">
-            3 peer-reviewed papers published in IEEE conferences
+          <p className="text-muted-foreground mt-4 font-mono text-xs uppercase tracking-wider">
+            3 peer-reviewed papers · IEEE conferences
           </p>
         </motion.div>
 
@@ -69,43 +71,43 @@ export function Publications() {
               viewport={{ once: true }}
               transition={{ delay: index * 0.12 }}
               whileHover={{ y: -3 }}
-              className="glass-card rounded-2xl p-5 sm:p-7 hover:shadow-lg hover:border-primary/25 transition-all duration-300 relative overflow-hidden"
+              className="neon-glow-sm group relative overflow-hidden rounded-2xl border border-primary/45 bg-card/80 p-5 sm:p-7 backdrop-blur-xl transition-colors duration-300 hover:border-primary"
             >
               {/* Left accent bar */}
-              <div className={`absolute top-0 left-0 w-1 h-full bg-gradient-to-b ${pub.color}`} />
+              <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary to-accent" />
 
               <div className="flex flex-col sm:flex-row gap-4 sm:gap-5">
                 {/* Icon */}
-                <div className={`shrink-0 self-start p-3 rounded-xl bg-gradient-to-br ${pub.color} text-primary`}>
+                <div className="clip-hud-sm grid h-12 w-12 shrink-0 self-start place-items-center bg-primary/12 text-primary">
                   {pub.icon}
                 </div>
 
                 {/* Content */}
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-base sm:text-lg font-bold text-foreground leading-snug mb-2">
+                  <h3 className="text-base sm:text-lg font-display font-bold text-foreground leading-snug mb-2">
                     {pub.title}
                   </h3>
                   <p className="text-sm text-muted-foreground italic mb-3">{pub.authors}</p>
 
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className={`text-xs font-bold px-2.5 py-1 rounded-lg border ${pub.accentColor}`}>
+                    <span className="clip-hud-sm border border-primary/30 bg-primary/10 px-2.5 py-1 font-mono text-xs font-semibold text-primary">
                       {pub.venue}
                     </span>
                     <span className="text-xs text-muted-foreground">{pub.venueFullName}</span>
                   </div>
 
-                  <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-muted-foreground">
+                  <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 font-mono text-xs text-muted-foreground">
                     <span className="flex items-center gap-1">
-                      <span className="font-semibold text-foreground/70">Publisher:</span> {pub.publisher}
+                      <span className="text-primary">&gt; publisher</span> {pub.publisher}
                     </span>
-                    <span className="w-1 h-1 rounded-full bg-border" />
+                    <span className="w-1 h-1 rounded-full bg-primary/50" />
                     <span>{pub.location}</span>
-                    <span className="w-1 h-1 rounded-full bg-border" />
-                    <span className="font-semibold px-2 py-0.5 bg-secondary rounded border border-border">{pub.year}</span>
+                    <span className="w-1 h-1 rounded-full bg-primary/50" />
+                    <span className="clip-hud-sm border border-border/70 bg-secondary/50 px-2 py-0.5 text-primary">{pub.year}</span>
                   </div>
                 </div>
 
-                <ExternalLink size={16} className="text-muted-foreground/40 shrink-0 self-start mt-1 hidden sm:block" />
+                <ExternalLink size={16} className="text-muted-foreground/50 shrink-0 self-start mt-1 hidden sm:block group-hover:text-primary transition-colors" />
               </div>
             </motion.div>
           ))}
