@@ -46,9 +46,22 @@ The recent commit history ("path fixed") is entirely about getting this base-pat
 - Single route (`/`) rendering `src/pages/Portfolio.tsx`, which composes ordered section components from `src/components/sections/` (Hero, About, Experience, Education, Skills, Services, Projects, Achievements, Publications, Contact) plus `layout/Navbar`, `layout/Footer`, a global `AnimatedBackground`, and the floating `Chatbot`.
 - **The personal/content data (job titles, projects, publications, etc.) is hardcoded inside the section components and the Chatbot's `getResponse`.** Updating the portfolio's content means editing those component files directly — there is no CMS or data file.
 - UI is **shadcn/ui (new-york style)** in `src/components/ui/` over Radix primitives. `components.json` defines aliases; `@/*` → `src/*`, `@assets` → `../../attached_assets`.
-- Styling is **Tailwind CSS v4** (via `@tailwindcss/vite`, no `tailwind.config.js`). Theme tokens are HSL CSS variables defined in `src/index.css` under `@theme inline` + `:root`. Fonts: DM Sans (body), Outfit (display).
-- Animations use **framer-motion**; data-fetching scaffolding uses `@tanstack/react-query` (client is set up but there's no real API).
+- Styling is **Tailwind CSS v4** (via `@tailwindcss/vite`, no `tailwind.config.js`). Theme tokens are HSL CSS variables in `src/index.css`. Fonts: **Sora** (`--font-display`, headings), **Inter** (`--font-sans`, body), **JetBrains Mono** (`--font-mono`, labels/HUD text).
+- Animations use **framer-motion**; the Skills radar uses **recharts**; data-fetching scaffolding uses `@tanstack/react-query` (client is set up but there's no real API).
 - React 19, Vite 7, wouter for routing.
+
+## Design system (visual conventions)
+
+The whole portfolio follows one deliberate look: **glossy-blue, neon, cyberpunk — dark-first**. All of it is token/utility-driven in `src/index.css`, so match these conventions when adding or editing UI rather than inventing new styles.
+
+- **Theme:** dark is default; light/dark toggle via `next-themes` (`attribute="class"`, wired in `App.tsx`). Dark tokens live under `:root, .dark`; light under `.light`. `@custom-variant dark` makes `dark:` utilities respond to the class. Every component must read correct in **both** themes — use tokens (`bg-card`, `text-foreground`, `border-primary`…), never hardcoded `bg-white`/`text-white` (removing those was most of the redesign).
+- **Palette:** primary = glossy blue, accent = brighter azure (no violet). Gradients go `from-primary to-accent`.
+- **NO diffuse background glow** — this is an explicit, repeated user rule. No large blurred `box-shadow` blooms (`0 0 40px`), radial glow blobs, `-inset blur` halos, or glowing grid backdrops behind content. See the `portfolio-visual-style` memory.
+- **Neon EDGE glow is wanted** — a tight glow hugging outlines. Use the `.neon-glow` / `.neon-glow-sm` utilities (defined in `index.css`), not ad-hoc big shadows.
+- **Reusable utilities in `index.css`** (prefer these): `.eyebrow` (mono `// LABEL` section kicker), `.text-gradient` (blue→azure heading text), `.glass-card`, `.clip-hud` / `.clip-hud-sm` (angular cut-corner HUD shape), `.neon-glow*`, `.neon-text`, and the `holo-scanbar` / `holo-flicker` / `holo-scanlines` keyframes (holographic/CRT effects). All respect `prefers-reduced-motion` where relevant.
+- **Section pattern:** centered `.eyebrow` + gradient heading + gradient divider, then content in **neon-bordered glass cards** (`border-primary/… bg-card/80 backdrop-blur` + `.neon-glow-sm`) with a top-right HUD corner bracket, cut-corner icon tiles (`.clip-hud-sm`), and mono meta/labels.
+- **Notable custom pieces:** `components/HeroTerminal.tsx` (looping token-streamed terminal intro; renders all lines at fixed height so the panel never resizes), the `AnimatedBackground` canvas particle-network (theme-aware, reads accent color via a probe element), and the Skills capability **radar** chart.
+- The `docs/superpowers/specs/` folder holds the redesign spec; the persistent memory `portfolio-visual-style` records the glossy-blue / neon-edge / no-background-glow rules.
 
 ## Monorepo TypeScript (only relevant if touching lib/* packages)
 
