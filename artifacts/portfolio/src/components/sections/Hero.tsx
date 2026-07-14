@@ -104,24 +104,34 @@ export function Hero() {
           transition={{ delay: 0.5, duration: 0.5 }}
           className="mt-9 lg:mt-12 w-full max-w-xl"
         >
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-4 sm:gap-5">
+            {/* Primary — filled gradient HUD button */}
             <a
               href="https://mr-ahabib.github.io/images/AhashanHabib.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-primary/30 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/40"
+              className="clip-hud group relative inline-flex items-center gap-2 overflow-hidden bg-gradient-to-r from-primary to-accent px-7 py-3.5 text-sm font-semibold text-white transition-transform duration-300 hover:-translate-y-0.5 [filter:drop-shadow(0_10px_22px_hsl(var(--primary)/0.4))]"
             >
               {/* sheen sweep on hover */}
               <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
               <Download size={18} className="transition-transform duration-300 group-hover:translate-y-0.5" />
               Download CV
             </a>
+
+            {/* Secondary — angular gradient-border HUD button */}
             <a
               href="#contact"
-              className="group inline-flex items-center gap-2 rounded-full border border-border bg-card/40 px-6 py-3 text-sm font-semibold text-foreground backdrop-blur transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/60 hover:bg-primary/10"
+              className="group relative inline-flex items-center transition-transform duration-300 hover:-translate-y-0.5"
             >
-              Contact Me
-              <ArrowRight size={17} className="transition-transform duration-300 group-hover:translate-x-1" />
+              {/* border layer */}
+              <span className="clip-hud absolute inset-0 bg-border transition-colors duration-300 group-hover:bg-primary/70" />
+              {/* fill layer */}
+              <span className="clip-hud absolute inset-[1.5px] bg-card/70 backdrop-blur transition-colors duration-300 group-hover:bg-primary/10" />
+              {/* content */}
+              <span className="relative inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold text-foreground">
+                Contact Me
+                <ArrowRight size={17} className="transition-transform duration-300 group-hover:translate-x-1" />
+              </span>
             </a>
           </div>
 

@@ -145,6 +145,18 @@
     @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent;
   }
 
+  /* Futuristic HUD button shape — cut top-left and bottom-right corners */
+  .clip-hud {
+    clip-path: polygon(
+      12px 0,
+      100% 0,
+      100% calc(100% - 12px),
+      calc(100% - 12px) 100%,
+      0 100%,
+      0 12px
+    );
+  }
+
   /* Barely-there alternating section tint that works in both themes */
   section:nth-child(even) {
     background: hsl(var(--foreground) / 0.02);
