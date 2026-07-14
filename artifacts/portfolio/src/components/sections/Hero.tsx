@@ -1,13 +1,6 @@
 import { motion } from "framer-motion";
-import { Download, Mail, Github, Linkedin, Globe } from "lucide-react";
+import { Download, ArrowRight } from "lucide-react";
 import { HeroTerminal } from "@/components/HeroTerminal";
-
-const SOCIALS = [
-  { href: "https://github.com/mr-ahabib", icon: <Github size={18} />, label: "GitHub" },
-  { href: "https://www.linkedin.com/in/md-ahashan-habib-9a81212a5/", icon: <Linkedin size={18} />, label: "LinkedIn" },
-  { href: "https://mr-ahabib.github.io/", icon: <Globe size={18} />, label: "Website" },
-  { href: "mailto:mr.ahashan261@gmail.com", icon: <Mail size={18} />, label: "Email" },
-];
 
 export function Hero() {
   return (
@@ -26,7 +19,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="order-2 lg:order-1"
+            className="order-2 lg:order-1 w-full max-w-xl"
           >
             {/* Terminal intro (streams in on load) */}
             <HeroTerminal />
@@ -42,31 +35,20 @@ export function Hero() {
                 href="https://mr-ahabib.github.io/images/AhashanHabib.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl font-semibold bg-primary text-primary-foreground shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-2 text-sm sm:text-base"
+                className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-primary/30 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/40"
               >
-                <Download size={18} />
+                {/* sheen sweep on hover */}
+                <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+                <Download size={18} className="transition-transform duration-300 group-hover:translate-y-0.5" />
                 Download CV
               </a>
               <a
                 href="#contact"
-                className="px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl font-semibold bg-card/60 backdrop-blur border border-border text-foreground hover:border-primary/50 hover:bg-primary/5 hover:-translate-y-0.5 transition-all duration-300 text-sm sm:text-base"
+                className="group inline-flex items-center gap-2 rounded-full border border-border bg-card/40 px-6 py-3 text-sm font-semibold text-foreground backdrop-blur transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/60 hover:bg-primary/10"
               >
                 Contact Me
+                <ArrowRight size={17} className="transition-transform duration-300 group-hover:translate-x-1" />
               </a>
-              <div className="flex gap-2.5">
-                {SOCIALS.map((social) => (
-                  <a
-                    key={social.label}
-                    href={social.href}
-                    target={social.href.startsWith("http") ? "_blank" : undefined}
-                    rel={social.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                    className="p-2.5 rounded-full bg-card/60 backdrop-blur border border-border text-muted-foreground hover:text-primary hover:border-primary/50 hover:bg-primary/5 transition-all duration-300"
-                    title={social.label}
-                  >
-                    {social.icon}
-                  </a>
-                ))}
-              </div>
             </motion.div>
 
             {/* Stats row */}
