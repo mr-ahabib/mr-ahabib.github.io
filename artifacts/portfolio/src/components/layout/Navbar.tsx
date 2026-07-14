@@ -88,8 +88,19 @@ export function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
-          <a href="#home" className="text-xl sm:text-2xl font-display font-bold text-foreground flex items-center shrink-0">
-            AHASHAN HABIB<span className="text-primary text-2xl sm:text-3xl leading-none">.</span>
+          <a
+            href="#home"
+            className="group flex shrink-0 items-center gap-2.5 font-mono"
+            aria-label="Ahashan Habib — home"
+          >
+            <span className="relative flex h-2.5 w-2.5" aria-hidden="true">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.7)]" />
+            </span>
+            <span className="text-base font-semibold tracking-tight sm:text-lg">
+              <span className="text-primary">~/</span>
+              <span className="text-foreground">ahashan-habib</span>
+            </span>
           </a>
 
           <div className="flex items-center gap-2">
