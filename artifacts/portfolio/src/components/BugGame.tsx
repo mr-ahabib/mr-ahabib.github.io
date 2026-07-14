@@ -9,10 +9,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
  * `window.__spawnBug()` in the console to force a bug to appear.
  */
 const FIRST_SPAWN_MS: [number, number] = [25_000, 50_000];
-const RESPAWN_MS: [number, number] = [120_000, 240_000];
+const RESPAWN_MS: [number, number] = [35_000, 45_000];
 const MAX_SPAWNS = 5; // per page load
 const LIFETIME_MS = 70_000; // after this the bug scurries off-screen
-const SIZE = 40; // sprite box in px
+const SIZE = 30; // sprite box in px
 
 const rand = (a: number, b: number) => a + Math.random() * (b - a);
 const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
