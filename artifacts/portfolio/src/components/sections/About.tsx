@@ -46,7 +46,7 @@ export function About() {
                 <div className="absolute bottom-4 left-1/2 -translate-x-1/2 whitespace-nowrap">
                   <span className="flex items-center gap-2 rounded-full border border-primary/50 bg-card/90 px-4 py-2 text-xs font-medium text-foreground backdrop-blur-md">
                     <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                    Currently at Qanun Limited
+                    Currently at As-Sunnah Foundation
                   </span>
                 </div>
               </div>
@@ -68,7 +68,7 @@ export function About() {
               I'm an AI/ML engineer who cares about the part most people skip — getting models out of the notebook and into production. Over the past year I've worked hands-on with LLMs, retrieval-augmented generation, and deep learning, including medical AI platforms, while building and maintaining the backend that keeps it all running reliably.
             </p>
             <p className="mt-4 text-muted-foreground leading-relaxed text-base sm:text-lg">
-              What keeps me interested is the distance between a promising result and a product someone can actually depend on. I like owning that whole path: shaping the data, training and evaluating the model, and building the APIs and interfaces that put it in front of real users. These days I'm doing exactly that as an AI Project Co-ordinator at Qanun Limited.
+              What keeps me interested is the distance between a promising result and a product someone can actually depend on. I like owning that whole path: shaping the data, training and evaluating the model, and building the APIs and interfaces that put it in front of real users. These days I'm doing exactly that as an AI &amp; Software Engineer at As-Sunnah Foundation.
             </p>
 
             {/* Cyberpunk HUD data readout */}

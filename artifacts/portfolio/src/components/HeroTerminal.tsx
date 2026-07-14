@@ -7,7 +7,7 @@ type Line =
   | { kind: "out"; text: string };
 
 const LINES: Line[] = [
-  { kind: "comment", text: "# status: available · AI Project Co-ordinator @ Qanun Limited" },
+  { kind: "comment", text: "# status: available · AI & Software Engineer @ As-Sunnah Foundation" },
   { kind: "cmd", prompt: "$", text: "whoami" },
   { kind: "name", text: "Md. Ahashan Habib" },
   { kind: "cmd", prompt: "$", text: "cat role.txt" },

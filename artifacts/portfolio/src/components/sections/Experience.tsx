@@ -3,11 +3,23 @@ import { Briefcase, Calendar, MapPin } from "lucide-react";
 
 const EXPERIENCES = [
   {
-    role: "AI Project Co-ordinator",
-    company: "Qanun Limited",
-    date: "Feb 2026 – Present",
+    role: "AI & Software Engineer",
+    company: "As-Sunnah Foundation",
+    date: "May 2026 – Present",
     location: "Dhaka, Bangladesh",
     current: true,
+    bullets: [
+      "Building AI-powered products and internal tools — from LLM/RAG features to full-stack web applications.",
+      "Developing, deploying, and maintaining machine learning models integrated into production systems.",
+      "Owning backend services and APIs that power the organisation's software platforms.",
+    ],
+  },
+  {
+    role: "AI Project Co-ordinator",
+    company: "Qanun Limited",
+    date: "Feb 2026 – Apr 2026",
+    location: "Dhaka, Bangladesh",
+    current: false,
     bullets: [
       "Managed AI-based legal tech projects, including chatbot, OCR, and contract systems.",
       "Coordinated teams and ensured smooth project execution and delivery.",
