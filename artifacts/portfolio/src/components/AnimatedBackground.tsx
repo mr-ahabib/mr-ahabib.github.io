@@ -1,156 +1,164 @@
-import { useEffect } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { useEffect, useRef } from "react";
 
-const PARTICLES = Array.from({ length: 24 }, (_, i) => ({
-  id: i,
-  size: Math.random() * 3 + 1.5,
-  x: Math.random() * 100,
-  y: Math.random() * 100,
-  delay: Math.random() * 8,
-  duration: Math.random() * 10 + 14,
-  opacity: Math.random() * 0.2 + 0.06,
-  driftX: (Math.random() - 0.5) * 18,
-}));
+type Node = {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  r: number;
+};
+
+// Distance under which two nodes get connected by a line.
+const LINK_DIST = 140;
+// Roughly one node per this many square pixels (capped below).
+const AREA_PER_NODE = 26000;
+const MAX_NODES = 70;
 
 export function AnimatedBackground() {
-  const rawX = useMotionValue(0.5);
-  const rawY = useMotionValue(0.5);
-
-  // Three springs at different speeds for parallax
-  const fastX = useSpring(rawX, { damping: 40, stiffness: 80 });
-  const fastY = useSpring(rawY, { damping: 40, stiffness: 80 });
-
-  const midX = useSpring(rawX, { damping: 70, stiffness: 35 });
-  const midY = useSpring(rawY, { damping: 70, stiffness: 35 });
-
-  const slowX = useSpring(rawX, { damping: 120, stiffness: 14 });
-  const slowY = useSpring(rawY, { damping: 120, stiffness: 14 });
-
-  // Map normalised [0-1] → pixel offset centred at 0
-  const orb1X = useTransform(fastX, [0, 1], [-280, 280]);
-  const orb1Y = useTransform(fastY, [0, 1], [-180, 180]);
-
-  const orb2X = useTransform(midX, [0, 1], [-200, 200]);
-  const orb2Y = useTransform(midY, [0, 1], [-150, 150]);
-
-  const orb3X = useTransform(slowX, [0, 1], [-150, 150]);
-  const orb3Y = useTransform(slowY, [0, 1], [-100, 100]);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const colorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const onMove = (e: MouseEvent) => {
-      rawX.set(e.clientX / window.innerWidth);
-      rawY.set(e.clientY / window.innerHeight);
+    const canvas = canvasRef.current;
+    const probe = colorRef.current;
+    if (!canvas || !probe) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    let width = 0;
+    let height = 0;
+    let dpr = Math.min(window.devicePixelRatio || 1, 2);
+    let nodes: Node[] = [];
+    // [r,g,b] of the accent colour, re-read when the theme changes.
+    let rgb: [number, number, number] = [34, 211, 238];
+
+    const readColor = () => {
+      const parsed = getComputedStyle(probe)
+        .color.match(/\d+(\.\d+)?/g)
+        ?.map(Number);
+      if (parsed && parsed.length >= 3) {
+        rgb = [parsed[0], parsed[1], parsed[2]];
+      }
     };
-    window.addEventListener("mousemove", onMove);
-    return () => window.removeEventListener("mousemove", onMove);
-  }, [rawX, rawY]);
+
+    const seedNodes = () => {
+      const count = Math.min(
+        MAX_NODES,
+        Math.floor((width * height) / AREA_PER_NODE),
+      );
+      nodes = Array.from({ length: count }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.28,
+        vy: (Math.random() - 0.5) * 0.28,
+        r: Math.random() * 1.6 + 1,
+      }));
+    };
+
+    const resize = () => {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      seedNodes();
+    };
+
+    const draw = () => {
+      ctx.clearRect(0, 0, width, height);
+      const [r, g, b] = rgb;
+
+      // Links first so nodes sit on top.
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const a = nodes[i];
+          const c = nodes[j];
+          const dx = a.x - c.x;
+          const dy = a.y - c.y;
+          const dist = Math.hypot(dx, dy);
+          if (dist < LINK_DIST) {
+            const alpha = (1 - dist / LINK_DIST) * 0.16;
+            ctx.strokeStyle = `rgba(${r},${g},${b},${alpha})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(c.x, c.y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      for (const n of nodes) {
+        ctx.fillStyle = `rgba(${r},${g},${b},0.5)`;
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    };
+
+    const step = () => {
+      for (const n of nodes) {
+        n.x += n.vx;
+        n.y += n.vy;
+        if (n.x < 0 || n.x > width) n.vx *= -1;
+        if (n.y < 0 || n.y > height) n.vy *= -1;
+      }
+      draw();
+      raf = requestAnimationFrame(step);
+    };
+
+    let raf = 0;
+    readColor();
+    resize();
+
+    if (reduceMotion) {
+      draw();
+    } else {
+      raf = requestAnimationFrame(step);
+    }
+
+    window.addEventListener("resize", resize);
+    // Re-read the accent colour whenever the theme class flips.
+    const themeObserver = new MutationObserver(readColor);
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", resize);
+      themeObserver.disconnect();
+    };
+  }, []);
 
   return (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-      {/* Dot grid */}
+    <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+      {/* Ambient radial glows anchored to corners, tinted with the accent */}
       <div
-        className="absolute inset-0 opacity-[0.04]"
+        className="absolute -top-1/4 left-1/2 h-[70vh] w-[70vh] -translate-x-1/2 rounded-full opacity-40 blur-[120px]"
         style={{
-          backgroundImage: "radial-gradient(circle, #4f46e5 1px, transparent 1px)",
-          backgroundSize: "36px 36px",
+          background:
+            "radial-gradient(circle, hsl(var(--primary) / 0.18) 0%, transparent 70%)",
         }}
       />
-
-      {/* Orb 1 — primary, top-left anchor, fast */}
-      <motion.div
-        className="absolute rounded-full"
+      <div
+        className="absolute bottom-0 right-0 h-[55vh] w-[55vh] translate-x-1/4 translate-y-1/4 rounded-full opacity-30 blur-[120px]"
         style={{
-          width: 700,
-          height: 700,
-          left: "20%",
-          top: "10%",
-          x: orb1X,
-          y: orb1Y,
-          background: "radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%)",
-          filter: "blur(80px)",
-          translateX: "-50%",
-          translateY: "-50%",
+          background:
+            "radial-gradient(circle, hsl(var(--accent) / 0.16) 0%, transparent 70%)",
         }}
       />
-
-      {/* Orb 2 — blue, bottom-right anchor, medium */}
-      <motion.div
-        className="absolute rounded-full"
-        style={{
-          width: 550,
-          height: 550,
-          left: "75%",
-          top: "65%",
-          x: orb2X,
-          y: orb2Y,
-          background: "radial-gradient(circle, rgba(59,130,246,0.13) 0%, transparent 70%)",
-          filter: "blur(70px)",
-          translateX: "-50%",
-          translateY: "-50%",
-        }}
-      />
-
-      {/* Orb 3 — violet, bottom-left anchor, slow */}
-      <motion.div
-        className="absolute rounded-full"
-        style={{
-          width: 480,
-          height: 480,
-          left: "10%",
-          top: "75%",
-          x: orb3X,
-          y: orb3Y,
-          background: "radial-gradient(circle, rgba(139,92,246,0.10) 0%, transparent 70%)",
-          filter: "blur(60px)",
-          translateX: "-50%",
-          translateY: "-50%",
-        }}
-      />
-
-      {/* Spotlight that follows cursor tightly */}
-      <motion.div
-        className="absolute rounded-full pointer-events-none"
-        style={{
-          width: 300,
-          height: 300,
-          x: useTransform(fastX, [0, 1], [0, window.innerWidth || 1280]),
-          y: useTransform(fastY, [0, 1], [0, window.innerHeight || 768]),
-          background: "radial-gradient(circle, rgba(99,102,241,0.06) 0%, transparent 70%)",
-          filter: "blur(30px)",
-          translateX: "-50%",
-          translateY: "-50%",
-        }}
-      />
-
-      {/* Floating particles */}
-      {PARTICLES.map((p) => (
-        <motion.div
-          key={p.id}
-          className="absolute rounded-full bg-primary"
-          style={{
-            width: p.size,
-            height: p.size,
-            left: `${p.x}%`,
-            top: `${p.y}%`,
-            opacity: p.opacity,
-          }}
-          animate={{
-            y: [0, -28, 0],
-            x: [0, p.driftX, 0],
-            opacity: [p.opacity, p.opacity * 2.5, p.opacity],
-            scale: [1, 1.3, 1],
-          }}
-          transition={{
-            duration: p.duration,
-            delay: p.delay,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-      ))}
-
-      {/* Subtle ambient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.03] via-transparent to-violet-500/[0.03]" />
+      {/* Colour probe: canvas reads its computed colour to stay theme-aware */}
+      <div ref={colorRef} className="hidden text-primary" />
+      <canvas ref={canvasRef} className="absolute inset-0" />
     </div>
   );
 }
