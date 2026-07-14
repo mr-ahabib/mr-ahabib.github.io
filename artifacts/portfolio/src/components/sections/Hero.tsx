@@ -135,7 +135,7 @@ export function Hero() {
             </a>
           </div>
 
-          <div className="mt-8 flex gap-10 border-t border-border/60 pt-6">
+          <div className="mt-10 flex gap-12 border-t border-border/60 pt-8">
             {[
               { label: "Publications", value: "3+" },
               { label: "Projects", value: "10+" },
