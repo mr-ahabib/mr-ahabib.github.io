@@ -5,12 +5,6 @@ import { HeroTerminal } from "@/components/HeroTerminal";
 export function Hero() {
   return (
     <section id="home" className="relative min-h-screen flex items-center pt-20 sm:pt-24 overflow-hidden">
-      {/* Section-level ambient tints */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/[0.05] to-transparent" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/[0.06] rounded-full blur-[80px]" />
-      </div>
-
       {/* Cyberpunk neon grid floor */}
       <div
         className="pointer-events-none absolute inset-x-0 bottom-0 h-56 overflow-hidden [perspective:340px]"
@@ -68,17 +62,10 @@ export function Hero() {
               </div>
             </div>
 
-            {/* Projection beam rising from the pedestal */}
-            <div
-              className="pointer-events-none absolute bottom-16 left-1/2 -translate-x-1/2 w-52 sm:w-64 h-80 sm:h-96 bg-gradient-to-t from-primary/15 via-primary/5 to-transparent"
-              style={{ clipPath: "polygon(36% 100%, 64% 100%, 90% 0, 10% 0)", filter: "blur(3px)" }}
-            />
-
-            {/* Holographic pedestal */}
+            {/* Pedestal — crisp neon lines (no glow bloom) */}
             <div className="pointer-events-none absolute bottom-10 left-1/2 -translate-x-1/2 w-64 sm:w-80">
-              <div className="h-14 w-full rounded-[100%] bg-primary/25 blur-2xl" />
-              <div className="mx-auto -mt-9 h-[3px] w-3/4 rounded-full bg-primary/70 blur-[1px]" />
-              <div className="mx-auto mt-1.5 h-px w-1/2 rounded-full bg-accent/50 blur-[1px]" />
+              <div className="mx-auto h-[2px] w-3/4 rounded-full bg-primary" />
+              <div className="mx-auto mt-1.5 h-px w-1/2 rounded-full bg-accent/70" />
             </div>
 
             {/* Avatar projection */}
@@ -89,7 +76,7 @@ export function Hero() {
             >
               <div className="relative w-56 h-72 sm:w-72 sm:h-96">
                 <div
-                  className="relative w-full h-full rounded-3xl overflow-hidden border-2 border-primary/80 shadow-[0_0_2px_hsl(var(--primary)),0_0_38px_hsl(var(--primary)/0.5)]"
+                  className="neon-glow relative w-full h-full rounded-3xl overflow-hidden border-2 border-primary"
                   style={{
                     maskImage: "linear-gradient(to bottom, black 66%, transparent 99%)",
                     WebkitMaskImage: "linear-gradient(to bottom, black 66%, transparent 99%)",

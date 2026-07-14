@@ -141,21 +141,6 @@ export function AnimatedBackground() {
 
   return (
     <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-      {/* Ambient radial glows anchored to corners, tinted with the accent */}
-      <div
-        className="absolute -top-1/4 left-1/2 h-[70vh] w-[70vh] -translate-x-1/2 rounded-full opacity-40 blur-[120px]"
-        style={{
-          background:
-            "radial-gradient(circle, hsl(var(--primary) / 0.18) 0%, transparent 70%)",
-        }}
-      />
-      <div
-        className="absolute bottom-0 right-0 h-[55vh] w-[55vh] translate-x-1/4 translate-y-1/4 rounded-full opacity-30 blur-[120px]"
-        style={{
-          background:
-            "radial-gradient(circle, hsl(var(--accent) / 0.16) 0%, transparent 70%)",
-        }}
-      />
       {/* Colour probe: canvas reads its computed colour to stay theme-aware */}
       <div ref={colorRef} className="hidden text-primary" />
       <canvas ref={canvasRef} className="absolute inset-0" />

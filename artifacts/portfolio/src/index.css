@@ -145,6 +145,18 @@
     @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent;
   }
 
+  /* Tight neon edge glow that hugs the outline (NOT a diffuse background bloom) */
+  .neon-glow {
+    box-shadow: 0 0 2px hsl(var(--primary)), 0 0 12px hsl(var(--primary) / 0.45);
+  }
+  .neon-glow-sm {
+    box-shadow: 0 0 1px hsl(var(--primary)), 0 0 7px hsl(var(--primary) / 0.4);
+  }
+  /* Neon text glow for headings/labels */
+  .neon-text {
+    filter: drop-shadow(0 0 7px hsl(var(--primary) / 0.55));
+  }
+
   /* Futuristic HUD button shape — cut top-left and bottom-right corners */
   .clip-hud {
     clip-path: polygon(

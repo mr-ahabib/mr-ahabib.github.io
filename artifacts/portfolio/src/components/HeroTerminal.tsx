@@ -117,7 +117,7 @@ export function HeroTerminal() {
   return (
     <div className="relative w-full max-w-xl">
       {/* Neon-outlined panel */}
-      <div className="relative overflow-hidden rounded-2xl border border-primary/70 bg-card/85 font-mono text-sm backdrop-blur-xl shadow-[0_0_2px_hsl(var(--primary)),0_0_24px_hsl(var(--primary)/0.35),inset_0_0_30px_hsl(var(--primary)/0.06)]">
+      <div className="neon-glow relative overflow-hidden rounded-2xl border border-primary bg-card/85 font-mono text-sm backdrop-blur-xl">
           {/* Glassy top sheen */}
           <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
           {/* Faint CRT scanline texture */}

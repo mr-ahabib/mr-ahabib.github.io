@@ -26,19 +26,8 @@ export function About() {
             className="lg:col-span-5"
           >
             <div className="relative max-w-sm mx-auto lg:max-w-none">
-              {/* Cyberpunk neon grid backdrop */}
-              <div
-                className="pointer-events-none absolute -inset-6 -z-10 opacity-[0.18]"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(hsl(var(--primary)/0.6) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)/0.6) 1px, transparent 1px)",
-                  backgroundSize: "26px 26px",
-                  maskImage: "radial-gradient(circle, black, transparent 72%)",
-                  WebkitMaskImage: "radial-gradient(circle, black, transparent 72%)",
-                }}
-              />
               {/* Neon-outlined frame */}
-              <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border-2 border-primary/70 bg-card shadow-[0_0_2px_hsl(var(--primary)),0_0_40px_hsl(var(--primary)/0.4)]">
+              <div className="neon-glow relative aspect-[4/5] overflow-hidden rounded-3xl border-2 border-primary bg-card">
                 <img
                   src={`${import.meta.env.BASE_URL}images/avatar.png`}
                   alt="Md. Ahashan Habib"
@@ -55,7 +44,7 @@ export function About() {
                 <span className="pointer-events-none absolute bottom-3 right-3 h-6 w-6 border-b-2 border-r-2 border-primary" />
                 {/* status badge */}
                 <div className="absolute bottom-4 left-1/2 -translate-x-1/2 whitespace-nowrap">
-                  <span className="flex items-center gap-2 rounded-full border border-primary/50 bg-card/80 px-4 py-2 text-xs font-medium text-foreground shadow-[0_0_16px_hsl(var(--primary)/0.3)] backdrop-blur-md">
+                  <span className="flex items-center gap-2 rounded-full border border-primary/50 bg-card/90 px-4 py-2 text-xs font-medium text-foreground backdrop-blur-md">
                     <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
                     Currently at Qanun Limited
                   </span>
@@ -83,7 +72,7 @@ export function About() {
             </p>
 
             {/* Cyberpunk HUD data readout */}
-            <div className="mt-8 rounded-xl border border-primary/40 bg-card/60 p-5 font-mono text-sm backdrop-blur shadow-[0_0_20px_hsl(var(--primary)/0.15)]">
+            <div className="neon-glow-sm mt-8 rounded-xl border border-primary/40 bg-card/60 p-5 font-mono text-sm backdrop-blur">
               {[
                 { k: "role", v: "AI/ML Engineer · Backend Dev" },
                 { k: "stack", v: "Python · PyTorch · RAG · React" },
