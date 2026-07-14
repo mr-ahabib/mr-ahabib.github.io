@@ -10,7 +10,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
  */
 const FIRST_SPAWN_MS: [number, number] = [25_000, 50_000];
 const RESPAWN_MS: [number, number] = [120_000, 240_000];
-const MAX_SPAWNS = 3; // per page load
+const MAX_SPAWNS = 5; // per page load
 const LIFETIME_MS = 70_000; // after this the bug scurries off-screen
 const SIZE = 40; // sprite box in px
 
