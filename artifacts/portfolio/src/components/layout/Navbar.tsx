@@ -26,11 +26,8 @@ function ThemeToggle() {
     <button
       onClick={() => setTheme(isDark ? "light" : "dark")}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-      className="group relative grid h-9 w-9 place-items-center text-muted-foreground transition-colors hover:text-primary"
+      className="group relative grid h-9 w-9 place-items-center rounded-lg border border-primary/50 bg-card/60 text-muted-foreground backdrop-blur shadow-[0_0_2px_hsl(var(--primary)/0.6),0_0_12px_hsl(var(--primary)/0.2)] transition-all duration-300 hover:border-primary hover:text-primary hover:shadow-[0_0_2px_hsl(var(--primary)),0_0_18px_hsl(var(--primary)/0.4)]"
     >
-      {/* angular gradient border + fill */}
-      <span className="clip-hud-sm absolute inset-0 bg-gradient-to-br from-primary/50 via-border/60 to-accent/50 transition-all duration-300 group-hover:from-primary group-hover:to-accent" />
-      <span className="clip-hud-sm absolute inset-px bg-card/70 backdrop-blur transition-colors duration-300 group-hover:bg-primary/10" />
       {/* Render nothing decisive until mounted to avoid a hydration flash */}
       <AnimatePresence mode="wait" initial={false}>
         <motion.span
@@ -114,11 +111,9 @@ export function Navbar() {
           </a>
 
           <div className="flex items-center gap-3">
-            {/* Desktop Nav — angular HUD panel */}
+            {/* Desktop Nav — neon panel */}
             <div className="relative hidden lg:block">
-              <span className="clip-hud-sm absolute inset-0 bg-gradient-to-r from-primary/40 via-border/60 to-accent/40" />
-              <span className="clip-hud-sm absolute inset-px bg-card/50 backdrop-blur-md" />
-              <nav className="clip-hud-sm relative flex gap-1 px-3 py-1.5">
+              <nav className="relative flex gap-1 rounded-xl border border-primary/45 bg-card/50 px-3 py-1.5 backdrop-blur-md shadow-[0_0_2px_hsl(var(--primary)/0.6),0_0_16px_hsl(var(--primary)/0.2)]">
                 {NAV_LINKS.map((link) => {
                   const isActive = activeSection === link.href.substring(1);
                   return (
