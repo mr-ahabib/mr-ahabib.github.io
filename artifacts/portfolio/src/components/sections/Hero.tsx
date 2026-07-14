@@ -178,30 +178,6 @@ export function Hero() {
               <div className="mx-auto mt-1.5 h-px w-1/2 rounded-full bg-accent/50 blur-[1px]" />
             </div>
 
-            {/* Floating status badges */}
-            <motion.div
-              animate={{ y: [-8, 8, -8] }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute top-2 right-2 sm:top-6 sm:right-6 px-3 py-1.5 bg-card/70 backdrop-blur rounded-full border border-primary/30 text-xs font-semibold text-primary flex items-center gap-1.5 z-20 shadow-[0_0_20px_hsl(var(--primary)/0.18)]"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              AI/ML Engineer
-            </motion.div>
-            <motion.div
-              animate={{ y: [8, -8, 8] }}
-              transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-              className="absolute bottom-24 sm:bottom-28 left-0 sm:-left-2 px-3 py-1.5 bg-card/70 backdrop-blur rounded-full border border-border text-xs font-semibold text-foreground z-20 font-mono"
-            >
-              🎓 CGPA 3.62
-            </motion.div>
-            <motion.div
-              animate={{ y: [-6, 6, -6] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-              className="absolute top-16 sm:top-20 left-0 sm:left-2 px-3 py-1.5 bg-card/70 backdrop-blur rounded-full border border-border text-xs font-semibold text-foreground z-20 font-mono"
-            >
-              🏆 Kaggle Champion
-            </motion.div>
-
             {/* Avatar projection */}
             <motion.div
               animate={{ y: [-10, 10, -10] }}
