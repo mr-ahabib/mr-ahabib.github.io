@@ -60,7 +60,9 @@ export function Projects() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <p className="text-primary font-semibold tracking-widest text-sm uppercase mb-3">Portfolio</p>
+          <div className="flex justify-center mb-3">
+            <span className="eyebrow">Portfolio</span>
+          </div>
           <h2 className="text-3xl md:text-5xl font-display font-bold mb-4 text-foreground">
             Featured <span className="text-gradient">Projects</span>
           </h2>
@@ -79,18 +81,18 @@ export function Projects() {
               key={index}
               variants={cardVariants}
               whileHover={{ y: -6, transition: { duration: 0.2 } }}
-              className="bg-white/80 backdrop-blur-sm border border-border rounded-2xl p-7 flex flex-col h-full group hover:border-primary/40 hover:shadow-xl shadow-sm transition-all duration-300 cursor-pointer relative overflow-hidden"
+              className="neon-glow-sm group relative flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-primary/45 bg-card/80 p-7 backdrop-blur-xl transition-colors duration-300 hover:border-primary"
               onClick={() => window.open(project.link, "_blank")}
             >
-              {/* Hover shimmer */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.04] to-accent/[0.04] opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl" />
+              {/* HUD corner bracket */}
+              <span className="pointer-events-none absolute right-4 top-4 h-4 w-4 border-r-2 border-t-2 border-primary/40" />
 
               <div className="flex justify-between items-start mb-5 relative">
                 <motion.div
                   whileHover={{ rotate: 5, scale: 1.1 }}
-                  className="p-3 rounded-xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300"
+                  className="clip-hud-sm grid h-12 w-12 place-items-center bg-primary/12 text-primary transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground"
                 >
-                  <FolderGit2 size={26} />
+                  <FolderGit2 size={24} />
                 </motion.div>
                 <div className="flex gap-2.5 text-muted-foreground">
                   <Github size={20} className="group-hover:text-foreground transition-colors" />
@@ -109,7 +111,7 @@ export function Projects() {
                 {project.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="text-xs font-medium px-2.5 py-1 rounded-lg bg-secondary text-secondary-foreground border border-border group-hover:border-primary/20 group-hover:bg-primary/5 transition-all duration-200"
+                    className="clip-hud-sm border border-border/70 bg-secondary/50 px-2.5 py-1 font-mono text-xs text-muted-foreground transition-colors group-hover:border-primary/40 group-hover:text-primary/90"
                   >
                     {tag}
                   </span>
