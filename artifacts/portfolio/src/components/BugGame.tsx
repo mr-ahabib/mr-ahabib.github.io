@@ -8,7 +8,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
  * Rare by design — tune the knobs below. Dev/demo hook: run
  * `window.__spawnBug()` in the console to force a bug to appear.
  */
-const FIRST_SPAWN_MS: [number, number] = [25_000, 50_000];
+const FIRST_SPAWN_MS: [number, number] = [8_000, 15_000];
 const RESPAWN_MS: [number, number] = [20_000, 30_000];
 const MAX_SPAWNS = 10; // per page load
 const LIFETIME_MS = 70_000; // after this the bug scurries off-screen
