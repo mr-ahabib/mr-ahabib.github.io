@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Smartphone, Microscope, Brain, MessageSquare, Code, Globe } from "lucide-react";
-import { WireCube } from "@/components/HudDecor";
+
 
 const SERVICES = [
   {
@@ -38,15 +38,13 @@ const SERVICES = [
 export function Services() {
   return (
     <section id="services" className="py-24 relative overflow-hidden">
-      {/* 3D wireframe fillers */}
-      <WireCube size={48} className="right-[8%] top-16 hidden lg:block" />
-      <WireCube size={30} className="left-[6%] bottom-20 hidden lg:block" />
+
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 6 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-120px 0px" }}
           className="text-center mb-16"
         >
           <div className="flex justify-center mb-3">
@@ -61,10 +59,10 @@ export function Services() {
           {SERVICES.map((service, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 6 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
-              transition={{ delay: index * 0.08 }}
+              transition={{ delay: index * 0.08, duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
               className="group"
             >
               <div className="mb-5 flex items-end justify-between">

@@ -57,9 +57,9 @@ export function Experience() {
     <section id="experience" className="py-24 relative">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 6 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-120px 0px" }}
           className="text-center mb-16"
         >
           <div className="flex justify-center mb-3">
@@ -75,10 +75,10 @@ export function Experience() {
             {EXPERIENCES.map((exp, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 24 }}
+                initial={{ opacity: 0, y: 6 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{ delay: index * 0.1, duration: 0.5 }}
+                viewport={{ once: true, margin: "-120px 0px" }}
+                transition={{ delay: index * 0.1, duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
                 className="group relative border-l-2 border-primary/25 pl-7 transition-colors duration-300 hover:border-primary/70"
               >
                 {/* timeline node */}

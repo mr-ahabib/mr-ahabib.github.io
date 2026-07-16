@@ -1,292 +1,106 @@
-import { useEffect, useState } from "react";
-import { motion, useReducedMotion, useTime, useTransform } from "framer-motion";
+import { useState } from "react";
+import { motion } from "framer-motion";
 import { Download, ArrowRight } from "lucide-react";
 import { HeroTerminal } from "@/components/HeroTerminal";
-import { Tilt3D } from "@/components/Tilt3D";
-import { WireCube } from "@/components/HudDecor";
-
-/** The solar system: each role is a planet on its own tilted orbit around
- * the avatar-sun — inner orbits run faster, exactly like real planets. */
-const TILT = 0.31; // vertical squash of a circle tilted ~72°
-// each orbit sits on its own inclined plane (tiltZ), like real orbital planes
-const ORBITS = [
-  { text: "AI Engineer", rx: 150, duration: 16, tiltZ: -9, label: "text-primary", ring: "border-primary/30" },
-  { text: "Software Engineer", rx: 215, duration: 26, tiltZ: 5, label: "text-accent", ring: "border-accent/25 border-dashed" },
-  { text: "Researcher", rx: 278, duration: 40, tiltZ: 13, label: "text-accent-2", ring: "border-accent-2/25" },
-];
-
-/** Little shaded sphere — reads as a lit planet, not a flat dot. */
-const PLANET_STYLE: React.CSSProperties = {
-  background: "radial-gradient(circle at 32% 30%, rgba(255,255,255,0.9), currentColor 68%)",
-  boxShadow: "0 0 7px currentColor",
-};
-
-/** One planet riding its inclined orbit — bright in front, dim behind the sun. */
-function OrbitTitle({
-  text,
-  phase,
-  rx,
-  duration,
-  tiltZ,
-  label,
-}: {
-  text: string;
-  phase: number;
-  rx: number;
-  duration: number;
-  tiltZ: number;
-  label: string;
-}) {
-  const time = useTime();
-  const ry = rx * TILT;
-  const angle = useTransform(time, (t) => (t / (duration * 1000)) * Math.PI * 2 + phase);
-  const x = useTransform(angle, (a) => Math.cos(a) * rx);
-  const y = useTransform(angle, (a) => Math.sin(a) * ry);
-  const depth = useTransform(angle, (a) => (Math.sin(a) + 1) / 2); // 0 = behind, 1 = in front
-  const scale = useTransform(depth, [0, 1], [0.68, 1.08]);
-  const opacity = useTransform(depth, [0, 1], [0.28, 1]);
-  // the tilt-rotation makes this wrapper a stacking context, so the z-index
-  // must live HERE (not on the inner span) to layer against the avatar (z-10)
-  const zIndex = useTransform(depth, (d) => (d > 0.5 ? 30 : 5));
-
-  return (
-    // the wrapper rotates the whole orbit onto its inclined plane; the label
-    // counter-rotates so the text stays level while the path is tilted
-    <motion.div
-      aria-hidden="true"
-      className="pointer-events-none absolute inset-0"
-      style={{ transform: `rotate(${tiltZ}deg)`, zIndex }}
-    >
-      {/* no backdrop-blur here — recomputing a blurred backdrop every frame of
-          the orbit causes visible shimmer; will-change keeps it on the GPU */}
-      <motion.span
-        style={{ x, y, scale, opacity }}
-        className="absolute left-1/2 top-1/2 will-change-transform"
-      >
-        <span
-          className={`flex items-center gap-1.5 whitespace-nowrap rounded-full border border-border/70 bg-card/95 px-2.5 py-1 font-mono text-[10px] sm:text-xs ${label}`}
-          style={{ transform: `translate(-50%, -50%) rotate(${-tiltZ}deg)` }}
-        >
-          <span className="h-2.5 w-2.5 rounded-full" style={PLANET_STYLE} />
-          {text}
-        </span>
-      </motion.span>
-    </motion.div>
-  );
-}
-
-/** Orbit rings + planets, scaled down on small screens. */
-function SolarSystem() {
-  const reduced = useReducedMotion();
-  const [small, setSmall] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 640px)");
-    const update = () => setSmall(mq.matches);
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
-  }, []);
-  const k = small ? 0.62 : 1; // mobile scale factor
-
-  return (
-    <>
-      {/* Orbit paths — each circle tilted onto its own inclined plane.
-          Drawn twice: the full ring sits behind the avatar, and a copy
-          clipped to its NEAR half sits above it (z-20 vs avatar z-10), so
-          the rings genuinely wrap around the image instead of hiding
-          behind it. */}
-      <div className="pointer-events-none absolute inset-0 z-0 grid place-items-center [perspective:1000px]">
-        {ORBITS.map((o) => (
-          <div
-            key={o.text}
-            className="col-start-1 row-start-1"
-            style={{ transform: `rotate(${o.tiltZ}deg) rotateX(72deg)` }}
-          >
-            <div
-              className={`rounded-full border ${o.ring}`}
-              style={{ width: o.rx * 2 * k, height: o.rx * 2 * k }}
-            />
-          </div>
-        ))}
-      </div>
-      <div className="pointer-events-none absolute inset-0 z-20 grid place-items-center [perspective:1000px]">
-        {ORBITS.map((o) => (
-          <div
-            key={o.text}
-            className="col-start-1 row-start-1"
-            style={{ transform: `rotate(${o.tiltZ}deg) rotateX(72deg)` }}
-          >
-            <div
-              className={`rounded-full border ${o.ring}`}
-              style={{
-                width: o.rx * 2 * k,
-                height: o.rx * 2 * k,
-                clipPath: "inset(50% 0 0 0)", // bottom half = the near half after the tilt
-              }}
-            />
-          </div>
-        ))}
-      </div>
-
-      {/* Planets */}
-      {reduced
-        ? ORBITS.map((o, i) => {
-            const spots = [
-              { x: -o.rx * k, y: 0 },
-              { x: o.rx * k, y: 0 },
-              { x: 0, y: o.rx * TILT * k },
-            ];
-            return (
-              <span
-                key={o.text}
-                aria-hidden="true"
-                className="pointer-events-none absolute left-1/2 top-1/2 z-20"
-                style={{ transform: `translate(${spots[i].x}px, ${spots[i].y}px)` }}
-              >
-                <span className={`flex -translate-x-1/2 -translate-y-1/2 items-center gap-1.5 whitespace-nowrap rounded-full border border-border/70 bg-card/80 px-2.5 py-1 font-mono text-[10px] backdrop-blur sm:text-xs ${o.label}`}>
-                  <span className="h-2.5 w-2.5 rounded-full" style={PLANET_STYLE} />
-                  {o.text}
-                </span>
-              </span>
-            );
-          })
-        : ORBITS.map((o, i) => (
-            <OrbitTitle
-              key={o.text}
-              text={o.text}
-              phase={(i * Math.PI * 2) / 3}
-              rx={o.rx * k}
-              duration={o.duration}
-              tiltZ={o.tiltZ}
-              label={o.label}
-            />
-          ))}
-    </>
-  );
-}
 
 export function Hero() {
+  const [imageError, setImageError] = useState(false);
+
   return (
     <section id="home" className="relative min-h-screen flex items-center pt-20 sm:pt-24 overflow-hidden">
-      {/* Cyberpunk neon grid floor */}
-      <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-56 overflow-hidden [perspective:340px]"
-        style={{
-          maskImage: "linear-gradient(to top, black, transparent)",
-          WebkitMaskImage: "linear-gradient(to top, black, transparent)",
-        }}
-      >
-        <div
-          className="absolute inset-x-[-50%] bottom-[-40%] h-[180%] opacity-20 dark:opacity-50 [transform:rotateX(74deg)]"
-          style={{
-            backgroundImage:
-              "linear-gradient(hsl(var(--primary)/0.55) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)/0.55) 1px, transparent 1px)",
-            backgroundSize: "44px 44px",
-          }}
-        />
-      </div>
+      {/* Removed geometric grid background for a clean spiral canvas */}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full py-10 sm:py-14">
-        {/* Terminal + holographic avatar share a centered row so they line up */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-
-          {/* ── Terminal intro ── */}
+        {/* ── Terminal (left) + portrait popping out (right) ── */}
+        <div className="relative">
+          {/* Terminal window — left */}
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="order-2 lg:order-1 w-full"
+            className="relative z-0 w-full lg:w-[62%]"
           >
-            <HeroTerminal />
-          </motion.div>
+            <div className="relative overflow-hidden bg-transparent font-mono">
+              {/* faint CRT scanline texture */}
+              <div className="holo-scanlines pointer-events-none absolute inset-0 z-10 opacity-[0.04]" />
 
-          {/* ── Right — Holographic Avatar ── */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="order-1 lg:order-2 relative flex items-center justify-center min-h-[420px] sm:min-h-[480px]"
-          >
-            {/* the whole system leans with the pointer as one rigid 3D object */}
-            <div
-              className="absolute inset-0 flex items-center justify-center"
-              style={{
-                transform:
-                  "perspective(1200px) rotateY(calc(var(--par-x, 0) * 8deg)) rotateX(calc(var(--par-y, 0) * -6deg))",
-                transformStyle: "preserve-3d",
-                transition: "transform 0.35s ease-out",
-              }}
-            >
-            {/* The solar system — orbit rings + role planets around the avatar-sun */}
-            <SolarSystem />
-
-            {/* Pedestal — crisp neon lines (no glow bloom) */}
-            <div className="pointer-events-none absolute bottom-10 left-1/2 -translate-x-1/2 w-64 sm:w-80">
-              <div className="mx-auto h-[2px] w-3/4 rounded-full bg-primary" />
-              <div className="mx-auto mt-1.5 h-px w-1/2 rounded-full bg-accent/70" />
-            </div>
-
-            {/* Floating wireframe cubes — 3D filler around the projection */}
-            <WireCube size={40} className="left-2 top-16 hidden sm:block" />
-            <WireCube size={26} className="right-4 bottom-24 hidden sm:block" />
-
-            {/* Avatar projection */}
-            <motion.div
-              animate={{ y: [-10, 10, -10] }}
-              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-              className="holo-flicker relative z-10"
-            >
-              <Tilt3D max={9} perspective={700}>
-              <div className="relative w-56 h-72 sm:w-72 sm:h-96">
-                <div
-                  className="neon-glow relative w-full h-full rounded-3xl overflow-hidden border-2 border-primary"
-                  style={{
-                    maskImage: "linear-gradient(to bottom, black 66%, transparent 99%)",
-                    WebkitMaskImage: "linear-gradient(to bottom, black 66%, transparent 99%)",
-                  }}
-                >
-                  <img
-                    src={`${import.meta.env.BASE_URL}images/avatar.webp`}
-                    alt="Md. Ahashan Habib"
-                    className="w-full h-full object-cover object-top"
-                  />
-                  {/* hologram colour tint */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-primary/25 via-transparent to-accent/35 mix-blend-screen" />
-                  {/* fine scanlines */}
-                  <div className="holo-scanlines absolute inset-0 opacity-70" />
-                  {/* moving scan bar */}
-                  <div className="holo-scanbar absolute left-0 h-10 w-full bg-gradient-to-b from-transparent via-primary/45 to-transparent" />
-                </div>
-
-                {/* Realistic floor reflection — mirrored, faded, slightly blurred */}
-                <div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute left-0 top-full mt-2 h-28 w-full overflow-hidden opacity-20 blur-[2px] [transform:scaleY(-1)]"
-                  style={{
-                    maskImage: "linear-gradient(to top, black, transparent 85%)",
-                    WebkitMaskImage: "linear-gradient(to top, black, transparent 85%)",
-                  }}
-                >
-                  <img
-                    src={`${import.meta.env.BASE_URL}images/avatar.webp`}
-                    alt=""
-                    className="w-full object-cover object-top"
-                  />
-                </div>
+              {/* Title bar */}
+              <div className="relative flex items-center gap-2 px-1 py-3.5">
+                <span className="h-3 w-3 rounded-full bg-red-400/90" />
+                <span className="h-3 w-3 rounded-full bg-yellow-400/90" />
+                <span className="h-3 w-3 rounded-full bg-emerald-400/90" />
+                <span className="mx-auto flex items-center gap-2 text-xs text-muted-foreground/70">
+                  <span className="text-primary/70">~/</span>ahashan@ai:portfolio
+                </span>
+                <span className="flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.15em] text-emerald-400/90">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="hidden sm:inline">online</span>
+                </span>
               </div>
-              </Tilt3D>
-            </motion.div>
+              {/* hairline under the title bar */}
+              <div className="pointer-events-none h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+
+              {/* Body — taller, info centered vertically */}
+              <div className="flex min-h-[20rem] items-center sm:min-h-[24rem] lg:min-h-[26rem]">
+                <HeroTerminal chrome={false} />
+              </div>
+
+              {/* hairline above the footer */}
+              <div className="pointer-events-none h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+              {/* Status footer */}
+              <div className="relative flex items-center justify-between bg-gradient-to-t from-white/[0.05] to-transparent px-2 py-3 text-xs">
+                <span className="text-muted-foreground/70"># AI / Full-Stack Engineer</span>
+                <span className="flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.15em] text-emerald-400/90">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  open to work
+                </span>
+              </div>
             </div>
           </motion.div>
 
+          {/* Portrait — larger, popping out on the right, overlapping the terminal edge */}
+          <motion.div
+            initial={{ opacity: 0, x: 12 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+            className="relative mt-6 flex items-center justify-center lg:absolute lg:-right-6 lg:top-1/2 lg:mt-0 lg:w-[46%] lg:-translate-y-1/2 xl:-right-12"
+          >
+            {/* "jolchap" watermark — the name behind the portrait */}
+            <div className="pointer-events-none absolute inset-0 z-0 flex flex-col items-center justify-center select-none">
+              <span className="bg-gradient-to-b from-primary/15 to-transparent bg-clip-text text-center font-display text-5xl font-extrabold uppercase leading-none tracking-tight text-transparent sm:text-6xl lg:text-7xl">
+                Habib
+              </span>
+              <span
+                className="text-center font-display text-5xl font-extrabold uppercase leading-none tracking-tight text-transparent sm:text-6xl lg:text-7xl"
+                style={{ WebkitTextStroke: "1px hsl(var(--primary) / 0.18)" }}
+              >
+                Ahashan
+              </span>
+            </div>
+
+            {!imageError ? (
+              <img
+                src={`${import.meta.env.BASE_URL}images/myself.png`}
+                alt="Md. Ahashan Habib"
+                className="relative z-10 max-h-[24rem] w-auto object-contain drop-shadow-[0_18px_40px_rgba(0,0,0,0.45)] sm:max-h-[28rem] lg:max-h-[34rem]"
+                loading="eager"
+                decoding="async"
+                onError={() => setImageError(true)}
+              />
+            ) : (
+              <div className="relative z-10 flex h-28 w-28 items-center justify-center rounded-full bg-primary/10 text-3xl font-semibold text-primary">
+                AH
+              </div>
+            )}
+          </motion.div>
         </div>
 
-        {/* CTA + stats — sit below the terminal, sharing its left edge */}
+        {/* CTA + stats — sit below the window */}
         <motion.div
-          initial={{ opacity: 0, y: 12 }}
+          initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.5 }}
-          className="mt-9 lg:mt-12 w-full max-w-xl"
+          className="mt-9 w-full max-w-xl lg:mt-12"
         >
           <div className="flex flex-wrap items-center gap-4 sm:gap-5">
             {/* Primary — filled gradient HUD button */}

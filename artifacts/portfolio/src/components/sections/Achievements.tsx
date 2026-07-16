@@ -53,9 +53,9 @@ export function Achievements() {
     <section id="achievements" className="py-20 sm:py-24 relative">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 6 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-120px 0px" }}
           className="text-center mb-12 sm:mb-20"
         >
           <div className="flex justify-center mb-3">
@@ -118,8 +118,8 @@ export function Achievements() {
               key={item.title}
               initial={{ opacity: 0, x: -16 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.08 }}
+              viewport={{ once: true, margin: "-120px 0px" }}
+              transition={{ delay: index * 0.08, duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
               className="relative border-l-2 border-primary/25 pb-8 pl-6 last:pb-0"
             >
               <span className="absolute -left-[7px] top-1 h-3 w-3 rotate-45 border-2 border-primary/60 bg-background" />

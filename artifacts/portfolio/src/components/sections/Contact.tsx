@@ -2,14 +2,12 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, MapPin, Github, Linkedin, Send, GraduationCap } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { WireCube } from "@/components/HudDecor";
 
-const CHANNELS = [
-  { icon: <Mail size={16} />, label: "Email", value: "mr.ahashan261@gmail.com", href: "mailto:mr.ahashan261@gmail.com" },
-  { icon: <MapPin size={16} />, label: "Location", value: "Uttar Badda, Dhaka, BD", href: null },
-  { icon: <Github size={16} />, label: "GitHub", value: "github.com/mr-ahabib", href: "https://github.com/mr-ahabib" },
-  { icon: <Linkedin size={16} />, label: "LinkedIn", value: "md-ahashan-habib", href: "https://www.linkedin.com/in/md-ahashan-habib-9a81212a5/" },
-  { icon: <GraduationCap size={16} />, label: "Google Scholar", value: "scholar.google.com", href: "https://scholar.google.com/citations?user=PSvun2MAAAAJ&hl=en" },
+
+const SOCIALS = [
+  { icon: <Github size={18} />, label: "GitHub", href: "https://github.com/mr-ahabib" },
+  { icon: <Linkedin size={18} />, label: "LinkedIn", href: "https://www.linkedin.com/in/md-ahashan-habib-9a81212a5/" },
+  { icon: <GraduationCap size={18} />, label: "Google Scholar", href: "https://scholar.google.com/citations?user=PSvun2MAAAAJ&hl=en" },
 ];
 
 const INPUT =
@@ -56,15 +54,13 @@ export function Contact() {
   return (
     <section id="contact" className="py-20 sm:py-24 relative overflow-hidden">
       <span className="pointer-events-none absolute top-0 left-0 h-px w-full bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-      {/* 3D wireframe fillers */}
-      <WireCube size={36} className="right-[7%] top-24 hidden lg:block" />
-      <WireCube size={24} className="left-[8%] bottom-24 hidden lg:block" />
+
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 6 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-120px 0px" }}
           className="text-center mb-12 sm:mb-14"
         >
           <div className="flex justify-center mb-3">
@@ -79,14 +75,72 @@ export function Contact() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-8 items-start">
-          {/* Form */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-stretch">
+          {/* ── Left — direct connect ── */}
+          <motion.div
+            initial={{ opacity: 0, x: -8 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-120px 0px" }}
+            className="flex flex-col justify-between"
+          >
+            <div>
+              <p className="eyebrow mb-4">Direct line</p>
+              <h3 className="font-display text-2xl sm:text-3xl font-bold leading-tight text-foreground">
+                Let&apos;s build something <span className="text-gradient">worth shipping.</span>
+              </h3>
+              <p className="mt-4 max-w-md text-sm leading-relaxed text-muted-foreground">
+                Fastest way to reach me is email — or drop a message on the right. I usually reply within a day.
+              </p>
+
+              {/* big email CTA */}
+              <a
+                href="mailto:mr.ahashan261@gmail.com"
+                className="group mt-7 flex items-center gap-4 rounded-2xl border border-primary/45 bg-card/60 p-4 backdrop-blur-xl transition-colors hover:border-primary neon-glow-sm"
+              >
+                <span className="clip-hud-sm grid h-11 w-11 shrink-0 place-items-center bg-primary/12 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                  <Mail size={18} />
+                </span>
+                <div className="min-w-0">
+                  <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">Email me</p>
+                  <p className="truncate font-medium text-foreground transition-colors group-hover:text-primary">mr.ahashan261@gmail.com</p>
+                </div>
+              </a>
+
+              {/* location */}
+              <div className="mt-4 flex items-center gap-2.5 font-mono text-xs text-muted-foreground">
+                <MapPin size={14} className="text-primary" />
+                Uttar Badda, Dhaka, Bangladesh
+              </div>
+            </div>
+
+            {/* social rail */}
+            <div className="mt-8">
+              <p className="mb-3 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">Find me elsewhere</p>
+              <div className="flex gap-3">
+                {SOCIALS.map((s) => (
+                  <a
+                    key={s.label}
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={s.label}
+                    title={s.label}
+                    className="group grid h-12 w-12 place-items-center rounded-xl border border-border/70 bg-secondary/30 text-muted-foreground transition-all duration-300 hover:-translate-y-1 hover:border-primary hover:bg-primary/10 hover:text-primary"
+                  >
+                    {s.icon}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+
+          {/* ── Right — Form ── */}
           <motion.form
             onSubmit={handleSubmit}
-            initial={{ opacity: 0, x: -24 }}
+            initial={{ opacity: 0, x: 8 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="neon-glow-sm relative lg:col-span-3 rounded-2xl border border-primary/45 bg-card/80 p-6 sm:p-8 backdrop-blur-xl"
+            viewport={{ once: true, margin: "-120px 0px" }}
+            className="neon-glow-sm relative rounded-2xl border border-primary/45 bg-card/80 p-6 sm:p-8 backdrop-blur-xl"
           >
             <span className="pointer-events-none absolute right-4 top-4 h-4 w-4 border-r-2 border-t-2 border-primary/40" />
             <p className="eyebrow mb-5">Send a message</p>
@@ -137,48 +191,6 @@ export function Contact() {
               {sending ? "Transmitting…" : "Transmit message"}
             </button>
           </motion.form>
-
-          {/* Channels */}
-          <motion.div
-            initial={{ opacity: 0, x: 24 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="neon-glow-sm relative lg:col-span-2 rounded-2xl border border-primary/45 bg-card/80 p-6 sm:p-7 backdrop-blur-xl"
-          >
-            <span className="pointer-events-none absolute right-4 top-4 h-4 w-4 border-r-2 border-t-2 border-primary/40" />
-            <p className="eyebrow mb-5">Channels</p>
-
-            <div className="space-y-3">
-              {CHANNELS.map((c) => {
-                const inner = (
-                  <>
-                    <div className="clip-hud-sm grid h-9 w-9 shrink-0 place-items-center bg-primary/12 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                      {c.icon}
-                    </div>
-                    <div className="min-w-0">
-                      <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">{c.label}</p>
-                      <p className="truncate text-sm font-medium text-foreground group-hover:text-primary transition-colors">{c.value}</p>
-                    </div>
-                  </>
-                );
-                return c.href ? (
-                  <a
-                    key={c.label}
-                    href={c.href}
-                    target={c.href.startsWith("http") ? "_blank" : undefined}
-                    rel={c.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                    className="group flex items-center gap-3 rounded-lg border border-border/60 bg-secondary/30 p-2.5 transition-colors hover:border-primary/50"
-                  >
-                    {inner}
-                  </a>
-                ) : (
-                  <div key={c.label} className="group flex items-center gap-3 rounded-lg border border-border/60 bg-secondary/30 p-2.5">
-                    {inner}
-                  </div>
-                );
-              })}
-            </div>
-          </motion.div>
         </div>
       </div>
     </section>

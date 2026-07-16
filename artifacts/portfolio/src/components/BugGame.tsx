@@ -13,7 +13,7 @@ const RESPAWN_MS: [number, number] = [20_000, 30_000];
 const MAX_SPAWNS = 14; // per page load (splits count too)
 const LIFETIME_MS = 70_000; // after this the bug scurries off-screen
 const SIZE = 30; // sprite box in px
-const MAX_BUGS = 3; // concurrent bugs after multiplying
+const MAX_BUGS = 1; // concurrent bugs after multiplying
 const SPLIT_MIN_AGE_MS = 6_000; // a bug must live this long before it can split
 const SPLIT_CHANCE_PER_SEC = 0.03; // per wandering bug (~once per ~33s)
 
@@ -23,37 +23,47 @@ const pick = <T,>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
 
 /** Cocky lines the bug drops while wandering. */
 const TAUNTS = [
-  "follow me if you dare 🐛",
-  "hire him — or I multiply",
-  "I will vanish you 😈",
-  "you can't debug me",
-  "I live in production",
-  "catch me, mortal",
-  "I deleted a semicolon once",
-  "your firewall can't stop me",
+  "it works on MY machine 🐛",
+  "I'm not a bug, I'm a feature",
+  "shipped straight to prod on a Friday",
+  "I only appear during the demo",
+  "git blame says it wasn't me",
+  "closed as 'cannot reproduce' 😏",
+  "your unit tests? adorable.",
+  "I survived code review",
+  "TODO: fix me (since 2019)",
+  "works 60% of the time, every time",
+  "have you tried turning it off? 💀",
+  "I'm in your node_modules",
+  "500 Internal Bug Error",
+  "Stack Overflow can't save you",
 ];
 /** Announced right after a bug splits in two. */
 const SPLIT_LINES = [
-  "mitosis complete 🐛🐛",
-  "told you I multiply",
-  "fork() succeeded",
-  "now there's two of us",
+  "npm install more-bugs 🐛🐛",
+  "one fix, two new bugs — classic",
+  "fork() and multiply, baby",
+  "merge conflict? nah, merge bugs",
+  "copy-paste is my love language",
 ];
 /** Yelled while running from the cursor. */
 const PANICS = [
-  "too slow, human!",
-  "nope nope nope 🏃",
-  "can't touch this",
-  "MOVE MOVE MOVE",
-  "nice try 😏",
+  "not today, junior dev! 🏃",
+  "ctrl+Z won't save you",
+  "you can't catch tech debt",
+  "PANIC: goroutine fleeing 💨",
+  "sudo catch me — still no 😏",
+  "404: bug not found",
 ];
 /** Random last words on the corpse. */
 const LAST_WORDS = [
-  "bug_fixed ✓",
+  "bug_fixed ✓ (probably)",
   "segfault (core dumped)",
-  "exit code 137",
-  "tell my larvae…",
+  "exit code 137 💀",
+  "tell my 400 dependencies…",
   "rm -rf /bug ✓",
+  "reverting to legacy afterlife",
+  "deprecated 🪦",
 ];
 
 /** Short synthesized "squish": filtered noise crunch + low pitch-drop thud. */

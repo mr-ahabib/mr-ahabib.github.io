@@ -5,19 +5,22 @@ import { useEffect, useRef } from "react";
  * replaced by a frosted glass lens — a 40px bubble that blurs whatever
  * passes beneath it, with a tiny specular highlight so it reads as glass —
  * chased by a 100px soft primary-tinted halo that lags further behind.
+ * It also has a crisp 6px dot precisely at the cursor's location.
  *
  * Only active for fine pointers without reduced-motion; the `custom-cursor`
  * class on <html> is what actually hides the native cursor, so touch
  * devices and reduced-motion users keep theirs untouched.
  */
 export function CursorGlow() {
+  const dotRef = useRef<HTMLDivElement>(null);
   const lensRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const dot = dotRef.current;
     const lens = lensRef.current;
     const glow = glowRef.current;
-    if (!lens || !glow) return;
+    if (!dot || !lens || !glow) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     if (!window.matchMedia("(pointer: fine)").matches) return;
 
@@ -29,23 +32,28 @@ export function CursorGlow() {
     let raf = 0;
 
     const step = () => {
-      // the lens chases fast, the halo lags — the gap is the whole effect
-      lensPos.x += (target.x - lensPos.x) * 0.22;
-      lensPos.y += (target.y - lensPos.y) * 0.22;
-      glowPos.x += (target.x - glowPos.x) * 0.08;
-      glowPos.y += (target.y - glowPos.y) * 0.08;
-      lens.style.transform = `translate3d(${lensPos.x - 20}px, ${lensPos.y - 20}px, 0)`;
-      glow.style.transform = `translate3d(${glowPos.x - 50}px, ${glowPos.y - 50}px, 0)`;
+      lensPos.x += (target.x - lensPos.x) * 0.06;
+      lensPos.y += (target.y - lensPos.y) * 0.06;
+      glowPos.x += (target.x - glowPos.x) * 0.022;
+      glowPos.y += (target.y - glowPos.y) * 0.022;
+      
+      lens.style.transform = `translate3d(${lensPos.x - 13}px, ${lensPos.y - 13}px, 0)`;
+      glow.style.transform = `translate3d(${glowPos.x - 60}px, ${glowPos.y - 60}px, 0)`;
       raf = requestAnimationFrame(step);
     };
 
     const onMove = (e: MouseEvent) => {
       target.x = e.clientX;
       target.y = e.clientY;
+      // the dot stays exactly on target INSTANTLY
+      dot.style.transform = `translate3d(${target.x - 3}px, ${target.y - 3}px, 0)`;
+      
+      dot.style.opacity = "1";
       lens.style.opacity = "1";
       glow.style.opacity = "1";
     };
     const onLeave = () => {
+      dot.style.opacity = "0";
       lens.style.opacity = "0";
       glow.style.opacity = "0";
     };
@@ -64,6 +72,26 @@ export function CursorGlow() {
 
   return (
     <>
+      {/* crisp dot center */}
+      <div
+        ref={dotRef}
+        aria-hidden="true"
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: 6,
+          height: 6,
+          borderRadius: "50%",
+          pointerEvents: "none",
+          zIndex: 999999,
+          willChange: "transform",
+          opacity: 0,
+          transition: "opacity 0.3s ease",
+          background: "hsl(var(--primary) / 0.9)",
+          boxShadow: "0 0 6px hsl(var(--primary) / 0.6)",
+        }}
+      />
       {/* soft trailing halo */}
       <div
         ref={glowRef}
@@ -72,16 +100,16 @@ export function CursorGlow() {
           position: "fixed",
           top: 0,
           left: 0,
-          width: 100,
-          height: 100,
+          width: 120,
+          height: 120,
           borderRadius: "50%",
           pointerEvents: "none",
           zIndex: 99997,
           willChange: "transform",
           opacity: 0,
-          transition: "opacity 0.3s ease",
-          background: "radial-gradient(circle, hsl(var(--primary) / 0.07) 0%, transparent 65%)",
-          filter: "blur(4px)",
+          transition: "opacity 0.4s ease",
+          background: "radial-gradient(circle, rgba(118,171,174,0.18) 0%, rgba(118,171,174,0.08) 45%, transparent 72%)",
+          filter: "blur(14px)",
         }}
       />
       {/* frosted glass lens — blurs what's underneath, like a droplet */}
@@ -92,8 +120,8 @@ export function CursorGlow() {
           position: "fixed",
           top: 0,
           left: 0,
-          width: 40,
-          height: 40,
+          width: 26,
+          height: 26,
           borderRadius: "50%",
           pointerEvents: "none",
           zIndex: 999998,

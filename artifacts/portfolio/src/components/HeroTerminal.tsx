@@ -71,7 +71,7 @@ function renderLine(line: Line, shown: string, showCursor: boolean) {
   );
 }
 
-export function HeroTerminal() {
+export function HeroTerminal({ chrome = true }: { chrome?: boolean }) {
   const [revealed, setRevealed] = useState(0);
 
   useEffect(() => {
@@ -114,10 +114,35 @@ export function HeroTerminal() {
 
   let offset = 0;
 
+  const body = (
+    <div className="relative space-y-1.5 p-5 font-mono text-sm leading-relaxed sm:p-6">
+      {LINES.map((line, i) => {
+        const full = fullText(line);
+        const start = offset;
+        offset += full.length + 1;
+
+        const shown =
+          revealed <= start ? "" : full.slice(0, Math.min(full.length, revealed - start));
+        const showCursor = i === cursorLine;
+        return (
+          <div
+            key={i}
+            className={`whitespace-pre-wrap break-words ${LINE_MIN_H[line.kind]}`}
+          >
+            {renderLine(line, shown, showCursor)}
+          </div>
+        );
+      })}
+    </div>
+  );
+
+  // Bare mode: just the streaming body (the tabbed window supplies its own chrome).
+  if (!chrome) return body;
+
   return (
     <div className="relative w-full max-w-xl">
-      {/* Neon-outlined panel */}
-      <div className="neon-glow relative overflow-hidden rounded-2xl border border-primary bg-card/85 font-mono text-sm backdrop-blur-xl">
+      {/* Transparent seamless panel */}
+      <div className="relative overflow-hidden font-mono text-sm bg-transparent">
           {/* Glassy top sheen */}
           <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
           {/* Faint CRT scanline texture */}
@@ -137,25 +162,7 @@ export function HeroTerminal() {
 
           {/* Body — all lines are always rendered (reserving height) so the
               panel size is fixed; only the revealed characters are shown. */}
-          <div className="relative space-y-1.5 p-5 leading-relaxed sm:p-6">
-            {LINES.map((line, i) => {
-              const full = fullText(line);
-              const start = offset;
-              offset += full.length + 1;
-
-              const shown =
-                revealed <= start ? "" : full.slice(0, Math.min(full.length, revealed - start));
-              const showCursor = i === cursorLine;
-              return (
-                <div
-                  key={i}
-                  className={`whitespace-pre-wrap break-words ${LINE_MIN_H[line.kind]}`}
-                >
-                  {renderLine(line, shown, showCursor)}
-                </div>
-              );
-            })}
-          </div>
+          {body}
       </div>
     </div>
   );

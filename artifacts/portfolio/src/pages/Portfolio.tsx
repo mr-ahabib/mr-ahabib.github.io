@@ -1,11 +1,14 @@
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { AnimatedBackground } from "@/components/AnimatedBackground";
 import { CursorGlow } from "@/components/CursorGlow";
 import { Hero } from "@/components/sections/Hero";
 import { About } from "@/components/sections/About";
-import { HudRails } from "@/components/HudDecor";
+import { CustomScrollbar } from "@/components/CustomScrollbar";
+import Lenis from "lenis";
+import { AnimatePresence } from "framer-motion";
+import { SplashScreen } from "@/components/SplashScreen";
 
 // Everything below the fold loads in its own chunk — the first paint only
 // pays for the hero + about. Named exports are mapped to lazy defaults.
@@ -21,24 +24,60 @@ const Chatbot = lazy(() => import("@/components/Chatbot").then((m) => ({ default
 const BugGame = lazy(() => import("@/components/BugGame").then((m) => ({ default: m.BugGame })));
 
 export default function Portfolio() {
-  // Global pointer-parallax vars: the background canvas, wireframe cubes and
-  // HUD rails all read --par-x/--par-y so foreground decor shifts with the
-  // same 3D depth as the background — one connected space.
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const root = document.documentElement;
-    const onMove = (e: MouseEvent) => {
-      root.style.setProperty("--par-x", String((e.clientX / window.innerWidth) * 2 - 1));
-      root.style.setProperty("--par-y", String((e.clientY / window.innerHeight) * 2 - 1));
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // easeOutExpo
+      orientation: "vertical",
+      gestureOrientation: "vertical",
+      smoothWheel: true,
+      wheelMultiplier: 1.0,
+    });
+
+    let rafId: number;
+    function raf(time: number) {
+      lenis.raf(time);
+      rafId = requestAnimationFrame(raf);
+    }
+    rafId = requestAnimationFrame(raf);
+
+    // Disable scroll while loading
+    if (loading) {
+      lenis.stop();
+      document.body.style.overflow = "hidden";
+    } else {
+      lenis.start();
+      document.body.style.overflow = "";
+    }
+
+    const timer = setTimeout(() => {
+      setLoading(false);
+      lenis.start();
+      document.body.style.overflow = "";
+    }, 2000);
+
+    return () => {
+      lenis.destroy();
+      cancelAnimationFrame(rafId);
+      clearTimeout(timer);
+      document.body.style.overflow = "";
     };
-    window.addEventListener("mousemove", onMove);
-    return () => window.removeEventListener("mousemove", onMove);
-  }, []);
+  }, [loading]);
 
   return (
-    <div className="relative min-h-screen text-foreground selection:bg-primary/20 selection:text-primary" style={{ backgroundColor: "transparent" }}>
+    <>
+      <AnimatePresence mode="wait">
+        {loading && <SplashScreen />}
+      </AnimatePresence>
+
+      <div className="relative min-h-screen text-foreground selection:bg-primary/20 selection:text-primary" style={{ backgroundColor: "transparent" }}>
       {/* Global animated background — rendered behind everything */}
       <AnimatedBackground />
+
+      {/* Custom interactive scrollbar */}
+      <CustomScrollbar />
 
       {/* Cursor ring + trailing glow (desktop pointers only) */}
       <CursorGlow />
@@ -53,8 +92,7 @@ export default function Portfolio() {
         }}
       />
 
-      {/* Fixed HUD side rails — decorative screen filler on wide viewports */}
-      <HudRails />
+
 
       {/* Page content sits above the background */}
       <div className="relative z-10">
@@ -83,5 +121,6 @@ export default function Portfolio() {
         <BugGame />
       </Suspense>
     </div>
+    </>
   );
 }

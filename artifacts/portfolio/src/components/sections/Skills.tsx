@@ -1,7 +1,7 @@
 import { lazy, Suspense } from "react";
 import { motion } from "framer-motion";
 import { Code2, Database, Layers, Brain, Wrench, ServerCog } from "lucide-react";
-import { WireCube } from "@/components/HudDecor";
+
 
 // recharts is heavy — load the radar in its own chunk, off the critical path
 const CapabilityRadar = lazy(() => import("@/components/CapabilityRadar"));
@@ -51,15 +51,13 @@ function RadarFallback() {
 export function Skills() {
   return (
     <section id="skills" className="py-20 sm:py-24 relative overflow-hidden">
-      {/* 3D wireframe fillers */}
-      <WireCube size={42} className="left-[7%] top-24 hidden lg:block" />
-      <WireCube size={28} className="right-[9%] bottom-32 hidden lg:block" />
+
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 6 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-120px 0px" }}
           className="text-center mb-12 sm:mb-16"
         >
           <div className="flex justify-center mb-3">
@@ -74,9 +72,9 @@ export function Skills() {
         {/* Radar instrument + skill matrix, side by side on wide screens */}
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-5 lg:gap-16">
           <motion.div
-            initial={{ opacity: 0, x: -24 }}
+            initial={{ opacity: 0, x: -8 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-120px 0px" }}
             className="lg:col-span-2"
           >
             <Suspense fallback={<RadarFallback />}>
@@ -89,10 +87,10 @@ export function Skills() {
             {CATEGORIES.map((category, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 16 }}
+                initial={{ opacity: 0, y: 6 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ delay: index * 0.06 }}
+                viewport={{ once: true, margin: "-120px 0px" }}
+                transition={{ delay: index * 0.06, duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
                 className="flex flex-col gap-3 py-5 sm:flex-row sm:items-start sm:gap-8"
               >
                 <div className="flex items-center gap-3 sm:w-44 sm:shrink-0 sm:pt-1">
@@ -108,7 +106,7 @@ export function Skills() {
                       key={i}
                       initial={{ opacity: 0, scale: 0.9 }}
                       whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true }}
+                      viewport={{ once: true, margin: "-120px 0px" }}
                       transition={{ delay: index * 0.04 + i * 0.03 }}
                       className="clip-hud-sm border border-border/70 bg-secondary/50 px-2.5 py-1.5 font-mono text-xs text-muted-foreground transition-colors hover:border-primary/50 hover:text-primary cursor-default"
                     >

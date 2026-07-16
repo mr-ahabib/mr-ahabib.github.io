@@ -29,9 +29,9 @@ export function Education() {
     <section id="education" className="py-20 sm:py-24 relative">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 6 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-120px 0px" }}
           className="text-center mb-12 sm:mb-16"
         >
           <div className="flex justify-center mb-3">
@@ -47,9 +47,9 @@ export function Education() {
           {EDUCATION_DATA.map((item, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 6 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
+              viewport={{ once: true, margin: "-120px 0px" }}
               transition={{ delay: index * 0.15, duration: 0.5 }}
               className="group relative border-l-2 border-primary/25 pl-7 transition-colors duration-300 hover:border-primary/70"
             >

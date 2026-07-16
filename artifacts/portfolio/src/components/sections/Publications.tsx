@@ -52,9 +52,9 @@ export function Publications() {
     <section id="publications" className="py-20 sm:py-24 relative">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 6 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-120px 0px" }}
           className="text-center mb-12 sm:mb-16"
         >
           <div className="flex justify-center mb-3">
@@ -86,9 +86,9 @@ export function Publications() {
             return (
               <motion.li
                 key={index}
-                initial={{ opacity: 0, y: 16 }}
+                initial={{ opacity: 0, y: 6 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, margin: "-120px 0px" }}
                 transition={{ delay: index * 0.1 }}
                 className="group relative pl-14 sm:pl-16"
               >
@@ -124,9 +124,9 @@ export function Publications() {
 
         {/* ── Under review ── */}
         <motion.div
-          initial={{ opacity: 0, y: 12 }}
+          initial={{ opacity: 0, y: 6 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-120px 0px" }}
           className="mt-12 mb-5 flex items-center gap-3"
         >
           <FileClock size={15} className="text-primary" />
@@ -138,9 +138,9 @@ export function Publications() {
           {UNDER_REVIEW.map((paper, index) => (
             <motion.div
               key={paper.title}
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 6 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "-120px 0px" }}
               transition={{ delay: index * 0.1 }}
               className="group border-l-2 border-dashed border-primary/35 pl-5 transition-colors duration-300 hover:border-primary/70"
             >

@@ -1,21 +1,16 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Constellation background (ayushcmd.me-style): scattered star-points that
- * twinkle gently, brighten with a tight glow when the cursor comes near,
- * and link up with hairline lines to close neighbours. The points don't
- * travel anywhere — all the life comes from the twinkle and the cursor —
- * so the field stays calm.
- *
- * Theme-aware: reads the primary colour from a probe element, so it's
- * electric cyan on black in dark mode and indigo ink on paper in light.
+ * Background (ayushcmd.me-style): a delicate, slowly rotating dotted
+ * Archimedean spiral with a soft glow at its core, over a calm field of
+ * faintly twinkling stars. Theme-aware via a colour probe.
  */
 
-const POINT_COUNT = 100;
-const LINK_DIST = 140; // px — draw a line when two stars are this close
-const NEAR_DIST = 220; // px — cursor proximity radius
+const STAR_COUNT = 80;
+const SPIRAL_DOTS = 300;
+const SPIRAL_TURNS = 6;
 
-type Star = { x: number; y: number; vx: number; vy: number; tw: number };
+type Star = { x: number; y: number; r: number; tw: number; base: number };
 
 export function AnimatedBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -35,7 +30,13 @@ export function AnimatedBackground() {
     let dpr = Math.min(window.devicePixelRatio || 1, 2);
     let stars: Star[] = [];
     let rgb = "34, 211, 238";
-    const cursor = { x: -9999, y: -9999 };
+
+    // Eased cursor — ripples radiate from here and follow the mouse smoothly.
+    // `active` is the target (1 near, 0 away); `aDisp` eases toward it so the
+    // ripple fades in and out instead of popping.
+    const cursor = { x: -9999, y: -9999, tx: -9999, ty: -9999, active: 0, aDisp: 0 };
+    const RIPPLE_R = 190; // px reach of the ripple
+    const RIPPLE_AMP = 4.5; // px max displacement
 
     const readColor = () => {
       const parsed = getComputedStyle(probe)
@@ -45,12 +46,12 @@ export function AnimatedBackground() {
     };
 
     const seed = () => {
-      stars = Array.from({ length: POINT_COUNT }, () => ({
+      stars = Array.from({ length: STAR_COUNT }, () => ({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.2,
-        vy: (Math.random() - 0.5) * 0.2,
+        r: 0.5 + Math.random() * 1.2,
         tw: Math.random() * Math.PI * 2,
+        base: 0.06 + Math.random() * 0.18,
       }));
     };
 
@@ -66,43 +67,73 @@ export function AnimatedBackground() {
       seed();
     };
 
+    // smooth ripple: returns [dx, dy, brightness] for a point given cursor state
+    const ripple = (x: number, y: number, time: number): [number, number, number] => {
+      if (cursor.aDisp <= 0.001) return [0, 0, 0];
+      const dx = x - cursor.x;
+      const dy = y - cursor.y;
+      const d = Math.hypot(dx, dy);
+      if (d > RIPPLE_R || d < 0.001) return [0, 0, 0];
+      const falloff = 1 - d / RIPPLE_R; // 1 at cursor → 0 at rim
+      const smooth = falloff * falloff * (3 - 2 * falloff); // smoothstep edge
+      // gentle travelling wave outward from the cursor
+      const wave = Math.sin(d * 0.04 - time * 0.005);
+      const push = wave * smooth * RIPPLE_AMP * cursor.aDisp;
+      return [(dx / d) * push, (dy / d) * push, smooth * cursor.aDisp];
+    };
+
     const draw = (time: number) => {
       ctx.clearRect(0, 0, width, height);
 
-      // stars — drift slowly, twinkle at rest, flare with a glow near the cursor
+      // ease cursor position AND presence for buttery-smooth ripples
+      cursor.x += (cursor.tx - cursor.x) * 0.1;
+      cursor.y += (cursor.ty - cursor.y) * 0.1;
+      cursor.aDisp += (cursor.active - cursor.aDisp) * 0.06;
+
+      const cx = width * 0.5;
+      const cy = height * 0.5;
+      // reach the farthest corner so the spiral fills the whole screen
+      const maxR = Math.hypot(width, height) * 0.55;
+
+      // soft layered glow core (subtle centre light)
+      const glowR = Math.min(width, height) * 0.5;
+      const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, glowR);
+      glow.addColorStop(0, `rgba(${rgb}, 0.09)`);
+      glow.addColorStop(0.35, `rgba(${rgb}, 0.035)`);
+      glow.addColorStop(1, "rgba(0, 0, 0, 0)");
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(cx, cy, glowR, 0, Math.PI * 2);
+      ctx.fill();
+
+      // faint twinkling stars — ride the ripple wave near the cursor
       for (const s of stars) {
-        s.x += s.vx;
-        s.y += s.vy;
-        if (s.x < 0 || s.x > width) s.vx *= -1;
-        if (s.y < 0 || s.y > height) s.vy *= -1;
-        const t = Math.max(0, 1 - Math.hypot(s.x - cursor.x, s.y - cursor.y) / NEAR_DIST);
-        const twinkle = 0.5 + 0.5 * Math.sin(time * 0.002 + s.tw);
+        const twinkle = 0.5 + 0.5 * Math.sin(time * 0.0015 + s.tw);
+        const [dx, dy, b] = ripple(s.x, s.y, time);
         ctx.beginPath();
-        ctx.arc(s.x, s.y, 1 + 1.8 * t, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${rgb}, ${0.25 * twinkle + 0.7 * t})`;
-        if (t > 0.1) {
-          ctx.shadowBlur = 8 * t;
-          ctx.shadowColor = `rgba(${rgb}, 0.9)`;
-        } else {
-          ctx.shadowBlur = 0;
-        }
+        ctx.arc(s.x + dx, s.y + dy, s.r + b * 0.6, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${rgb}, ${s.base * twinkle + b * 0.3})`;
         ctx.fill();
       }
-      ctx.shadowBlur = 0;
 
-      // constellation lines between close neighbours
-      for (let i = 0; i < stars.length; i++) {
-        for (let j = i + 1; j < stars.length; j++) {
-          const a = stars[i];
-          const b = stars[j];
-          const d = Math.hypot(a.x - b.x, a.y - b.y);
-          if (d > LINK_DIST) continue;
+      // two intertwined dotted Archimedean spiral arms, slowly rotating —
+      // sizes taper and brightness fades outward for an elegant galaxy feel.
+      const rotation = time * 0.00004;
+      for (let arm = 0; arm < 2; arm++) {
+        const armPhase = arm * Math.PI; // second arm is opposite
+        for (let i = 1; i < SPIRAL_DOTS; i++) {
+          const p = i / SPIRAL_DOTS;
+          const theta = p * SPIRAL_TURNS * Math.PI * 2 + rotation + armPhase;
+          const radius = Math.pow(p, 0.82) * maxR; // ease outward = more spread near rim
+          const x = cx + Math.cos(theta) * radius;
+          const y = cy + Math.sin(theta) * radius;
+          const size = 1.5 - p * 0.9; // bigger near the core, small at the rim
+          const alpha = (0.36 - p * 0.24) * (0.75 + 0.25 * Math.sin(time * 0.0012 + i * 0.6));
+          const [dx, dy, b] = ripple(x, y, time);
           ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
-          ctx.strokeStyle = `rgba(${rgb}, ${(1 - d / LINK_DIST) * 0.18})`;
-          ctx.lineWidth = 0.5;
-          ctx.stroke();
+          ctx.arc(x + dx, y + dy, Math.max(0.5, size) + b * 0.6, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${rgb}, ${Math.max(0, alpha) + b * 0.3})`;
+          ctx.fill();
         }
       }
     };
@@ -114,12 +145,13 @@ export function AnimatedBackground() {
     };
 
     const onMove = (e: MouseEvent) => {
-      cursor.x = e.clientX;
-      cursor.y = e.clientY;
+      if (cursor.tx < -9000) { cursor.x = e.clientX; cursor.y = e.clientY; }
+      cursor.tx = e.clientX;
+      cursor.ty = e.clientY;
+      cursor.active = 1;
     };
     const onLeave = () => {
-      cursor.x = -9999;
-      cursor.y = -9999;
+      cursor.active = 0;
     };
 
     readColor();
@@ -129,7 +161,7 @@ export function AnimatedBackground() {
       draw(0);
     } else {
       window.addEventListener("mousemove", onMove, { passive: true });
-      window.addEventListener("mouseleave", onLeave);
+      document.documentElement.addEventListener("mouseleave", onLeave);
       raf = requestAnimationFrame(step);
     }
 
@@ -147,7 +179,7 @@ export function AnimatedBackground() {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
       window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mouseleave", onLeave);
+      document.documentElement.removeEventListener("mouseleave", onLeave);
       themeObserver.disconnect();
     };
   }, []);

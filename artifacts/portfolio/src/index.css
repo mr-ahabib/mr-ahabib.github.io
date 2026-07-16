@@ -36,79 +36,76 @@
    with violet and amber as the supporting cast (ayushcmd.me-inspired). ---- */
 :root,
 .dark {
-  --background: 0 0% 4%;
-  --foreground: 210 40% 96%;
+  --background: 0 0% 4%; /* original pure-black #0a0a0a */
+  --foreground: 0 0% 96%;   /* #F5F5F5 */
 
-  --card: 0 0% 7%;
-  --card-foreground: 210 40% 96%;
+  --card: 0 0% 7%;          /* original card dark-grey */
+  --card-foreground: 0 0% 96%;
 
   --popover: 0 0% 6%;
-  --popover-foreground: 210 40% 96%;
+  --popover-foreground: 0 0% 96%;
 
-  /* electric cyan #00d9ff */
-  --primary: 189 100% 50%;
-  --primary-foreground: 0 0% 5%;
+  /* developer slate-teal #76ABAE */
+  --primary: 182 25% 57%;
+  --primary-foreground: 0 0% 4%;
 
-  --secondary: 0 0% 12%;
-  --secondary-foreground: 210 40% 96%;
+  --secondary: 0 0% 11%;
+  --secondary-foreground: 0 0% 96%;
 
-  --muted: 0 0% 11%;
-  --muted-foreground: 220 9% 64%;
+  --muted: 0 0% 10%;
+  --muted-foreground: 215 10% 65%;
 
-  /* soft violet #a78bfa */
-  --accent: 255 92% 76%;
-  --accent-foreground: 0 0% 5%;
-  /* third gradient stop — amber #f59e0b */
-  --accent-2: 38 92% 50%;
+  /* developer off-white #F5F5F5 */
+  --accent: 0 0% 96%;
+  --accent-foreground: 0 0% 4%;
+  /* developer slate-teal #76ABAE */
+  --accent-2: 182 25% 57%;
 
   --destructive: 0 72% 55%;
   --destructive-foreground: 210 40% 98%;
 
-  /* the easter-egg bug — neon red on the black terminal */
-  --bug: 0 92% 62%;
+  /* the easter-egg bug — acid glitch-green */
+  --bug: 96 95% 55%;
 
-  --border: 0 0% 16%;
-  --input: 0 0% 16%;
-  --ring: 189 100% 50%;
+  --border: 0 0% 14%;
+  --input: 0 0% 14%;
+  --ring: 182 25% 57%;
 
   --radius: 0.75rem;
 }
 
-/* ---- Light theme: engineering blueprint — deep indigo ink → azure → teal
-   on cool paper with a fine drafting grid. A different world from dark. ---- */
+/* ---- Light theme: developer blueprint (off-white base with teal/gray contrast) ---- */
 .light {
-  --background: 216 45% 97%;
-  --foreground: 224 50% 14%;
+  --background: 0 0% 96%; /* #F5F5F5 */
+  --foreground: 214 15% 22%; /* #303841 */
 
   --card: 0 0% 100%;
-  --card-foreground: 224 50% 14%;
+  --card-foreground: 214 15% 22%;
 
   --popover: 0 0% 100%;
-  --popover-foreground: 224 50% 14%;
+  --popover-foreground: 214 15% 22%;
 
-  --primary: 224 76% 45%;
+  --primary: 182 30% 36%; /* high-contrast developer teal */
   --primary-foreground: 0 0% 100%;
 
-  --secondary: 218 35% 93%;
-  --secondary-foreground: 224 50% 14%;
+  --secondary: 214 15% 88%;
+  --secondary-foreground: 214 15% 22%;
 
-  --muted: 218 35% 93%;
-  --muted-foreground: 222 18% 40%;
+  --muted: 214 15% 88%;
+  --muted-foreground: 214 15% 45%;
 
-  --accent: 205 90% 42%;
+  --accent: 214 15% 35%; /* high-contrast developer gray/charcoal */
   --accent-foreground: 0 0% 100%;
-  /* third gradient stop — drafting teal */
-  --accent-2: 174 84% 32%;
+  --accent-2: 182 30% 36%;
 
   --destructive: 0 84% 55%;
   --destructive-foreground: 210 40% 98%;
 
-  /* the easter-egg bug — burnt amber on paper (clearly not the dark-mode red) */
-  --bug: 28 95% 44%;
+  --bug: 96 75% 38%;
 
-  --border: 220 28% 85%;
-  --input: 220 28% 85%;
-  --ring: 224 76% 45%;
+  --border: 214 15% 82%;
+  --input: 214 15% 82%;
+  --ring: 182 30% 36%;
 
   --radius: 0.75rem;
 }
@@ -125,6 +122,17 @@
   html {
     scroll-behavior: smooth;
     background-color: hsl(var(--background));
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    /* GPU-accelerated momentum scroll — feels like 120Hz */
+    -webkit-overflow-scrolling: touch;
+    scroll-padding-top: 72px; /* offset for fixed navbar */
+    overscroll-behavior-y: none; /* prevents scroll-bounce jank at top/bottom */
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+  html::-webkit-scrollbar {
+    display: none; /* Hide Chrome/Safari scrollbar */
   }
   body {
     background: transparent;
@@ -231,12 +239,12 @@
     );
   }
 
-  /* Barely-there alternating section tint that works in both themes */
-  section:nth-child(even) {
-    background: hsl(var(--foreground) / 0.02);
-  }
-  section:nth-child(odd) {
-    background: transparent;
+  /* Seamless section-to-section flow with transparent backgrounds */
+  section {
+    background: transparent !important;
+    /* Promote each section to its own GPU compositor layer for smooth repaints */
+    transform: translateZ(0);
+    will-change: auto;
   }
 
   /* ---- Holographic avatar projection ---- */
@@ -372,4 +380,9 @@
   .bug-legs-b {
     animation: none;
   }
+}
+
+@keyframes scan-laser {
+  0%, 100% { top: 6%; opacity: 0.15; }
+  50% { top: 94%; opacity: 0.85; }
 }

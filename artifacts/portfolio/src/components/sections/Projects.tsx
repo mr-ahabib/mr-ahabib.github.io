@@ -1,98 +1,182 @@
 import { motion } from "framer-motion";
-import { Github, ExternalLink, FolderGit2, Bot, ScanText, GraduationCap, Radio } from "lucide-react";
-import { Tilt3D } from "@/components/Tilt3D";
+import {
+  Github,
+  ArrowUpRight,
+  Radio,
+  Bot,
+  ScanText,
+  GraduationCap,
+  FileText,
+  MessagesSquare,
+  BookOpen,
+  Stethoscope,
+  ShoppingBag,
+  Server,
+} from "lucide-react";
+import type { ReactNode } from "react";
 
-const LIVE_PROJECTS = [
+type Project = {
+  title: string;
+  domain: string;
+  link: string;
+  description: string;
+  tags: string[];
+  icon: ReactNode;
+  live?: boolean;
+};
+
+const LIVE_PROJECTS: Project[] = [
   {
     title: "Islamic GPT",
     domain: "gpt-dev.asf.sh",
     link: "https://gpt-dev.asf.sh/",
     description:
-      "AI-powered Islamic knowledge assistant for As-Sunnah Foundation — answers questions in Bangla & English with verified references from the Qur'an, Hadith, and Islamic scholars.",
-    impact: "Mufti-verified sources · bilingual",
+      "AI-powered Islamic knowledge assistant — answers in Bangla & English with verified references from the Qur'an, Hadith, and scholars.",
     tags: ["LLM", "RAG", "FastAPI", "React", "PgVector"],
-    icon: <Bot size={26} />,
+    icon: <Bot size={22} />,
   },
   {
     title: "DoceanAI Cloud",
     domain: "doceanai.cloud",
     link: "https://doceanai.cloud/",
     description:
-      "Cloud-based intelligent document processing platform — advanced OCR, document understanding, and NLP that turn scanned files into searchable, AI-ready knowledge bases.",
-    impact: "Production-grade document AI platform",
+      "Cloud-based document intelligence — advanced OCR, document understanding, and NLP that turn scanned files into AI-ready knowledge bases.",
     tags: ["OCR", "LLM", "Knowledge Base", "FastAPI", "React"],
-    icon: <ScanText size={26} />,
+    icon: <ScanText size={22} />,
   },
   {
     title: "AI Medical LMS",
     domain: "ai-lms.eatlbd.com",
     link: "https://ai-lms.eatlbd.com/",
     description:
-      "AI-powered medical education platform with intelligent tutoring, domain-adapted LLMs with RAG for personalised learning, and automated assessment generation.",
-    impact: "Serving 800+ medical students",
+      "AI medical-education platform with intelligent tutoring, domain-adapted LLMs + RAG for personalised learning, and automated assessments.",
     tags: ["LLMs", "RAG", "Vector DB", "FastAPI", "React"],
-    icon: <GraduationCap size={26} />,
+    icon: <GraduationCap size={22} />,
   },
 ];
 
-const PROJECTS = [
+const PROJECTS: Project[] = [
   {
     title: "Bangla PDF RAG System",
-    description: "An intelligent system that reads Bangla PDFs and provides accurate answers by combining OCR, semantic search, and AI-powered language understanding.",
-    tags: ["FastAPI", "RAG", "React", "FAISS", "OCR"],
+    domain: "github.com/mr-ahabib/RAG_API",
     link: "https://github.com/mr-ahabib/RAG_API",
+    description:
+      "Reads Bangla PDFs and answers accurately by combining OCR, semantic search, and AI-powered language understanding.",
+    tags: ["FastAPI", "RAG", "React", "FAISS", "OCR"],
+    icon: <FileText size={22} />,
   },
   {
     title: "RAG Q&A and MCQ Generator",
-    description: "A RAG system that answers questions, supports chat, and generates MCQs from documents, with FastAPI backend and React frontend for an interactive experience.",
-    tags: ["FastAPI", "FAISS", "RAG", "React", "Llama"],
+    domain: "github.com/mr-ahabib/RAG_MCQ_QA",
     link: "https://github.com/mr-ahabib/RAG_MCQ_QA",
+    description:
+      "A RAG system that answers questions, supports chat, and generates MCQs from documents — FastAPI backend with a React frontend.",
+    tags: ["FastAPI", "FAISS", "RAG", "React", "Llama"],
+    icon: <MessagesSquare size={22} />,
   },
   {
     title: "Book Critic App",
-    description: "Mobile app for discovering, reviewing, and discussing books with Redux state management, pagination, and reusable components.",
-    tags: ["React Native", "TypeScript", "Express.js", "Redux", "Expo"],
+    domain: "github.com/mr-ahabib/Book_Critic",
     link: "https://github.com/mr-ahabib/Book_Critic",
+    description:
+      "Mobile app for discovering, reviewing, and discussing books, with Redux state management, pagination, and reusable components.",
+    tags: ["React Native", "TypeScript", "Express.js", "Redux", "Expo"],
+    icon: <BookOpen size={22} />,
   },
   {
     title: "DocLink",
-    description: "Medical app that enables users to manage health records, get condition insights through symptom-based disease classification, and scan documents using OCR.",
-    tags: ["TypeScript", "React Native", "MySQL", "Express", "OCR"],
+    domain: "github.com/mr-ahabib/DocLink",
     link: "https://github.com/mr-ahabib/DocLink",
+    description:
+      "Medical app to manage health records, get condition insights via symptom-based disease classification, and scan documents with OCR.",
+    tags: ["TypeScript", "React Native", "MySQL", "Express", "OCR"],
+    icon: <Stethoscope size={22} />,
   },
   {
     title: "ShopSphere",
-    description: "Eco-themed mobile shopping app featuring product browsing, wishlist, cart functionality, and smooth animated UI.",
-    tags: ["React Native", "TypeScript", "Expo"],
+    domain: "github.com/mr-ahabib",
     link: "https://github.com/mr-ahabib",
+    description:
+      "Eco-themed mobile shopping app featuring product browsing, wishlist, cart functionality, and smooth animated UI.",
+    tags: ["React Native", "TypeScript", "Expo"],
+    icon: <ShoppingBag size={22} />,
   },
   {
     title: "Django LMS",
-    description: "LMS backend with role-based access control, JWT authentication, Stripe payments, and REST APIs.",
-    tags: ["Django", "Python", "Stripe", "MySQL"],
+    domain: "github.com/mr-ahabib",
     link: "https://github.com/mr-ahabib",
+    description:
+      "LMS backend with role-based access control, JWT authentication, Stripe payments, and REST APIs.",
+    tags: ["Django", "Python", "Stripe", "MySQL"],
+    icon: <Server size={22} />,
   },
 ];
 
-const containerVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.1 } },
-};
+/** Grid card — icon-led, no screenshot. */
+function ProjectCard({ project, index }: { project: Project; index: number }) {
+  return (
+    <motion.a
+      href={project.link}
+      target="_blank"
+      rel="noopener noreferrer"
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-80px 0px" }}
+      transition={{ duration: 0.5, delay: (index % 3) * 0.08 }}
+      className="clip-hud group relative flex h-full min-h-[15rem] flex-col overflow-hidden border border-primary/40 bg-card/80 p-5 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-primary [filter:drop-shadow(0_10px_22px_hsl(var(--primary)/0.12))] hover:[filter:drop-shadow(0_14px_28px_hsl(var(--primary)/0.28))]"
+    >
+      {/* sheen sweep on hover — same as the Download CV button */}
+      <span className="pointer-events-none absolute inset-0 z-10 -translate-x-full bg-gradient-to-r from-transparent via-white/15 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-};
+      <div className="mb-3 flex items-center justify-between">
+        <div className="clip-hud-sm grid h-10 w-10 place-items-center bg-primary/12 text-primary transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground">
+          {project.icon}
+        </div>
+        {project.live ? (
+          <span className="flex items-center gap-1.5 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-emerald-500">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            Live
+          </span>
+        ) : (
+          <span className="flex items-center gap-1.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+            <Github size={12} />
+            Repo
+          </span>
+        )}
+      </div>
+
+      <h3 className="truncate font-display text-base font-bold text-foreground transition-colors group-hover:text-primary">
+        {project.title}
+      </h3>
+      <p className="mb-2 flex items-center gap-1.5 truncate font-mono text-[11px] text-primary/80">
+        {project.domain}
+        <ArrowUpRight size={11} className="shrink-0 opacity-60 transition-opacity group-hover:opacity-100" />
+      </p>
+      <p className="mb-4 line-clamp-2 flex-grow text-[13px] leading-relaxed text-muted-foreground">{project.description}</p>
+
+      <div className="mt-auto flex flex-wrap gap-1.5">
+        {project.tags.slice(0, 4).map((tag) => (
+          <span
+            key={tag}
+            className="clip-hud-sm border border-border/70 bg-secondary/50 px-2 py-0.5 font-mono text-[10px] text-muted-foreground transition-colors group-hover:border-primary/40 group-hover:text-primary/90"
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+    </motion.a>
+  );
+}
 
 export function Projects() {
   return (
     <section id="projects" className="py-24 relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 6 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
+          viewport={{ once: true, margin: "-120px 0px" }}
+          className="text-center mb-14"
         >
           <div className="flex justify-center mb-3">
             <span className="eyebrow">Portfolio</span>
@@ -105,9 +189,9 @@ export function Projects() {
 
         {/* ── Live production systems ── */}
         <motion.div
-          initial={{ opacity: 0, y: 12 }}
+          initial={{ opacity: 0, y: 6 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-120px 0px" }}
           className="mb-6 flex items-center gap-3"
         >
           <Radio size={15} className="text-primary" />
@@ -115,73 +199,17 @@ export function Projects() {
           <span className="h-px flex-1 bg-gradient-to-r from-primary/50 to-transparent" />
         </motion.div>
 
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          className="mb-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7"
-        >
-          {LIVE_PROJECTS.map((project) => (
-            <Tilt3D key={project.title} className="h-full">
-            <motion.a
-              href={project.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              variants={cardVariants}
-              className="neon-glow-sm group relative flex h-full flex-col overflow-hidden rounded-2xl border border-primary/60 bg-card/80 p-7 backdrop-blur-xl transition-colors duration-300 hover:border-primary"
-            >
-              {/* Gradient top accent */}
-              <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary via-accent to-accent-2" />
-              {/* HUD corner bracket */}
-              <span className="pointer-events-none absolute right-4 top-4 h-4 w-4 border-r-2 border-t-2 border-primary/40" />
-
-              <div className="mb-5 flex items-start justify-between relative">
-                <div className="clip-hud-sm grid h-12 w-12 place-items-center bg-primary/12 text-primary transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground">
-                  {project.icon}
-                </div>
-                {/* LIVE badge */}
-                <span className="mr-6 flex items-center gap-1.5 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-emerald-500">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  Live
-                </span>
-              </div>
-
-              <h3 className="text-lg font-display font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
-                {project.title}
-              </h3>
-              <p className="mb-3 flex items-center gap-1.5 font-mono text-xs text-primary/90">
-                {project.domain}
-                <ExternalLink size={12} className="opacity-60 transition-opacity group-hover:opacity-100" />
-              </p>
-              <p className="text-muted-foreground text-sm leading-relaxed mb-4 flex-grow">
-                {project.description}
-              </p>
-
-              <p className="mb-4 flex items-center gap-2 font-mono text-xs text-foreground/80">
-                <span className="text-primary">&gt;</span> {project.impact}
-              </p>
-
-              <div className="flex flex-wrap gap-1.5 mt-auto">
-                {project.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="clip-hud-sm border border-border/70 bg-secondary/50 px-2.5 py-1 font-mono text-xs text-muted-foreground transition-colors group-hover:border-primary/40 group-hover:text-primary/90"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </motion.a>
-            </Tilt3D>
+        <div className="mb-16 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {LIVE_PROJECTS.map((p, i) => (
+            <ProjectCard key={p.title} project={{ ...p, live: true }} index={i} />
           ))}
-        </motion.div>
+        </div>
 
         {/* ── Open source / side projects ── */}
         <motion.div
-          initial={{ opacity: 0, y: 12 }}
+          initial={{ opacity: 0, y: 6 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-120px 0px" }}
           className="mb-6 flex items-center gap-3"
         >
           <Github size={15} className="text-primary" />
@@ -189,63 +217,17 @@ export function Projects() {
           <span className="h-px flex-1 bg-gradient-to-r from-primary/50 to-transparent" />
         </motion.div>
 
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7"
-        >
-          {PROJECTS.map((project, index) => (
-            <Tilt3D key={index} className="h-full">
-            <motion.div
-              variants={cardVariants}
-              className="neon-glow-sm group relative flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-primary/45 bg-card/80 p-7 backdrop-blur-xl transition-colors duration-300 hover:border-primary"
-              onClick={() => window.open(project.link, "_blank", "noopener,noreferrer")}
-            >
-              {/* HUD corner bracket */}
-              <span className="pointer-events-none absolute right-4 top-4 h-4 w-4 border-r-2 border-t-2 border-primary/40" />
-
-              <div className="flex justify-between items-start mb-5 relative">
-                <motion.div
-                  whileHover={{ rotate: 5, scale: 1.1 }}
-                  className="clip-hud-sm grid h-12 w-12 place-items-center bg-primary/12 text-primary transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground"
-                >
-                  <FolderGit2 size={24} />
-                </motion.div>
-                <div className="flex gap-2.5 text-muted-foreground">
-                  <Github size={20} className="group-hover:text-foreground transition-colors" />
-                  <ExternalLink size={20} className="opacity-0 group-hover:opacity-100 transition-opacity text-primary" />
-                </div>
-              </div>
-
-              <h3 className="text-lg font-display font-bold text-foreground mb-2.5 group-hover:text-primary transition-colors relative">
-                {project.title}
-              </h3>
-              <p className="text-muted-foreground text-sm leading-relaxed mb-5 flex-grow relative">
-                {project.description}
-              </p>
-
-              <div className="flex flex-wrap gap-1.5 mt-auto relative">
-                {project.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="clip-hud-sm border border-border/70 bg-secondary/50 px-2.5 py-1 font-mono text-xs text-muted-foreground transition-colors group-hover:border-primary/40 group-hover:text-primary/90"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </motion.div>
-            </Tilt3D>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {PROJECTS.map((p, i) => (
+            <ProjectCard key={p.title + i} project={p} index={i} />
           ))}
-        </motion.div>
+        </div>
 
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 6 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mt-12"
+          viewport={{ once: true, margin: "-120px 0px" }}
+          className="text-center mt-14"
         >
           <a
             href="https://github.com/mr-ahabib"
