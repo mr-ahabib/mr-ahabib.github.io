@@ -13,30 +13,31 @@ const RESPAWN_MS: [number, number] = [20_000, 30_000];
 const MAX_SPAWNS = 14; // per page load (splits count too)
 const LIFETIME_MS = 70_000; // after this the bug scurries off-screen
 const SIZE = 30; // sprite box in px
-const MAX_BUGS = 1; // concurrent bugs after multiplying
-const SPLIT_MIN_AGE_MS = 6_000; // a bug must live this long before it can split
-const SPLIT_CHANCE_PER_SEC = 0.03; // per wandering bug (~once per ~33s)
+const MAX_BUGS = 3; // concurrent bugs after multiplying
+const SPLIT_MIN_AGE_MS = 5_000; // a bug must live this long before it can split
+const SPLIT_CHANCE_PER_SEC = 0.06; // per wandering bug
 
 const rand = (a: number, b: number) => a + Math.random() * (b - a);
 const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
 const pick = <T,>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
 
-/** Cocky lines the bug drops while wandering. */
+/** Cocky lines the bugs drop while wandering — teasing the developer. */
 const TAUNTS = [
-  "it works on MY machine 🐛",
-  "I'm not a bug, I'm a feature",
-  "shipped straight to prod on a Friday",
-  "I only appear during the demo",
-  "git blame says it wasn't me",
-  "closed as 'cannot reproduce' 😏",
-  "your unit tests? adorable.",
-  "I survived code review",
-  "TODO: fix me (since 2019)",
-  "works 60% of the time, every time",
-  "have you tried turning it off? 💀",
-  "I'm in your node_modules",
-  "500 Internal Bug Error",
-  "Stack Overflow can't save you",
+  "psst dev, your code has 99 problems 🐛",
+  "I saw that TODO you never did 👀",
+  "6 ghonta debug korlen, ami-i chilam 😂",
+  "Ctrl+S diyeo amake thamate parben na",
+  "deploy korei ghumate jaben na 😉",
+  "git commit -m 'fix' … abar? 😏",
+  "your console.log won't save you dev",
+  "ei dev ta amake dhorte pare na 😎",
+  "works on my machine — not yours 🤷",
+  "aponar unit tests? cute 🐛",
+  "prod-e amake khuje paben, hehe",
+  "npm run cry",
+  "ami ekta feature, bug na — boss ke bolben",
+  "Stack Overflow-o apnake bachate parbe na",
+  "code review pass korechi, dev 😌",
 ];
 /** Announced right after a bug splits in two. */
 const SPLIT_LINES = [
@@ -233,14 +234,16 @@ export function BugGame() {
   const [corpses, setCorpses] = useState<{ id: number; x: number; y: number; label: string }[]>([]);
   const [hovered, setHovered] = useState(false);
   const [swing, setSwing] = useState(false);
-  const [bubble, setBubble] = useState<{ bugId: number; text: string } | null>(null);
+  // Each bug can have its own speech bubble at once.
+  const [bubbles, setBubbles] = useState<{ bugId: number; text: string }[]>([]);
 
   const bugsRef = useRef(new Map<number, BugState>());
   const elsRef = useRef(new Map<number, HTMLDivElement>());
   const hammerElRef = useRef<HTMLDivElement | null>(null);
-  const bubbleElRef = useRef<HTMLDivElement | null>(null);
-  const bubbleRef = useRef<{ bugId: number; text: string } | null>(null);
-  bubbleRef.current = bubble;
+  const bubbleEls = useRef(new Map<number, HTMLDivElement>());
+  const bubblesRef = useRef<{ bugId: number; text: string }[]>([]);
+  bubblesRef.current = bubbles;
+  const bubbleTimers = useRef(new Map<number, number>());
   const cursor = useRef({ x: -9999, y: -9999 });
   const lastPanic = useRef(0);
   const nextId = useRef(1);
@@ -250,6 +253,27 @@ export function BugGame() {
   const anyAlive = bugIds.length > 0;
   const pushTimer = (id: number) => timers.current.push(id);
   const syncIds = () => setBugIds(Array.from(bugsRef.current.keys()));
+
+  /** Make one bug say something for a while (replaces its current line). */
+  const say = useCallback((bugId: number, text: string, ms = 2600) => {
+    setBubbles((prev) => [...prev.filter((b) => b.bugId !== bugId), { bugId, text }]);
+    const existing = bubbleTimers.current.get(bugId);
+    if (existing) clearTimeout(existing);
+    const t = window.setTimeout(() => {
+      setBubbles((prev) => prev.filter((b) => b.bugId !== bugId));
+      bubbleTimers.current.delete(bugId);
+    }, ms);
+    bubbleTimers.current.set(bugId, t);
+    pushTimer(t);
+  }, []);
+
+  /** Drop a bug's bubble immediately (on death / flee). */
+  const clearBubble = useCallback((bugId: number) => {
+    const existing = bubbleTimers.current.get(bugId);
+    if (existing) clearTimeout(existing);
+    bubbleTimers.current.delete(bugId);
+    setBubbles((prev) => prev.filter((b) => b.bugId !== bugId));
+  }, []);
 
   /** Add a bug — from a random screen edge, or at a position (a split). */
   const spawn = useCallback((at?: { x: number; y: number }) => {
@@ -301,6 +325,7 @@ export function BugGame() {
 
     const remove = (id: number) => {
       bugsRef.current.delete(id);
+      clearBubble(id);
       syncIds();
       if (bugsRef.current.size === 0) scheduleSpawn(RESPAWN_MS);
     };
@@ -340,10 +365,9 @@ export function BugGame() {
             };
             s.speed = 210;
             s.pauseUntil = 0;
-            if (now - lastPanic.current > 4500) {
+            if (now - lastPanic.current > 3500) {
               lastPanic.current = now;
-              setBubble({ bugId: s.id, text: pick(PANICS) });
-              pushTimer(window.setTimeout(() => setBubble(null), 1600));
+              say(s.id, pick(PANICS), 1600);
             }
           }
         }
@@ -358,8 +382,7 @@ export function BugGame() {
         ) {
           const child = spawn({ x: s.x + rand(-18, 18), y: s.y + rand(-18, 18) });
           child.angle = s.angle + rand(120, 240);
-          setBubble({ bugId: s.id, text: pick(SPLIT_LINES) });
-          pushTimer(window.setTimeout(() => setBubble(null), 2200));
+          say(s.id, pick(SPLIT_LINES), 2200);
         }
 
         const paused = now < s.pauseUntil && !s.fleeing;
@@ -397,12 +420,11 @@ export function BugGame() {
         }
       }
 
-      // keep the speech bubble pinned to its bug
-      const b = bubbleRef.current;
-      const bEl = bubbleElRef.current;
-      if (b && bEl) {
+      // keep every speech bubble pinned to its bug
+      for (const b of bubblesRef.current) {
         const s = bugsRef.current.get(b.bugId);
-        if (s) {
+        const bEl = bubbleEls.current.get(b.bugId);
+        if (s && bEl) {
           bEl.style.transform = `translate3d(${s.x}px, ${Math.max(s.y - SIZE / 2 - 6, 34)}px, 0)`;
         }
       }
@@ -412,7 +434,7 @@ export function BugGame() {
 
     raf = requestAnimationFrame(step);
     return () => cancelAnimationFrame(raf);
-  }, [anyAlive, scheduleSpawn, spawn]);
+  }, [anyAlive, scheduleSpawn, spawn, say, clearBubble]);
 
   // Track the cursor globally while bugs are alive (they dodge anything close).
   useEffect(() => {
@@ -427,10 +449,10 @@ export function BugGame() {
     };
   }, [anyAlive]);
 
-  // Random cocky taunts while wandering — a random bug does the talking.
+  // Cocky taunts while wandering — every alive bug chimes in, staggered.
   useEffect(() => {
     if (!anyAlive) {
-      setBubble(null);
+      setBubbles([]);
       return;
     }
     let cancelled = false;
@@ -439,22 +461,20 @@ export function BugGame() {
       t = window.setTimeout(() => {
         if (cancelled) return;
         const ids = Array.from(bugsRef.current.keys());
-        if (ids.length > 0) {
-          setBubble({ bugId: pick(ids), text: pick(TAUNTS) });
+        ids.forEach((id, i) => {
           window.setTimeout(() => {
-            if (!cancelled) setBubble(null);
-          }, 2800);
-        }
-        loop(rand(5000, 9000));
+            if (!cancelled && bugsRef.current.has(id)) say(id, pick(TAUNTS), 2800);
+          }, i * 550);
+        });
+        loop(rand(5500, 9000));
       }, delay);
     };
     loop(rand(1500, 3000));
     return () => {
       cancelled = true;
       clearTimeout(t);
-      setBubble(null);
     };
-  }, [anyAlive]);
+  }, [anyAlive, say]);
 
   // First spawn + dev hook. Auto-spawns respect prefers-reduced-motion.
   useEffect(() => {
@@ -488,9 +508,9 @@ export function BugGame() {
     const corpseId = id;
     setCorpses((prev) => [...prev, { id: corpseId, x: s.x, y: s.y, label: pick(LAST_WORDS) }]);
     bugsRef.current.delete(id);
+    clearBubble(id);
     syncIds();
     setHovered(false);
-    setBubble((b) => (b?.bugId === id ? null : b));
     pushTimer(window.setTimeout(() => setSwing(false), 340));
     pushTimer(
       window.setTimeout(() => setCorpses((prev) => prev.filter((c) => c.id !== corpseId)), 4200),
@@ -545,19 +565,27 @@ export function BugGame() {
         </div>
       ))}
 
-      {bubble && bugsRef.current.has(bubble.bugId) && (
-        <div
-          ref={bubbleElRef}
-          className="absolute left-0 top-0 will-change-transform"
-          style={{
-            transform: `translate3d(${bugsRef.current.get(bubble.bugId)!.x}px, ${Math.max(bugsRef.current.get(bubble.bugId)!.y - SIZE / 2 - 6, 34)}px, 0)`,
-          }}
-        >
-          <span className="bug-bubble neon-glow-sm relative block -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-lg border border-bug/60 bg-card/95 px-2.5 py-1 font-mono text-[11px] font-medium text-bug backdrop-blur after:absolute after:left-1/2 after:top-full after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-bug/60 after:content-['']">
-            {bubble.text}
-          </span>
-        </div>
-      )}
+      {bubbles.map((b) => {
+        const s = bugsRef.current.get(b.bugId);
+        if (!s) return null;
+        return (
+          <div
+            key={b.bugId}
+            ref={(el) => {
+              if (el) bubbleEls.current.set(b.bugId, el);
+              else bubbleEls.current.delete(b.bugId);
+            }}
+            className="absolute left-0 top-0 will-change-transform"
+            style={{
+              transform: `translate3d(${s.x}px, ${Math.max(s.y - SIZE / 2 - 6, 34)}px, 0)`,
+            }}
+          >
+            <span className="bug-bubble neon-glow-sm relative block -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-lg border border-bug/60 bg-card/95 px-2.5 py-1 font-mono text-[11px] font-medium text-bug backdrop-blur after:absolute after:left-1/2 after:top-full after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-bug/60 after:content-['']">
+              {b.text}
+            </span>
+          </div>
+        );
+      })}
 
       {(hovered || swing) && (
         <div
