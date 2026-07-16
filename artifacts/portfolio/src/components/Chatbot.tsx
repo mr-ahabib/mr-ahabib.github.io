@@ -55,16 +55,16 @@ export function Chatbot() {
       return "Ahashan is currently an AI & Software Engineer at As-Sunnah Foundation (May 2026 – Present). Previously he was an AI Project Co-ordinator at Qanun Limited (Feb–Apr 2026), an AI/ML Engineer at Ethics Advance Innovation Hub Ltd. (Feb 2025 – Jan 2026), and a Research Assistant at United International University (Aug 2024 – Jan 2025).";
     }
     if (text.match(/\b(skills|technology|tech)\b/)) {
-      return "Ahashan is proficient in Python, TypeScript, Java, C++, and more. He specializes in AI/ML: LLMs, RAG, LangChain, PyTorch, TensorFlow. Frameworks: FastAPI, Django, React, Next.js, React Native, Node.js.";
+      return "Ahashan specializes in AI/ML: LLMs, NLP, RAG, PyTorch, TensorFlow, Transformers, LangChain, plus OCR and computer vision. Languages: Python, TypeScript, Java, C++. Frameworks: FastAPI, Django, React, React Native, Node.js. Also Docker, CI/CD, PostgreSQL, FAISS, and PgVector.";
     }
-    if (text.match(/\b(project|projects)\b/)) {
-      return "Ahashan has built several notable projects including a Bangla PDF RAG System, RAG Q&A Generator, DocLink (medical app), ShopSphere, and Django LMS. Visit his GitHub: github.com/mr-ahabib";
+    if (text.match(/\b(project|projects|live|production)\b/)) {
+      return "Ahashan has 3 live production products: Islamic GPT (gpt-dev.asf.sh) — an AI Islamic knowledge assistant with Qur'an & Hadith references, DoceanAI Cloud (doceanai.cloud) — an intelligent document processing/OCR platform, and an AI Medical LMS (ai-lms.eatlbd.com) serving 800+ students. Plus open-source builds like the Bangla PDF RAG System and DocLink on GitHub: github.com/mr-ahabib";
     }
     if (text.match(/\b(education|degree|university)\b/)) {
       return "Ahashan completed his B.Sc. in CSE from United International University with a CGPA of 3.62. He also studied at Govt. Azizul Haque College (HSC).";
     }
     if (text.match(/\b(publication|research|paper)\b/)) {
-      return "Ahashan has 3 publications: Brain Tumor Prediction (INDUSCON 2025, Brazil), ADDomics multiomics fusion (TENSYMP 2025, New Zealand), and PyroVision wildfire detection (ICEEICT 2024, Dhaka).";
+      return "Ahashan has 3 IEEE publications: Brain Tumor Prediction (INDUSCON 2025, Brazil), ADDomics multiomics fusion (TENSYMP 2025, New Zealand), and PyroVision wildfire detection (ICEEICT 2024, Dhaka) — plus 2 first-author papers under review at EMNLP and Pattern Recognition.";
     }
     if (text.match(/\b(achievement|award|champion)\b/)) {
       return "Ahashan is a Kaggle Champion (UIU 2024), Software Lab Project Show Champion (UIU 2024), IEEE TENSYMP 2025 Reviewer, and received the Bangladesh Scouts Award from the Prime Minister (2012).";

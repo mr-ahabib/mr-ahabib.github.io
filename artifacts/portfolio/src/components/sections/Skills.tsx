@@ -1,11 +1,23 @@
 import { lazy, Suspense } from "react";
 import { motion } from "framer-motion";
-import { Code2, Database, Layers, Brain, Wrench } from "lucide-react";
+import { Code2, Database, Layers, Brain, Wrench, ServerCog } from "lucide-react";
+import { Tilt3D } from "@/components/Tilt3D";
+import { WireCube } from "@/components/HudDecor";
 
 // recharts is heavy — load the radar in its own chunk, off the critical path
 const CapabilityRadar = lazy(() => import("@/components/CapabilityRadar"));
 
 const CATEGORIES = [
+  {
+    title: "AI / ML",
+    icon: <Brain size={20} />,
+    skills: ["LLMs", "NLP", "Deep Learning", "RAG", "PyTorch", "TensorFlow", "Transformers", "Hugging Face", "LangChain", "Scikit-learn"],
+  },
+  {
+    title: "Specialized",
+    icon: <Wrench size={20} />,
+    skills: ["OCR", "Computer Vision", "Document Processing", "Knowledge Base Systems", "Blockchain"],
+  },
   {
     title: "Languages",
     icon: <Code2 size={20} />,
@@ -14,22 +26,17 @@ const CATEGORIES = [
   {
     title: "Frameworks",
     icon: <Layers size={20} />,
-    skills: ["FastAPI", "Django", "React", "React Native", "Node.js (Express.js)"],
+    skills: ["FastAPI", "Django", "React", "React Native", "Node.js", "Express.js"],
   },
   {
     title: "Databases",
     icon: <Database size={20} />,
-    skills: ["MySQL", "PostgreSQL"],
+    skills: ["PostgreSQL", "MySQL", "FAISS", "PgVector", "Vector Databases"],
   },
   {
-    title: "AI / ML",
-    icon: <Brain size={20} />,
-    skills: ["LLMs", "NLP", "Machine Learning", "Deep Learning", "RAG", "Transformers", "Hugging Face", "PyTorch", "TensorFlow", "LangChain"],
-  },
-  {
-    title: "Technologies",
-    icon: <Wrench size={20} />,
-    skills: ["Blockchain", "Data Structures & Algorithms", "Digital Image Processing", "Git / GitHub"],
+    title: "DevOps & Tools",
+    icon: <ServerCog size={20} />,
+    skills: ["Docker", "Git", "CI/CD", "Linux", "REST APIs", "JWT / OAuth2", "HPC (LUMI)"],
   },
 ];
 
@@ -47,6 +54,10 @@ function RadarFallback() {
 export function Skills() {
   return (
     <section id="skills" className="py-20 sm:py-24 relative overflow-hidden">
+      {/* 3D wireframe fillers */}
+      <WireCube size={42} className="left-[7%] top-24 hidden lg:block" />
+      <WireCube size={28} className="right-[9%] bottom-32 hidden lg:block" />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -60,7 +71,7 @@ export function Skills() {
           <h2 className="text-3xl md:text-5xl font-display font-bold mb-4 text-foreground">
             Technical <span className="text-gradient">Proficiency</span>
           </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded-full" />
+          <div className="w-24 h-1 bg-gradient-to-r from-primary via-accent to-accent-2 mx-auto rounded-full" />
         </motion.div>
 
         {/* Capability radar */}
@@ -83,12 +94,12 @@ export function Skills() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ delay: index * 0.1 }}
-              whileHover={{ y: -4 }}
-              className="neon-glow-sm group relative rounded-2xl border border-primary/50 bg-card/80 backdrop-blur-xl transition-colors duration-300 hover:border-primary"
+              className="h-full"
             >
+              <Tilt3D className="neon-glow-sm group relative h-full rounded-2xl border border-primary/50 bg-card/80 backdrop-blur-xl transition-colors duration-300 hover:border-primary">
               <div className="relative h-full overflow-hidden rounded-2xl p-5 sm:p-6">
                 {/* Gradient top accent */}
-                <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary to-accent" />
+                <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary via-accent to-accent-2" />
                 {/* HUD corner bracket */}
                 <span className="pointer-events-none absolute right-4 top-4 h-4 w-4 border-r-2 border-t-2 border-primary/40" />
 
@@ -114,6 +125,7 @@ export function Skills() {
                   ))}
                 </div>
               </div>
+              </Tilt3D>
             </motion.div>
           ))}
         </div>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, MapPin, Github, Globe, Linkedin, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { WireCube } from "@/components/HudDecor";
 
 const CHANNELS = [
   { icon: <Mail size={16} />, label: "Email", value: "mr.ahashan261@gmail.com", href: "mailto:mr.ahashan261@gmail.com" },
@@ -30,6 +31,9 @@ export function Contact() {
   return (
     <section id="contact" className="py-20 sm:py-24 relative overflow-hidden">
       <span className="pointer-events-none absolute top-0 left-0 h-px w-full bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+      {/* 3D wireframe fillers */}
+      <WireCube size={36} className="right-[7%] top-24 hidden lg:block" />
+      <WireCube size={24} className="left-[8%] bottom-24 hidden lg:block" />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
         <motion.div
@@ -44,7 +48,7 @@ export function Contact() {
           <h2 className="text-3xl md:text-5xl font-display font-bold mb-4 text-foreground">
             Get In <span className="text-gradient">Touch</span>
           </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded-full mb-5" />
+          <div className="w-24 h-1 bg-gradient-to-r from-primary via-accent to-accent-2 mx-auto rounded-full mb-5" />
           <p className="text-muted-foreground text-sm sm:text-base leading-relaxed max-w-xl mx-auto">
             Whether you have a question, a project idea, or just want to say hi — I'd love to hear from you.
           </p>
@@ -100,7 +104,7 @@ export function Contact() {
 
             <button
               type="submit"
-              className="clip-hud group relative mt-6 inline-flex w-full items-center justify-center gap-2 overflow-hidden bg-gradient-to-r from-primary to-accent px-7 py-3.5 text-sm font-semibold text-white transition-transform duration-300 hover:-translate-y-0.5 [filter:drop-shadow(0_6px_16px_hsl(var(--primary)/0.4))]"
+              className="clip-hud group relative mt-6 inline-flex w-full items-center justify-center gap-2 overflow-hidden bg-gradient-to-r from-primary via-accent to-accent-2 px-7 py-3.5 text-sm font-semibold text-primary-foreground transition-transform duration-300 hover:-translate-y-0.5 [filter:drop-shadow(0_6px_16px_hsl(var(--primary)/0.4))]"
             >
               <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
               <Send size={17} />

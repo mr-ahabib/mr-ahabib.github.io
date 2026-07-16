@@ -1,4 +1,6 @@
 import { motion } from "framer-motion";
+import { Tilt3D } from "@/components/Tilt3D";
+import { WireCube } from "@/components/HudDecor";
 
 export function About() {
   return (
@@ -14,7 +16,7 @@ export function About() {
             <span className="eyebrow">Who I Am</span>
           </div>
           <h2 className="text-3xl md:text-5xl font-display font-bold mb-4 text-foreground">About <span className="text-gradient">Me</span></h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded-full" />
+          <div className="w-24 h-1 bg-gradient-to-r from-primary via-accent to-accent-2 mx-auto rounded-full" />
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
@@ -26,6 +28,8 @@ export function About() {
             className="lg:col-span-5"
           >
             <div className="relative max-w-sm mx-auto lg:max-w-none">
+              <WireCube size={44} className="-top-10 -left-8 hidden lg:block" />
+              <Tilt3D max={7}>
               {/* Neon-outlined frame */}
               <div className="neon-glow relative aspect-[4/5] overflow-hidden rounded-3xl border-2 border-primary bg-card">
                 <img
@@ -50,6 +54,7 @@ export function About() {
                   </span>
                 </div>
               </div>
+              </Tilt3D>
             </div>
           </motion.div>
 

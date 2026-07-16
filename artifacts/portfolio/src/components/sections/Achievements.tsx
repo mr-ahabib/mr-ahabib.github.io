@@ -1,15 +1,20 @@
 import { motion } from "framer-motion";
-import { Trophy, Medal, Award } from "lucide-react";
+import { Trophy, Medal, Award, ClipboardCheck } from "lucide-react";
 
 const ACHIEVEMENTS = [
+  {
+    title: "IEEE TENSYMP Reviewer",
+    org: "IEEE Region 10 Symposium",
+    date: "2025",
+    desc: "Peer reviewer for AI and machine learning research papers at the IEEE Region 10 Symposium.",
+    icon: <ClipboardCheck size={28} className="text-primary" />,
+  },
   {
     title: "Kaggle Competition Champion",
     org: "United International University",
     date: "December 2024",
     desc: "Won first place in the university-level Kaggle machine learning competition.",
-    icon: <Trophy size={28} className="text-yellow-500" />,
-    accent: "border-yellow-400/30 bg-yellow-50/50",
-    badge: "bg-yellow-100 text-yellow-700 border-yellow-200",
+    icon: <Trophy size={28} className="text-primary" />,
   },
   {
     title: "Software Lab Champion",
@@ -17,17 +22,13 @@ const ACHIEVEMENTS = [
     date: "December 2024",
     desc: "First place at the CSE Project Show Fall '24 — Software Lab competition.",
     icon: <Medal size={28} className="text-primary" />,
-    accent: "border-primary/20 bg-primary/5",
-    badge: "bg-primary/10 text-primary border-primary/20",
   },
   {
     title: "Bangladesh Scouts Award",
-    org: "Bangladesh Scout",
+    org: "Bangladesh Scouts",
     date: "2012",
     desc: "Prestigious national award recognising excellence in scouting, presented on behalf of the Prime Minister of Bangladesh.",
-    icon: <Award size={28} className="text-emerald-600" />,
-    accent: "border-emerald-400/30 bg-emerald-50/50",
-    badge: "bg-emerald-100 text-emerald-700 border-emerald-200",
+    icon: <Award size={28} className="text-primary" />,
   },
 ];
 
@@ -47,10 +48,10 @@ export function Achievements() {
           <h2 className="text-3xl md:text-5xl font-display font-bold mb-4 text-foreground">
             Awards &amp; <span className="text-gradient">Achievements</span>
           </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded-full" />
+          <div className="w-24 h-1 bg-gradient-to-r from-primary via-accent to-accent-2 mx-auto rounded-full" />
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-7">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
           {ACHIEVEMENTS.map((item, index) => (
             <motion.div
               key={index}

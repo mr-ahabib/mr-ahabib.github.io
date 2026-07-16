@@ -19,6 +19,7 @@
   --color-muted-foreground: hsl(var(--muted-foreground));
   --color-accent: hsl(var(--accent));
   --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-accent-2: hsl(var(--accent-2));
   --color-destructive: hsl(var(--destructive));
   --color-destructive-foreground: hsl(var(--destructive-foreground));
   --color-border: hsl(var(--border));
@@ -30,69 +31,75 @@
   --color-popover-foreground: hsl(var(--popover-foreground));
 }
 
-/* ---- Dark theme (default) ---- */
+/* ---- Dark theme (default): neon terminal — electric cyan → teal → green
+   on a deep teal-black. Feels like a live machine. ---- */
 :root,
 .dark {
-  --background: 222 47% 6%;
-  --foreground: 210 40% 96%;
+  --background: 198 55% 4%;
+  --foreground: 185 30% 95%;
 
-  --card: 222 40% 10%;
-  --card-foreground: 210 40% 96%;
+  --card: 198 45% 8%;
+  --card-foreground: 185 30% 95%;
 
-  --popover: 222 44% 8%;
-  --popover-foreground: 210 40% 96%;
+  --popover: 198 50% 7%;
+  --popover-foreground: 185 30% 95%;
 
-  --primary: 214 100% 56%;
-  --primary-foreground: 0 0% 100%;
+  --primary: 187 95% 55%;
+  --primary-foreground: 200 70% 7%;
 
-  --secondary: 218 32% 16%;
-  --secondary-foreground: 210 40% 96%;
+  --secondary: 194 35% 14%;
+  --secondary-foreground: 185 30% 95%;
 
-  --muted: 218 30% 14%;
-  --muted-foreground: 214 22% 64%;
+  --muted: 194 32% 12%;
+  --muted-foreground: 190 22% 62%;
 
-  --accent: 200 100% 60%;
-  --accent-foreground: 0 0% 100%;
+  --accent: 165 85% 48%;
+  --accent-foreground: 200 70% 7%;
+  /* third gradient stop — spring green */
+  --accent-2: 145 80% 50%;
 
   --destructive: 0 72% 55%;
   --destructive-foreground: 210 40% 98%;
 
-  --border: 214 40% 22%;
-  --input: 214 40% 22%;
-  --ring: 214 100% 56%;
+  --border: 190 40% 19%;
+  --input: 190 40% 19%;
+  --ring: 187 95% 55%;
 
   --radius: 0.75rem;
 }
 
-/* ---- Light theme (alternate) ---- */
+/* ---- Light theme: engineering blueprint — deep indigo ink → azure → teal
+   on cool paper with a fine drafting grid. A different world from dark. ---- */
 .light {
-  --background: 210 40% 99%;
-  --foreground: 222 47% 11%;
+  --background: 216 45% 97%;
+  --foreground: 224 50% 14%;
 
   --card: 0 0% 100%;
-  --card-foreground: 222 47% 11%;
+  --card-foreground: 224 50% 14%;
 
   --popover: 0 0% 100%;
-  --popover-foreground: 222 47% 11%;
+  --popover-foreground: 224 50% 14%;
 
-  --primary: 216 92% 50%;
+  --primary: 224 76% 45%;
   --primary-foreground: 0 0% 100%;
 
-  --secondary: 210 40% 96%;
-  --secondary-foreground: 222 47% 11%;
+  --secondary: 218 35% 93%;
+  --secondary-foreground: 224 50% 14%;
 
-  --muted: 210 40% 96%;
-  --muted-foreground: 215 16% 42%;
+  --muted: 218 35% 93%;
+  --muted-foreground: 222 18% 40%;
 
-  --accent: 202 92% 52%;
+  --accent: 205 90% 42%;
   --accent-foreground: 0 0% 100%;
+  /* third gradient stop — drafting teal */
+  --accent-2: 174 84% 32%;
 
   --destructive: 0 84% 55%;
   --destructive-foreground: 210 40% 98%;
 
-  --border: 214 32% 88%;
-  --input: 214 32% 88%;
-  --ring: 216 92% 50%;
+  --border: 220 28% 85%;
+  --input: 220 28% 85%;
+  --ring: 224 76% 45%;
 
   --radius: 0.75rem;
 }
@@ -142,19 +149,49 @@
   }
 
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent to-accent-2;
+    background-size: 200% 100%;
+    animation: gradient-pan 7s ease-in-out infinite;
   }
 
-  /* Tight neon edge glow that hugs the outline (NOT a diffuse background bloom) */
+  /* Tight neon edge glow that hugs the outline (NOT a diffuse background bloom),
+     layered with realistic glass lighting: a hairline top highlight (light
+     catching the pane) and a soft grounded shadow beneath for physical depth. */
   .neon-glow {
-    box-shadow: 0 0 2px hsl(var(--primary)), 0 0 12px hsl(var(--primary) / 0.45);
+    box-shadow:
+      inset 0 1px 0 hsl(var(--foreground) / 0.08),
+      0 0 2px hsl(var(--primary)),
+      0 0 12px hsl(var(--primary) / 0.45),
+      0 18px 36px -18px hsl(222 60% 2% / 0.6);
   }
   .neon-glow-sm {
-    box-shadow: 0 0 1px hsl(var(--primary)), 0 0 7px hsl(var(--primary) / 0.4);
+    box-shadow:
+      inset 0 1px 0 hsl(var(--foreground) / 0.07),
+      0 0 1px hsl(var(--primary)),
+      0 0 7px hsl(var(--primary) / 0.4),
+      0 14px 28px -16px hsl(222 60% 2% / 0.5);
   }
   /* Neon text glow for headings/labels */
   .neon-text {
     filter: drop-shadow(0 0 7px hsl(var(--primary) / 0.55));
+  }
+
+  /* ---- Light mode reads as clean editorial print, not neon: cards get real
+     paper elevation (soft grey shadow + white top edge) and quiet hairline
+     borders. Hover still inks the border in primary. ---- */
+  .light .neon-glow,
+  .light .neon-glow-sm {
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.9),
+      0 1px 2px hsl(224 45% 20% / 0.06),
+      0 14px 34px -14px hsl(224 45% 20% / 0.18);
+  }
+  .light .neon-glow:not(:hover),
+  .light .neon-glow-sm:not(:hover) {
+    border-color: hsl(222 28% 86%);
+  }
+  .light .neon-text {
+    filter: none;
   }
 
   /* Futuristic HUD button shape — cut top-left and bottom-right corners */
@@ -211,6 +248,22 @@
   12% { opacity: 0.8; }
   88% { opacity: 0.8; }
   100% { top: 108%; opacity: 0; }
+}
+
+/* Slow left↔right sweep for gradient text */
+@keyframes gradient-pan {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* 3D wireframe cube — slow tumble on a fixed axis tilt */
+@keyframes cube-spin {
+  from { transform: rotateX(-22deg) rotateY(0deg); }
+  to { transform: rotateX(-22deg) rotateY(360deg); }
+}
+.cube-spin {
+  animation: cube-spin 20s linear infinite;
+  transform-style: preserve-3d;
 }
 
 @keyframes holo-flicker {
@@ -299,6 +352,8 @@
 @media (prefers-reduced-motion: reduce) {
   .holo-scanbar,
   .holo-flicker,
+  .cube-spin,
+  .text-gradient,
   .bug-legs-a,
   .bug-legs-b {
     animation: none;

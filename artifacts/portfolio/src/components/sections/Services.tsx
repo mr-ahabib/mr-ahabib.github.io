@@ -1,5 +1,7 @@
 import { motion } from "framer-motion";
 import { Smartphone, Microscope, Brain, MessageSquare, Code, Globe } from "lucide-react";
+import { Tilt3D } from "@/components/Tilt3D";
+import { WireCube } from "@/components/HudDecor";
 
 const SERVICES = [
   {
@@ -37,9 +39,9 @@ const SERVICES = [
 export function Services() {
   return (
     <section id="services" className="py-24 relative overflow-hidden">
-      {/* Decorative gradients */}
-      <div className="absolute top-1/4 -right-64 w-96 h-96 bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-1/4 -left-64 w-96 h-96 bg-accent/5 rounded-full blur-[100px] pointer-events-none" />
+      {/* 3D wireframe fillers */}
+      <WireCube size={48} className="right-[8%] top-16 hidden lg:block" />
+      <WireCube size={30} className="left-[6%] bottom-20 hidden lg:block" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
@@ -52,7 +54,7 @@ export function Services() {
             <span className="eyebrow">What I Do</span>
           </div>
           <h2 className="text-3xl md:text-5xl font-display font-bold mb-4 text-foreground">My <span className="text-gradient">Services</span></h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded-full" />
+          <div className="w-24 h-1 bg-gradient-to-r from-primary via-accent to-accent-2 mx-auto rounded-full" />
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -63,8 +65,9 @@ export function Services() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ delay: index * 0.1 }}
-              className="neon-glow-sm group relative rounded-2xl border border-primary/50 bg-card/80 backdrop-blur-xl transition-all duration-300 hover:-translate-y-2 hover:border-primary"
+              className="h-full"
             >
+            <Tilt3D className="neon-glow-sm group relative h-full rounded-2xl border border-primary/50 bg-card/80 backdrop-blur-xl transition-colors duration-300 hover:border-primary">
               <div className="relative h-full overflow-hidden rounded-2xl p-8">
                 {/* Hover glow */}
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/8 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
@@ -79,6 +82,7 @@ export function Services() {
                   <p className="text-muted-foreground leading-relaxed">{service.description}</p>
                 </div>
               </div>
+            </Tilt3D>
             </motion.div>
           ))}
         </div>

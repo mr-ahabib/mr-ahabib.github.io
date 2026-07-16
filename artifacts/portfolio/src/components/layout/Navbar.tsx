@@ -131,7 +131,7 @@ export function Navbar() {
                     >
                       {link.name}
                       <span
-                        className={`pointer-events-none absolute -bottom-0.5 left-2 right-2 h-0.5 origin-left rounded-full bg-gradient-to-r from-primary to-accent transition-transform duration-300 ease-out ${
+                        className={`pointer-events-none absolute -bottom-0.5 left-2 right-2 h-0.5 origin-left rounded-full bg-gradient-to-r from-primary via-accent to-accent-2 transition-transform duration-300 ease-out ${
                           isActive
                             ? "scale-x-100"
                             : "scale-x-0 group-hover:scale-x-100"

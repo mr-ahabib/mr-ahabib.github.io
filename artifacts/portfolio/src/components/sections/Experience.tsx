@@ -55,7 +55,7 @@ const EXPERIENCES = [
 export function Experience() {
   return (
     <section id="experience" className="py-24 relative">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -68,49 +68,27 @@ export function Experience() {
           <h2 className="text-3xl md:text-5xl font-display font-bold mb-4 text-foreground">
             Work <span className="text-gradient">Experience</span>
           </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded-full" />
+          <div className="w-24 h-1 bg-gradient-to-r from-primary via-accent to-accent-2 mx-auto rounded-full" />
         </motion.div>
 
-        <div className="relative">
-          {/* Vertical timeline line */}
-          <div className="absolute left-6 md:left-8 top-0 bottom-0 w-px bg-gradient-to-b from-primary/50 via-primary/20 to-transparent" />
-
-          <div className="space-y-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-7 items-stretch">
             {EXPERIENCES.map((exp, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-80px" }}
                 transition={{ delay: index * 0.12, duration: 0.5 }}
-                className="pl-16 md:pl-20 relative"
+                className="relative h-full"
               >
-                {/* Timeline node */}
-                <div className="absolute left-6 md:left-8 top-7 -translate-x-1/2 flex items-center justify-center">
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    whileInView={{ scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.12 + 0.2, type: "spring" }}
-                    className={`h-4 w-4 rounded-full border-2 border-background ${
-                      exp.current
-                        ? "bg-primary shadow-[0_0_14px_hsl(var(--primary))]"
-                        : "bg-card ring-1 ring-primary/60"
-                    }`}
-                  />
-                  {exp.current && (
-                    <span className="absolute h-4 w-4 rounded-full bg-primary/40 animate-ping" />
-                  )}
-                </div>
-
                 <motion.div
                   whileHover={{ y: -4 }}
                   transition={{ duration: 0.2 }}
-                  className="neon-glow-sm group relative rounded-2xl border border-primary/50 bg-card/80 backdrop-blur-xl transition-colors duration-300 hover:border-primary"
+                  className="neon-glow-sm group relative h-full rounded-2xl border border-primary/50 bg-card/80 backdrop-blur-xl transition-colors duration-300 hover:border-primary"
                 >
-                  <div className="relative overflow-hidden rounded-2xl p-6 md:p-8">
+                  <div className="relative h-full overflow-hidden rounded-2xl p-6 md:p-7">
                     {/* Left accent bar */}
-                    <div className="absolute top-0 left-0 h-full w-1 bg-gradient-to-b from-primary to-accent" />
+                    <div className="absolute top-0 left-0 h-full w-1 bg-gradient-to-b from-primary via-accent to-accent-2" />
                     {/* HUD corner bracket */}
                     <span className="pointer-events-none absolute right-4 top-4 h-4 w-4 border-r-2 border-t-2 border-primary/40" />
 
@@ -161,7 +139,6 @@ export function Experience() {
                 </motion.div>
               </motion.div>
             ))}
-          </div>
         </div>
       </div>
     </section>

@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { motion, useReducedMotion, useTime, useTransform } from "framer-motion";
 import { Download, ArrowRight } from "lucide-react";
 import { HeroTerminal } from "@/components/HeroTerminal";
+import { Tilt3D } from "@/components/Tilt3D";
+import { WireCube } from "@/components/HudDecor";
 
 const ORBIT_TITLES = ["AI Engineer", "Software Engineer", "Researcher"];
 
@@ -94,7 +96,7 @@ export function Hero() {
         }}
       >
         <div
-          className="absolute inset-x-[-50%] bottom-[-40%] h-[180%] opacity-50 [transform:rotateX(74deg)]"
+          className="absolute inset-x-[-50%] bottom-[-40%] h-[180%] opacity-20 dark:opacity-50 [transform:rotateX(74deg)]"
           style={{
             backgroundImage:
               "linear-gradient(hsl(var(--primary)/0.55) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)/0.55) 1px, transparent 1px)",
@@ -151,12 +153,17 @@ export function Hero() {
               <div className="mx-auto mt-1.5 h-px w-1/2 rounded-full bg-accent/70" />
             </div>
 
+            {/* Floating wireframe cubes — 3D filler around the projection */}
+            <WireCube size={40} className="left-2 top-16 hidden sm:block" />
+            <WireCube size={26} className="right-4 bottom-24 hidden sm:block" />
+
             {/* Avatar projection */}
             <motion.div
               animate={{ y: [-10, 10, -10] }}
               transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
               className="holo-flicker relative z-10"
             >
+              <Tilt3D max={9} perspective={700}>
               <div className="relative w-56 h-72 sm:w-72 sm:h-96">
                 <div
                   className="neon-glow relative w-full h-full rounded-3xl overflow-hidden border-2 border-primary"
@@ -177,7 +184,24 @@ export function Hero() {
                   {/* moving scan bar */}
                   <div className="holo-scanbar absolute left-0 h-10 w-full bg-gradient-to-b from-transparent via-primary/45 to-transparent" />
                 </div>
+
+                {/* Realistic floor reflection — mirrored, faded, slightly blurred */}
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute left-0 top-full mt-2 h-28 w-full overflow-hidden opacity-20 blur-[2px] [transform:scaleY(-1)]"
+                  style={{
+                    maskImage: "linear-gradient(to top, black, transparent 85%)",
+                    WebkitMaskImage: "linear-gradient(to top, black, transparent 85%)",
+                  }}
+                >
+                  <img
+                    src={`${import.meta.env.BASE_URL}images/avatar.webp`}
+                    alt=""
+                    className="w-full object-cover object-top"
+                  />
+                </div>
               </div>
+              </Tilt3D>
             </motion.div>
           </motion.div>
 
@@ -193,10 +217,10 @@ export function Hero() {
           <div className="flex flex-wrap items-center gap-4 sm:gap-5">
             {/* Primary — filled gradient HUD button */}
             <a
-              href="https://mr-ahabib.github.io/images/AhashanHabib.pdf"
+              href={`${import.meta.env.BASE_URL}Ahashan_Habib_CV.pdf`}
               target="_blank"
               rel="noopener noreferrer"
-              className="clip-hud group relative inline-flex items-center gap-2 overflow-hidden bg-gradient-to-r from-primary to-accent px-7 py-3.5 text-sm font-semibold text-white transition-transform duration-300 hover:-translate-y-0.5 [filter:drop-shadow(0_10px_22px_hsl(var(--primary)/0.4))]"
+              className="clip-hud group relative inline-flex items-center gap-2 overflow-hidden bg-gradient-to-r from-primary via-accent to-accent-2 px-7 py-3.5 text-sm font-semibold text-primary-foreground transition-transform duration-300 hover:-translate-y-0.5 [filter:drop-shadow(0_10px_22px_hsl(var(--primary)/0.4))]"
             >
               {/* sheen sweep on hover */}
               <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
@@ -223,9 +247,9 @@ export function Hero() {
 
           <div className="mt-10 flex gap-12 border-t border-border/60 pt-8">
             {[
-              { label: "Publications", value: "3+" },
-              { label: "Projects", value: "10+" },
-              { label: "Experience", value: "1yr+" },
+              { label: "IEEE Publications", value: "3" },
+              { label: "Live Products", value: "3" },
+              { label: "Experience", value: "2yr+" },
             ].map((stat) => (
               <div key={stat.label}>
                 <div className="text-xl sm:text-2xl font-display font-bold text-primary">{stat.value}</div>

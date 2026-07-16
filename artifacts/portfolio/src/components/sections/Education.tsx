@@ -10,7 +10,6 @@ const EDUCATION_DATA = [
     location: "Dhaka, Bangladesh",
     details: "Final Grade: CGPA 3.62 / 4.00 · EQF Level 6",
     thesis: "A Secure Blockchain Based Brain Tumor Prediction By Using Swin Transformer",
-    color: "from-primary/20 to-accent/10",
     icon: <GraduationCap size={22} />,
   },
   {
@@ -19,9 +18,8 @@ const EDUCATION_DATA = [
     field: "Science",
     institution: "Govt. Azizul Haque College, Bogra",
     location: "Bogra, Bangladesh",
-    details: "EQF Level 4",
+    details: "GPA 4.83 / 5.00 · EQF Level 4",
     thesis: null,
-    color: "from-blue-500/20 to-indigo-500/10",
     icon: <BookOpen size={22} />,
   },
 ];
@@ -29,7 +27,7 @@ const EDUCATION_DATA = [
 export function Education() {
   return (
     <section id="education" className="py-20 sm:py-24 relative">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -42,10 +40,10 @@ export function Education() {
           <h2 className="text-3xl md:text-5xl font-display font-bold mb-4 text-foreground">
             Academic <span className="text-gradient">Background</span>
           </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded-full" />
+          <div className="w-24 h-1 bg-gradient-to-r from-primary via-accent to-accent-2 mx-auto rounded-full" />
         </motion.div>
 
-        <div className="space-y-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 items-stretch">
           {EDUCATION_DATA.map((item, index) => (
             <motion.div
               key={index}
@@ -54,11 +52,11 @@ export function Education() {
               viewport={{ once: true, margin: "-80px" }}
               transition={{ delay: index * 0.15, duration: 0.5 }}
               whileHover={{ y: -4 }}
-              className="neon-glow-sm group relative rounded-2xl border border-primary/50 bg-card/80 backdrop-blur-xl transition-colors duration-300 hover:border-primary"
+              className="neon-glow-sm group relative h-full rounded-2xl border border-primary/50 bg-card/80 backdrop-blur-xl transition-colors duration-300 hover:border-primary"
             >
-              <div className="relative overflow-hidden rounded-2xl p-6 sm:p-8">
+              <div className="relative h-full overflow-hidden rounded-2xl p-6 sm:p-8">
                 {/* Gradient accent top bar */}
-                <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary to-accent" />
+                <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary via-accent to-accent-2" />
                 {/* HUD corner bracket */}
                 <span className="pointer-events-none absolute right-4 top-4 h-4 w-4 border-r-2 border-t-2 border-primary/40" />
 
