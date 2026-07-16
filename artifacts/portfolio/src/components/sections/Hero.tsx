@@ -45,20 +45,22 @@ function OrbitTitle({
   const depth = useTransform(angle, (a) => (Math.sin(a) + 1) / 2); // 0 = behind, 1 = in front
   const scale = useTransform(depth, [0, 1], [0.68, 1.08]);
   const opacity = useTransform(depth, [0, 1], [0.28, 1]);
-  const zIndex = useTransform(depth, (d) => (d > 0.5 ? 20 : 5));
+  // the tilt-rotation makes this wrapper a stacking context, so the z-index
+  // must live HERE (not on the inner span) to layer against the avatar (z-10)
+  const zIndex = useTransform(depth, (d) => (d > 0.5 ? 30 : 5));
 
   return (
     // the wrapper rotates the whole orbit onto its inclined plane; the label
     // counter-rotates so the text stays level while the path is tilted
-    <div
+    <motion.div
       aria-hidden="true"
       className="pointer-events-none absolute inset-0"
-      style={{ transform: `rotate(${tiltZ}deg)` }}
+      style={{ transform: `rotate(${tiltZ}deg)`, zIndex }}
     >
       {/* no backdrop-blur here — recomputing a blurred backdrop every frame of
           the orbit causes visible shimmer; will-change keeps it on the GPU */}
       <motion.span
-        style={{ x, y, scale, opacity, zIndex }}
+        style={{ x, y, scale, opacity }}
         className="absolute left-1/2 top-1/2 will-change-transform"
       >
         <span
@@ -69,7 +71,7 @@ function OrbitTitle({
           {text}
         </span>
       </motion.span>
-    </div>
+    </motion.div>
   );
 }
 
@@ -88,8 +90,12 @@ function SolarSystem() {
 
   return (
     <>
-      {/* Orbit paths — each circle tilted onto its own inclined plane */}
-      <div className="pointer-events-none absolute inset-0 grid place-items-center [perspective:1000px]">
+      {/* Orbit paths — each circle tilted onto its own inclined plane.
+          Drawn twice: the full ring sits behind the avatar, and a copy
+          clipped to its NEAR half sits above it (z-20 vs avatar z-10), so
+          the rings genuinely wrap around the image instead of hiding
+          behind it. */}
+      <div className="pointer-events-none absolute inset-0 z-0 grid place-items-center [perspective:1000px]">
         {ORBITS.map((o) => (
           <div
             key={o.text}
@@ -99,6 +105,24 @@ function SolarSystem() {
             <div
               className={`rounded-full border ${o.ring}`}
               style={{ width: o.rx * 2 * k, height: o.rx * 2 * k }}
+            />
+          </div>
+        ))}
+      </div>
+      <div className="pointer-events-none absolute inset-0 z-20 grid place-items-center [perspective:1000px]">
+        {ORBITS.map((o) => (
+          <div
+            key={o.text}
+            className="col-start-1 row-start-1"
+            style={{ transform: `rotate(${o.tiltZ}deg) rotateX(72deg)` }}
+          >
+            <div
+              className={`rounded-full border ${o.ring}`}
+              style={{
+                width: o.rx * 2 * k,
+                height: o.rx * 2 * k,
+                clipPath: "inset(50% 0 0 0)", // bottom half = the near half after the tilt
+              }}
             />
           </div>
         ))}
