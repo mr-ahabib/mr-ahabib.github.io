@@ -30,6 +30,7 @@ export function AnimatedBackground() {
     let dpr = Math.min(window.devicePixelRatio || 1, 2);
     let stars: Star[] = [];
     let rgb = "34, 211, 238";
+    let alphaMul = 1; // boosted in light mode so the spiral stays visible on paper
 
     // Eased cursor — ripples radiate from here and follow the mouse smoothly.
     // `active` is the target (1 near, 0 away); `aDisp` eases toward it so the
@@ -43,6 +44,8 @@ export function AnimatedBackground() {
         .color.match(/\d+(\.\d+)?/g)
         ?.map(Number);
       if (parsed && parsed.length >= 3) rgb = `${parsed[0]}, ${parsed[1]}, ${parsed[2]}`;
+      const isLight = document.documentElement.classList.contains("light");
+      alphaMul = isLight ? 1.7 : 1;
     };
 
     const seed = () => {
@@ -98,8 +101,8 @@ export function AnimatedBackground() {
       // soft layered glow core (subtle centre light)
       const glowR = Math.min(width, height) * 0.5;
       const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, glowR);
-      glow.addColorStop(0, `rgba(${rgb}, 0.09)`);
-      glow.addColorStop(0.35, `rgba(${rgb}, 0.035)`);
+      glow.addColorStop(0, `rgba(${rgb}, ${0.09 * alphaMul})`);
+      glow.addColorStop(0.35, `rgba(${rgb}, ${0.035 * alphaMul})`);
       glow.addColorStop(1, "rgba(0, 0, 0, 0)");
       ctx.fillStyle = glow;
       ctx.beginPath();
@@ -112,7 +115,7 @@ export function AnimatedBackground() {
         const [dx, dy, b] = ripple(s.x, s.y, time);
         ctx.beginPath();
         ctx.arc(s.x + dx, s.y + dy, s.r + b * 0.6, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${rgb}, ${s.base * twinkle + b * 0.3})`;
+        ctx.fillStyle = `rgba(${rgb}, ${(s.base * twinkle + b * 0.3) * alphaMul})`;
         ctx.fill();
       }
 
@@ -132,7 +135,7 @@ export function AnimatedBackground() {
           const [dx, dy, b] = ripple(x, y, time);
           ctx.beginPath();
           ctx.arc(x + dx, y + dy, Math.max(0.5, size) + b * 0.6, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(${rgb}, ${Math.max(0, alpha) + b * 0.3})`;
+          ctx.fillStyle = `rgba(${rgb}, ${(Math.max(0, alpha) + b * 0.3) * alphaMul})`;
           ctx.fill();
         }
       }

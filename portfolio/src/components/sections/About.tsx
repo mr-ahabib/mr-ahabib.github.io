@@ -41,16 +41,6 @@ const fadeRight = (delay = 0) => ({
 export function About() {
   return (
     <section id="about" className="py-24 sm:py-32 relative overflow-hidden">
-      {/* Ambient background glow */}
-      <div
-        className="pointer-events-none absolute left-0 top-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full"
-        style={{
-          background:
-            "radial-gradient(circle, hsl(var(--primary) / 0.06) 0%, transparent 70%)",
-          filter: "blur(60px)",
-        }}
-      />
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section label */}
         <motion.div {...fadeUp(0)} className="mb-16 sm:mb-20">
