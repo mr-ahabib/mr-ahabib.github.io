@@ -11,12 +11,11 @@ import { useEffect, useRef } from "react";
  * electric cyan on black in dark mode and indigo ink on paper in light.
  */
 
-const AREA_PER_POINT = 26000; // px² of screen per star (capped below)
-const MAX_POINTS = 90;
+const POINT_COUNT = 100;
 const LINK_DIST = 140; // px — draw a line when two stars are this close
 const NEAR_DIST = 220; // px — cursor proximity radius
 
-type Star = { x: number; y: number; tw: number };
+type Star = { x: number; y: number; vx: number; vy: number; tw: number };
 
 export function AnimatedBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -46,10 +45,11 @@ export function AnimatedBackground() {
     };
 
     const seed = () => {
-      const count = Math.min(MAX_POINTS, Math.floor((width * height) / AREA_PER_POINT));
-      stars = Array.from({ length: count }, () => ({
+      stars = Array.from({ length: POINT_COUNT }, () => ({
         x: Math.random() * width,
         y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.2,
+        vy: (Math.random() - 0.5) * 0.2,
         tw: Math.random() * Math.PI * 2,
       }));
     };
@@ -69,8 +69,12 @@ export function AnimatedBackground() {
     const draw = (time: number) => {
       ctx.clearRect(0, 0, width, height);
 
-      // stars — twinkle at rest, flare with a tight glow near the cursor
+      // stars — drift slowly, twinkle at rest, flare with a glow near the cursor
       for (const s of stars) {
+        s.x += s.vx;
+        s.y += s.vy;
+        if (s.x < 0 || s.x > width) s.vx *= -1;
+        if (s.y < 0 || s.y > height) s.vy *= -1;
         const t = Math.max(0, 1 - Math.hypot(s.x - cursor.x, s.y - cursor.y) / NEAR_DIST);
         const twinkle = 0.5 + 0.5 * Math.sin(time * 0.002 + s.tw);
         ctx.beginPath();

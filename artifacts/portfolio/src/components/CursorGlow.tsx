@@ -1,34 +1,40 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Cursor companion (ayushcmd.me-style): a crisp ring that chases the
- * pointer closely and a soft blurred glow that drifts behind it. Both are
- * pure transforms driven by one rAF loop — the native cursor stays visible.
- * Skipped entirely on touch devices and under prefers-reduced-motion.
+ * Custom pointer (ayushcmd.me-style): the native cursor is hidden and
+ * replaced by a frosted glass lens — a 40px bubble that blurs whatever
+ * passes beneath it, with a tiny specular highlight so it reads as glass —
+ * chased by a 100px soft primary-tinted halo that lags further behind.
+ *
+ * Only active for fine pointers without reduced-motion; the `custom-cursor`
+ * class on <html> is what actually hides the native cursor, so touch
+ * devices and reduced-motion users keep theirs untouched.
  */
 export function CursorGlow() {
-  const ringRef = useRef<HTMLDivElement>(null);
+  const lensRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const ring = ringRef.current;
+    const lens = lensRef.current;
     const glow = glowRef.current;
-    if (!ring || !glow) return;
+    if (!lens || !glow) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     if (!window.matchMedia("(pointer: fine)").matches) return;
 
+    document.documentElement.classList.add("custom-cursor");
+
     const target = { x: -100, y: -100 };
-    const ringPos = { x: -100, y: -100 };
+    const lensPos = { x: -100, y: -100 };
     const glowPos = { x: -100, y: -100 };
     let raf = 0;
 
     const step = () => {
-      // the ring chases fast, the glow lags — the gap is the whole effect
-      ringPos.x += (target.x - ringPos.x) * 0.22;
-      ringPos.y += (target.y - ringPos.y) * 0.22;
+      // the lens chases fast, the halo lags — the gap is the whole effect
+      lensPos.x += (target.x - lensPos.x) * 0.22;
+      lensPos.y += (target.y - lensPos.y) * 0.22;
       glowPos.x += (target.x - glowPos.x) * 0.08;
       glowPos.y += (target.y - glowPos.y) * 0.08;
-      ring.style.transform = `translate3d(${ringPos.x - 20}px, ${ringPos.y - 20}px, 0)`;
+      lens.style.transform = `translate3d(${lensPos.x - 20}px, ${lensPos.y - 20}px, 0)`;
       glow.style.transform = `translate3d(${glowPos.x - 50}px, ${glowPos.y - 50}px, 0)`;
       raf = requestAnimationFrame(step);
     };
@@ -36,11 +42,11 @@ export function CursorGlow() {
     const onMove = (e: MouseEvent) => {
       target.x = e.clientX;
       target.y = e.clientY;
-      ring.style.opacity = "1";
+      lens.style.opacity = "1";
       glow.style.opacity = "1";
     };
     const onLeave = () => {
-      ring.style.opacity = "0";
+      lens.style.opacity = "0";
       glow.style.opacity = "0";
     };
 
@@ -49,6 +55,7 @@ export function CursorGlow() {
     raf = requestAnimationFrame(step);
 
     return () => {
+      document.documentElement.classList.remove("custom-cursor");
       cancelAnimationFrame(raf);
       window.removeEventListener("mousemove", onMove);
       document.documentElement.removeEventListener("mouseleave", onLeave);
@@ -69,18 +76,17 @@ export function CursorGlow() {
           height: 100,
           borderRadius: "50%",
           pointerEvents: "none",
-          zIndex: 9999,
+          zIndex: 99997,
           willChange: "transform",
           opacity: 0,
           transition: "opacity 0.3s ease",
-          background:
-            "radial-gradient(circle, hsl(var(--primary) / 0.09) 0%, transparent 65%)",
+          background: "radial-gradient(circle, hsl(var(--primary) / 0.07) 0%, transparent 65%)",
           filter: "blur(4px)",
         }}
       />
-      {/* crisp chasing ring */}
+      {/* frosted glass lens — blurs what's underneath, like a droplet */}
       <div
-        ref={ringRef}
+        ref={lensRef}
         aria-hidden="true"
         style={{
           position: "fixed",
@@ -90,13 +96,33 @@ export function CursorGlow() {
           height: 40,
           borderRadius: "50%",
           pointerEvents: "none",
-          zIndex: 9999,
+          zIndex: 999998,
           willChange: "transform",
           opacity: 0,
           transition: "opacity 0.3s ease",
-          border: "1px solid hsl(var(--primary) / 0.45)",
+          backdropFilter: "blur(4px) saturate(150%)",
+          WebkitBackdropFilter: "blur(4px) saturate(150%)",
+          background: "rgba(255,255,255,0.03)",
+          border: "1px solid rgba(255,255,255,0.15)",
+          boxShadow:
+            "inset 0 1px 0 rgba(255,255,255,0.18), 0 0 12px hsl(var(--primary) / 0.06)",
         }}
-      />
+      >
+        {/* specular highlight — the little gleam that sells the glass */}
+        <div
+          style={{
+            position: "absolute",
+            top: 7,
+            left: 9,
+            width: 10,
+            height: 3,
+            borderRadius: "50%",
+            background: "rgba(255,255,255,0.40)",
+            filter: "blur(1.5px)",
+            transform: "rotate(-20deg)",
+          }}
+        />
+      </div>
     </>
   );
 }
