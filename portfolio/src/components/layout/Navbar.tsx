@@ -36,27 +36,37 @@ export function Navbar() {
   const [activeSection, setActiveSection] = useState("home");
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handleScroll);
-
-    // A section is "active" when it crosses a thin band around the viewport's
-    // middle — unlike a visibility threshold, this works for sections much
-    // taller than the viewport (e.g. Projects on mobile).
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActiveSection(entry.target.id);
-        });
-      },
-      { rootMargin: "-45% 0px -50% 0px", threshold: 0 }
-    );
-
-    const sections = document.querySelectorAll("section[id]");
-    sections.forEach((s) => observer.observe(s));
+    let raf = 0;
+    // The active section is the last one whose top has scrolled past a line a
+    // little below the fixed header. Reliable even for very tall sections and
+    // when several are on screen at once (which broke the observer approach).
+    const update = () => {
+      raf = 0;
+      setIsScrolled(window.scrollY > 50);
+      const line = window.scrollY + 140;
+      let current = "home";
+      document.querySelectorAll<HTMLElement>("section[id]").forEach((sec) => {
+        const top = sec.getBoundingClientRect().top + window.scrollY;
+        if (top <= line) current = sec.id;
+      });
+      // near the very bottom, force the last section active
+      if (window.innerHeight + window.scrollY >= document.body.scrollHeight - 4) {
+        const all = document.querySelectorAll<HTMLElement>("section[id]");
+        if (all.length) current = all[all.length - 1].id;
+      }
+      setActiveSection(current);
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    update();
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
-      sections.forEach((s) => observer.unobserve(s));
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (raf) cancelAnimationFrame(raf);
     };
   }, []);
 
@@ -160,9 +170,11 @@ export function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="xl:hidden absolute top-full left-0 w-full bg-background/95 backdrop-blur-xl border-b border-border shadow-xl"
+            className="xl:hidden absolute top-full left-0 w-full border-b border-primary/25 bg-background/95 backdrop-blur-xl shadow-[0_20px_40px_-12px_hsl(var(--background))]"
           >
-            <nav className="max-w-7xl mx-auto px-4 py-4 grid grid-cols-3 gap-1">
+            {/* neon top edge */}
+            <span className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
+            <nav className="mx-auto grid max-w-7xl grid-cols-2 gap-2 px-4 py-5">
               {NAV_LINKS.map((link, i) => {
                 const isActive = activeSection === link.href.substring(1);
                 return (
@@ -171,15 +183,24 @@ export function Navbar() {
                     href={link.href}
                     initial={{ opacity: 0, y: -8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.04 }}
-                    className={`text-center text-sm font-medium py-2.5 px-2 rounded-xl transition-all duration-200 ${
+                    transition={{ delay: i * 0.03 }}
+                    className={`group relative flex items-center gap-2.5 overflow-hidden rounded-xl border px-3.5 py-3 transition-all duration-200 ${
                       isActive
-                        ? "text-primary bg-primary/10 font-semibold"
-                        : "text-muted-foreground hover:text-primary hover:bg-primary/5"
+                        ? "border-primary/50 bg-primary/10 text-primary"
+                        : "border-border/60 bg-card/40 text-muted-foreground hover:border-primary/40 hover:text-primary"
                     }`}
                     onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection(link.href); }}
                   >
-                    {link.name}
+                    {/* active left bar */}
+                    <span
+                      className={`absolute inset-y-1.5 left-0 w-0.5 rounded-full bg-gradient-to-b from-primary via-accent to-accent-2 transition-opacity duration-200 ${
+                        isActive ? "opacity-100" : "opacity-0"
+                      }`}
+                    />
+                    <span className="font-mono text-[10px] tabular-nums text-primary/50">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className="text-sm font-medium">{link.name}</span>
                   </motion.a>
                 );
               })}
