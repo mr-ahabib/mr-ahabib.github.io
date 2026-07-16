@@ -79,53 +79,45 @@ export function Publications() {
           </a>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 items-stretch">
+        {/* Editorial list — numbered entries with hairline separators */}
+        <div className="mx-auto max-w-4xl">
           {PUBLICATIONS.map((pub, index) => (
-            <motion.div
+            <motion.article
               key={index}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.12 }}
-              whileHover={{ y: -4 }}
-              className="neon-glow-sm group relative flex h-full flex-col overflow-hidden rounded-2xl border border-primary/45 bg-card/80 p-5 sm:p-6 backdrop-blur-xl transition-colors duration-300 hover:border-primary"
+              transition={{ delay: index * 0.1 }}
+              className="group flex gap-5 border-b border-border/60 py-7 first:pt-2 last:border-b-0 sm:gap-8"
             >
-              {/* Gradient top accent */}
-              <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary via-accent to-accent-2" />
-              {/* HUD corner bracket */}
-              <span className="pointer-events-none absolute right-4 top-4 h-4 w-4 border-r-2 border-t-2 border-primary/40" />
+              <span className="shrink-0 pt-1 font-mono text-2xl font-bold text-primary/35 transition-colors group-hover:text-primary/70 sm:text-3xl">
+                {String(index + 1).padStart(2, "0")}
+              </span>
 
-              <div className="mb-4 flex items-center justify-between">
-                <div className="clip-hud-sm grid h-12 w-12 shrink-0 place-items-center bg-primary/12 text-primary">
-                  {pub.icon}
-                </div>
-                <span className="clip-hud-sm mr-6 border border-border/70 bg-secondary/50 px-2 py-0.5 font-mono text-xs text-primary">
-                  {pub.year}
-                </span>
-              </div>
+              <div className="min-w-0">
+                <h3 className="text-base sm:text-lg font-display font-bold text-foreground leading-snug transition-colors group-hover:text-primary">
+                  {pub.title}
+                </h3>
+                <p className="mt-1.5 text-sm text-muted-foreground italic">{pub.authors}</p>
 
-              <h3 className="text-base font-display font-bold text-foreground leading-snug mb-2">
-                {pub.title}
-              </h3>
-              <p className="text-sm text-muted-foreground italic mb-4">{pub.authors}</p>
-
-              <div className="mt-auto space-y-3">
-                <div className="flex flex-wrap items-center gap-2">
+                <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2">
                   <span className="clip-hud-sm border border-primary/30 bg-primary/10 px-2.5 py-1 font-mono text-xs font-semibold text-primary">
                     {pub.venue}
                   </span>
-                  <ExternalLink size={14} className="text-muted-foreground/50 group-hover:text-primary transition-colors" />
+                  <span className="text-xs text-muted-foreground">{pub.venueFullName}</span>
                 </div>
-                <p className="text-xs text-muted-foreground leading-relaxed">{pub.venueFullName}</p>
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 font-mono text-xs text-muted-foreground">
+
+                <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1.5 font-mono text-xs text-muted-foreground">
                   <span className="flex items-center gap-1">
                     <span className="text-primary">&gt;</span> {pub.publisher}
                   </span>
                   <span className="w-1 h-1 rounded-full bg-primary/50" />
                   <span>{pub.location}</span>
+                  <span className="w-1 h-1 rounded-full bg-primary/50" />
+                  <span className="text-primary">{pub.year}</span>
                 </div>
               </div>
-            </motion.div>
+            </motion.article>
           ))}
         </div>
 
@@ -141,7 +133,7 @@ export function Publications() {
           <span className="h-px flex-1 bg-gradient-to-r from-primary/50 to-transparent" />
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div className="mx-auto grid max-w-4xl grid-cols-1 gap-x-10 gap-y-6 sm:grid-cols-2">
           {UNDER_REVIEW.map((paper, index) => (
             <motion.div
               key={paper.title}
@@ -149,25 +141,16 @@ export function Publications() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              whileHover={{ y: -3 }}
-              className="neon-glow-sm group relative overflow-hidden rounded-2xl border border-primary/35 border-dashed bg-card/60 p-5 backdrop-blur-xl transition-colors duration-300 hover:border-primary"
+              className="group border-l-2 border-dashed border-primary/35 pl-5 transition-colors duration-300 hover:border-primary/70"
             >
-              <span className="pointer-events-none absolute right-4 top-4 h-4 w-4 border-r-2 border-t-2 border-primary/40" />
-              <div className="flex items-start gap-4">
-                <div className="clip-hud-sm grid h-10 w-10 shrink-0 place-items-center bg-primary/12 text-primary">
-                  <FileClock size={18} />
-                </div>
-                <div className="min-w-0">
-                  <h3 className="text-sm sm:text-base font-display font-bold text-foreground leading-snug mb-2">
-                    {paper.title}
-                  </h3>
-                  <div className="flex flex-wrap items-center gap-2 font-mono text-xs">
-                    <span className="clip-hud-sm border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-primary">
-                      {paper.venue}
-                    </span>
-                    <span className="text-muted-foreground">{paper.role}</span>
-                  </div>
-                </div>
+              <h3 className="text-sm sm:text-base font-display font-bold text-foreground leading-snug mb-2">
+                {paper.title}
+              </h3>
+              <div className="flex flex-wrap items-center gap-2 font-mono text-xs">
+                <span className="clip-hud-sm border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-primary">
+                  {paper.venue}
+                </span>
+                <span className="text-muted-foreground">{paper.role}</span>
               </div>
             </motion.div>
           ))}

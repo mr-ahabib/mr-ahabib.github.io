@@ -51,35 +51,32 @@ export function Achievements() {
           <div className="w-24 h-1 bg-gradient-to-r from-primary via-accent to-accent-2 mx-auto rounded-full" />
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
+        {/* Open honors list — year rail on the left, hairline separators */}
+        <div className="mx-auto max-w-3xl">
           {ACHIEVEMENTS.map((item, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, x: -16 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.12 }}
-              whileHover={{ y: -6 }}
-              className="neon-glow-sm group relative flex flex-col gap-4 rounded-2xl border border-primary/45 bg-card/80 p-6 backdrop-blur-xl transition-colors duration-300 hover:border-primary"
+              transition={{ delay: index * 0.1 }}
+              className="group flex items-start gap-5 border-b border-border/60 py-6 last:border-b-0 sm:gap-7"
             >
-              {/* HUD corner bracket */}
-              <span className="pointer-events-none absolute right-4 top-4 h-4 w-4 border-r-2 border-t-2 border-primary/40" />
+              <span className="w-14 shrink-0 pt-1 font-mono text-sm font-semibold text-primary">
+                {item.date.match(/\d{4}/)?.[0] ?? item.date}
+              </span>
 
-              <div className="clip-hud-sm grid h-14 w-14 place-items-center bg-primary/12">
+              <div className="clip-hud-sm grid h-11 w-11 shrink-0 place-items-center bg-primary/12 transition-transform duration-300 group-hover:scale-110">
                 {item.icon}
               </div>
 
-              <div className="flex-1">
-                <h3 className="text-base sm:text-lg font-display font-bold text-foreground leading-snug mb-1">
+              <div className="min-w-0">
+                <h3 className="text-base sm:text-lg font-display font-bold text-foreground leading-snug transition-colors group-hover:text-primary">
                   {item.title}
                 </h3>
-                <p className="text-sm text-muted-foreground font-medium mb-2">{item.org}</p>
-                <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
+                <p className="mt-0.5 text-sm font-medium text-muted-foreground">{item.org}</p>
+                <p className="mt-1 text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
               </div>
-
-              <span className="clip-hud-sm self-start border border-primary/30 bg-primary/10 px-3 py-1 font-mono text-xs text-primary">
-                {item.date}
-              </span>
             </motion.div>
           ))}
         </div>

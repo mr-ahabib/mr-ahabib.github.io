@@ -71,72 +71,58 @@ export function Experience() {
           <div className="w-24 h-1 bg-gradient-to-r from-primary via-accent to-accent-2 mx-auto rounded-full" />
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-7 items-stretch">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-14 gap-y-12">
             {EXPERIENCES.map((exp, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-80px" }}
-                transition={{ delay: index * 0.12, duration: 0.5 }}
-                className="relative h-full"
+                transition={{ delay: index * 0.1, duration: 0.5 }}
+                className="group relative border-l-2 border-primary/25 pl-7 transition-colors duration-300 hover:border-primary/70"
               >
-                <motion.div
-                  whileHover={{ y: -4 }}
-                  transition={{ duration: 0.2 }}
-                  className="neon-glow-sm group relative h-full rounded-2xl border border-primary/50 bg-card/80 backdrop-blur-xl transition-colors duration-300 hover:border-primary"
-                >
-                  <div className="relative h-full overflow-hidden rounded-2xl p-6 md:p-7">
-                    {/* Left accent bar */}
-                    <div className="absolute top-0 left-0 h-full w-1 bg-gradient-to-b from-primary via-accent to-accent-2" />
-                    {/* HUD corner bracket */}
-                    <span className="pointer-events-none absolute right-4 top-4 h-4 w-4 border-r-2 border-t-2 border-primary/40" />
+                {/* timeline node */}
+                <span
+                  className={`absolute -left-[7px] top-1.5 h-3 w-3 rotate-45 border-2 ${
+                    exp.current
+                      ? "border-primary bg-primary shadow-[0_0_10px_hsl(var(--primary)/0.8)]"
+                      : "border-primary/60 bg-background"
+                  }`}
+                />
 
-                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-5">
-                      <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className="text-xl font-display font-bold text-foreground">{exp.role}</h3>
-                          {exp.current && (
-                            <span className="clip-hud-sm bg-primary/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary">
-                              Current
-                            </span>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-2 font-semibold text-primary">
-                          <Briefcase size={16} />
-                          <span>{exp.company}</span>
-                        </div>
-                      </div>
+                <div className="mb-1 flex flex-wrap items-center gap-2">
+                  <h3 className="text-lg sm:text-xl font-display font-bold text-foreground">{exp.role}</h3>
+                  {exp.current && (
+                    <span className="clip-hud-sm bg-primary/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary">
+                      Current
+                    </span>
+                  )}
+                </div>
 
-                      <div className="flex flex-col gap-1.5 font-mono text-xs text-muted-foreground shrink-0">
-                        <div className="flex items-center gap-1.5">
-                          <Calendar size={13} />
-                          <span>{exp.date}</span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          <MapPin size={13} />
-                          <span>{exp.location}</span>
-                        </div>
-                      </div>
-                    </div>
+                <div className="flex items-center gap-2 font-semibold text-primary">
+                  <Briefcase size={15} />
+                  <span>{exp.company}</span>
+                </div>
 
-                    <ul className="space-y-2.5">
-                      {exp.bullets.map((bullet, i) => (
-                        <motion.li
-                          key={i}
-                          initial={{ opacity: 0, x: -10 }}
-                          whileInView={{ opacity: 1, x: 0 }}
-                          viewport={{ once: true }}
-                          transition={{ delay: index * 0.12 + i * 0.07 + 0.3 }}
-                          className="flex items-start gap-3"
-                        >
-                          <span className="mt-1.5 h-1.5 w-1.5 rotate-45 bg-primary/70 flex-shrink-0" />
-                          <span className="text-muted-foreground leading-relaxed text-sm">{bullet}</span>
-                        </motion.li>
-                      ))}
-                    </ul>
-                  </div>
-                </motion.div>
+                <div className="mt-1.5 mb-4 flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs text-muted-foreground">
+                  <span className="flex items-center gap-1.5">
+                    <Calendar size={12} />
+                    {exp.date}
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <MapPin size={12} />
+                    {exp.location}
+                  </span>
+                </div>
+
+                <ul className="space-y-2">
+                  {exp.bullets.map((bullet, i) => (
+                    <li key={i} className="flex items-start gap-3">
+                      <span className="mt-1.5 h-1.5 w-1.5 rotate-45 bg-primary/60 flex-shrink-0" />
+                      <span className="text-muted-foreground leading-relaxed text-sm">{bullet}</span>
+                    </li>
+                  ))}
+                </ul>
               </motion.div>
             ))}
         </div>
