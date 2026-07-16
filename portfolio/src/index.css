@@ -339,6 +339,25 @@
   from { opacity: 0; }
 }
 
+/* A bug is gnawing this text — glitchy, non-destructive "chomp". */
+.bug-chomp {
+  animation: bug-chomp 0.95s ease-in-out;
+  text-decoration: line-through wavy hsl(var(--bug));
+  text-decoration-thickness: 1.5px;
+}
+@keyframes bug-chomp {
+  0%   { opacity: 1;   transform: translateX(0); color: inherit; letter-spacing: normal; }
+  15%  { opacity: 0.7; transform: translateX(-1px) skewX(-2deg); color: hsl(var(--bug)); }
+  30%  { opacity: 0.35; transform: translateX(2px); letter-spacing: 0.5px; filter: blur(0.6px); }
+  45%  { opacity: 0.55; transform: translateX(-2px) skewX(3deg); }
+  60%  { opacity: 0.3;  transform: translateX(1px); letter-spacing: -0.5px; }
+  80%  { opacity: 0.75; transform: translateX(-1px); color: hsl(var(--bug)); }
+  100% { opacity: 1;   transform: translateX(0); color: inherit; letter-spacing: normal; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bug-chomp { animation: none; }
+}
+
 @keyframes bug-legs-a {
   0%, 100% { transform: rotate(9deg); }
   50% { transform: rotate(-9deg); }

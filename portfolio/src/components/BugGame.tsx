@@ -13,7 +13,7 @@ const RESPAWN_MS: [number, number] = [20_000, 30_000];
 const MAX_SPAWNS = 14; // per page load (splits count too)
 const LIFETIME_MS = 70_000; // after this the bug scurries off-screen
 const SIZE = 30; // sprite box in px
-const MAX_BUGS = 3; // concurrent bugs after multiplying
+const MAX_BUGS = 2; // concurrent bugs after multiplying
 const SPLIT_MIN_AGE_MS = 5_000; // a bug must live this long before it can split
 const SPLIT_CHANCE_PER_SEC = 0.06; // per wandering bug
 
@@ -57,6 +57,16 @@ const PANICS = [
   "you'll never catch me!",
   "missed me! 😜",
   "not today, dev!",
+];
+/** Said while chewing on the page's content. */
+const EAT_LINES = [
+  "nom nom nom 🍴",
+  "tasty code 😋",
+  "mmm, spaghetti code",
+  "eating your <div>s 🐛",
+  "deleting this line…",
+  "yoink! 🍽️",
+  "this text looks delicious",
 ];
 /** Random last words on the corpse. */
 const LAST_WORDS = [
@@ -248,6 +258,7 @@ export function BugGame() {
   const bubbleTimers = useRef(new Map<number, number>());
   const cursor = useRef({ x: -9999, y: -9999 });
   const lastPanic = useRef(0);
+  const lastBite = useRef(0);
   const nextId = useRef(1);
   const spawns = useRef(0);
   const timers = useRef<number[]>([]);
@@ -275,6 +286,28 @@ export function BugGame() {
     if (existing) clearTimeout(existing);
     bubbleTimers.current.delete(bugId);
     setBubbles((prev) => prev.filter((b) => b.bugId !== bugId));
+  }, []);
+
+  /**
+   * "Eat" whatever page text sits under the bug: briefly glitch/gnaw the
+   * nearest content element (non-destructive — the class is removed after).
+   */
+  const biteAt = useCallback((x: number, y: number) => {
+    const els = document.querySelectorAll<HTMLElement>(
+      "main h1, main h2, main h3, main p, main li, main a, main span",
+    );
+    for (const el of els) {
+      if (el.classList.contains("bug-chomp") || !el.textContent?.trim()) continue;
+      const r = el.getBoundingClientRect();
+      if (r.width < 24 || r.height < 8 || r.height > 120) continue;
+      if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) {
+        el.classList.add("bug-chomp");
+        const t = window.setTimeout(() => el.classList.remove("bug-chomp"), 950);
+        pushTimer(t);
+        return true;
+      }
+    }
+    return false;
   }, []);
 
   /** Add a bug — from a random screen edge, or at a position (a split). */
@@ -387,6 +420,14 @@ export function BugGame() {
           say(s.id, pick(SPLIT_LINES), 2200);
         }
 
+        // munch on nearby page content now and then
+        if (!s.fleeing && now - lastBite.current > 2200 && Math.random() < dt * 0.5) {
+          if (biteAt(s.x, s.y)) {
+            lastBite.current = now;
+            say(s.id, pick(EAT_LINES), 1600);
+          }
+        }
+
         const paused = now < s.pauseUntil && !s.fleeing;
         if (!paused) {
           const dx = s.target.x - s.x;
@@ -436,7 +477,7 @@ export function BugGame() {
 
     raf = requestAnimationFrame(step);
     return () => cancelAnimationFrame(raf);
-  }, [anyAlive, scheduleSpawn, spawn, say, clearBubble]);
+  }, [anyAlive, scheduleSpawn, spawn, say, clearBubble, biteAt]);
 
   // Track the cursor globally while bugs are alive (they dodge anything close).
   useEffect(() => {

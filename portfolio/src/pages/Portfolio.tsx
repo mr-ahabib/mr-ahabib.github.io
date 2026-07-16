@@ -22,6 +22,7 @@ const Publications = lazy(() => import("@/components/sections/Publications").the
 const Contact = lazy(() => import("@/components/sections/Contact").then((m) => ({ default: m.Contact })));
 const Chatbot = lazy(() => import("@/components/Chatbot").then((m) => ({ default: m.Chatbot })));
 const BugGame = lazy(() => import("@/components/BugGame").then((m) => ({ default: m.BugGame })));
+const DevMascot = lazy(() => import("@/components/DevMascot").then((m) => ({ default: m.DevMascot })));
 
 export default function Portfolio() {
   const [loading, setLoading] = useState(true);
@@ -123,6 +124,7 @@ export default function Portfolio() {
       <Suspense fallback={null}>
         <Chatbot />
         <BugGame />
+        <DevMascot />
       </Suspense>
     </div>
     </>
