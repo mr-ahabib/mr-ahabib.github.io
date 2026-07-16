@@ -5,18 +5,39 @@ import { HeroTerminal } from "@/components/HeroTerminal";
 import { Tilt3D } from "@/components/Tilt3D";
 import { WireCube } from "@/components/HudDecor";
 
-const ORBIT_TITLES = ["AI Engineer", "Software Engineer", "Researcher"];
+/** The solar system: each role is a planet on its own tilted orbit around
+ * the avatar-sun — inner orbits run faster, exactly like real planets. */
+const TILT = 0.31; // vertical squash of a circle tilted ~72°
+const ORBITS = [
+  { text: "AI Engineer", rx: 150, duration: 16, planet: "bg-primary", label: "text-primary", ring: "border-primary/30" },
+  { text: "Software Engineer", rx: 215, duration: 26, planet: "bg-accent", label: "text-accent", ring: "border-accent/25 border-dashed" },
+  { text: "Researcher", rx: 278, duration: 40, planet: "bg-accent-2", label: "text-accent-2", ring: "border-accent-2/25" },
+];
 
-/** One title riding the tilted orbit — bright in front, dim behind the avatar. */
-function OrbitTitle({ text, phase, rx, ry }: { text: string; phase: number; rx: number; ry: number }) {
+/** One planet riding its orbit — bright in front, dim behind the sun. */
+function OrbitTitle({
+  text,
+  phase,
+  rx,
+  duration,
+  planet,
+  label,
+}: {
+  text: string;
+  phase: number;
+  rx: number;
+  duration: number;
+  planet: string;
+  label: string;
+}) {
   const time = useTime();
-  // one full orbit every 26s, matching the inner ring's spin
-  const angle = useTransform(time, (t) => (t / 26000) * Math.PI * 2 + phase);
+  const ry = rx * TILT;
+  const angle = useTransform(time, (t) => (t / (duration * 1000)) * Math.PI * 2 + phase);
   const x = useTransform(angle, (a) => Math.cos(a) * rx);
   const y = useTransform(angle, (a) => Math.sin(a) * ry);
   const depth = useTransform(angle, (a) => (Math.sin(a) + 1) / 2); // 0 = behind, 1 = in front
-  const scale = useTransform(depth, [0, 1], [0.78, 1.05]);
-  const opacity = useTransform(depth, [0, 1], [0.35, 1]);
+  const scale = useTransform(depth, [0, 1], [0.72, 1.06]);
+  const opacity = useTransform(depth, [0, 1], [0.3, 1]);
   const zIndex = useTransform(depth, (d) => (d > 0.5 ? 20 : 5));
 
   return (
@@ -27,16 +48,16 @@ function OrbitTitle({ text, phase, rx, ry }: { text: string; phase: number; rx: 
       style={{ x, y, scale, opacity, zIndex }}
       className="pointer-events-none absolute left-1/2 top-1/2 will-change-transform"
     >
-      <span className="flex -translate-x-1/2 -translate-y-1/2 items-center gap-1.5 whitespace-nowrap rounded-full border border-primary/40 bg-card/95 px-2.5 py-1 font-mono text-[10px] text-primary sm:text-xs">
-        <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+      <span className={`flex -translate-x-1/2 -translate-y-1/2 items-center gap-1.5 whitespace-nowrap rounded-full border border-border/70 bg-card/95 px-2.5 py-1 font-mono text-[10px] sm:text-xs ${label}`}>
+        <span className={`h-2 w-2 rounded-full ${planet} shadow-[0_0_6px_currentColor]`} />
         {text}
       </span>
     </motion.span>
   );
 }
 
-/** The three titles spaced 120° apart on the avatar's orbit ring. */
-function OrbitingTitles() {
+/** Orbit rings + planets, scaled down on small screens. */
+function SolarSystem() {
   const reduced = useReducedMotion();
   const [small, setSmall] = useState(false);
   useEffect(() => {
@@ -46,40 +67,55 @@ function OrbitingTitles() {
     mq.addEventListener("change", update);
     return () => mq.removeEventListener("change", update);
   }, []);
-  // ellipse matching the visible ring (circle tilted ~72°)
-  const rx = small ? 140 : 215;
-  const ry = small ? 46 : 66;
-
-  if (reduced) {
-    const spots = [
-      { x: -rx, y: 0 },
-      { x: rx, y: 0 },
-      { x: 0, y: ry },
-    ];
-    return (
-      <>
-        {ORBIT_TITLES.map((t, i) => (
-          <span
-            key={t}
-            aria-hidden="true"
-            className="pointer-events-none absolute left-1/2 top-1/2 z-20"
-            style={{ transform: `translate(${spots[i].x}px, ${spots[i].y}px)` }}
-          >
-            <span className="flex -translate-x-1/2 -translate-y-1/2 items-center gap-1.5 whitespace-nowrap rounded-full border border-primary/40 bg-card/80 px-2.5 py-1 font-mono text-[10px] text-primary backdrop-blur sm:text-xs">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-              {t}
-            </span>
-          </span>
-        ))}
-      </>
-    );
-  }
+  const k = small ? 0.62 : 1; // mobile scale factor
 
   return (
     <>
-      {ORBIT_TITLES.map((t, i) => (
-        <OrbitTitle key={t} text={t} phase={(i * Math.PI * 2) / 3} rx={rx} ry={ry} />
-      ))}
+      {/* Orbit paths — circles tilted into the same plane the planets ride */}
+      <div className="pointer-events-none absolute inset-0 grid place-items-center [perspective:1000px]">
+        {ORBITS.map((o) => (
+          <div key={o.text} className="col-start-1 row-start-1 [transform:rotateX(72deg)]">
+            <div
+              className={`rounded-full border ${o.ring}`}
+              style={{ width: o.rx * 2 * k, height: o.rx * 2 * k }}
+            />
+          </div>
+        ))}
+      </div>
+
+      {/* Planets */}
+      {reduced
+        ? ORBITS.map((o, i) => {
+            const spots = [
+              { x: -o.rx * k, y: 0 },
+              { x: o.rx * k, y: 0 },
+              { x: 0, y: o.rx * TILT * k },
+            ];
+            return (
+              <span
+                key={o.text}
+                aria-hidden="true"
+                className="pointer-events-none absolute left-1/2 top-1/2 z-20"
+                style={{ transform: `translate(${spots[i].x}px, ${spots[i].y}px)` }}
+              >
+                <span className={`flex -translate-x-1/2 -translate-y-1/2 items-center gap-1.5 whitespace-nowrap rounded-full border border-border/70 bg-card/80 px-2.5 py-1 font-mono text-[10px] backdrop-blur sm:text-xs ${o.label}`}>
+                  <span className={`h-2 w-2 rounded-full ${o.planet}`} />
+                  {o.text}
+                </span>
+              </span>
+            );
+          })
+        : ORBITS.map((o, i) => (
+            <OrbitTitle
+              key={o.text}
+              text={o.text}
+              phase={(i * Math.PI * 2) / 3}
+              rx={o.rx * k}
+              duration={o.duration}
+              planet={o.planet}
+              label={o.label}
+            />
+          ))}
     </>
   );
 }
@@ -126,26 +162,8 @@ export function Hero() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="order-1 lg:order-2 relative flex items-center justify-center min-h-[420px] sm:min-h-[480px]"
           >
-            {/* Orbiting perspective rings */}
-            <div className="pointer-events-none absolute inset-0 grid place-items-center [perspective:1000px]">
-              <div className="[transform:rotateX(72deg)]">
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 26, repeat: Infinity, ease: "linear" }}
-                  className="h-[320px] w-[320px] sm:h-[420px] sm:w-[420px] rounded-full border border-primary/25"
-                />
-              </div>
-              <div className="[transform:rotateX(72deg)]">
-                <motion.div
-                  animate={{ rotate: -360 }}
-                  transition={{ duration: 38, repeat: Infinity, ease: "linear" }}
-                  className="h-[400px] w-[400px] sm:h-[520px] sm:w-[520px] rounded-full border border-dashed border-accent/20"
-                />
-              </div>
-            </div>
-
-            {/* Titles orbiting the avatar like planets */}
-            <OrbitingTitles />
+            {/* The solar system — orbit rings + role planets around the avatar-sun */}
+            <SolarSystem />
 
             {/* Pedestal — crisp neon lines (no glow bloom) */}
             <div className="pointer-events-none absolute bottom-10 left-1/2 -translate-x-1/2 w-64 sm:w-80">
