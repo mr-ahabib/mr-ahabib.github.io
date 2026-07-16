@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Sun, Moon } from "lucide-react";
-import { useTheme } from "next-themes";
+import { Menu, X } from "lucide-react";
 
 const NAV_LINKS = [
   { name: "Home", href: "#home" },
@@ -29,36 +28,6 @@ function scrollToSection(href: string) {
     const y = (el as HTMLElement).getBoundingClientRect().top + window.scrollY - 72;
     window.scrollTo({ top: y, behavior: "smooth" });
   }
-}
-
-function ThemeToggle() {
-  const { resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-
-  const isDark = resolvedTheme === "dark";
-
-  return (
-    <button
-      onClick={() => setTheme(isDark ? "light" : "dark")}
-      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-      className="neon-glow-sm group relative grid h-9 w-9 place-items-center rounded-lg border border-primary/50 bg-card/60 text-muted-foreground backdrop-blur transition-colors duration-300 hover:border-primary hover:text-primary"
-    >
-      {/* Render nothing decisive until mounted to avoid a hydration flash */}
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.span
-          key={mounted ? (isDark ? "moon" : "sun") : "placeholder"}
-          initial={{ rotate: -90, opacity: 0 }}
-          animate={{ rotate: 0, opacity: 1 }}
-          exit={{ rotate: 90, opacity: 0 }}
-          transition={{ duration: 0.18 }}
-          className="relative"
-        >
-          {mounted && isDark ? <Moon size={17} /> : <Sun size={17} />}
-        </motion.span>
-      </AnimatePresence>
-    </button>
-  );
 }
 
 export function Navbar() {
@@ -160,8 +129,6 @@ export function Navbar() {
                 })}
               </nav>
             </div>
-
-            <ThemeToggle />
 
             {/* Mobile toggle */}
             <button
