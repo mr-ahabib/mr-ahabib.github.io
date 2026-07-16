@@ -39,13 +39,11 @@ const CATEGORIES = [
   },
 ];
 
-/** Same footprint as the radar panel so the lazy swap causes no layout shift. */
+/** Same footprint as the radar so the lazy swap causes no layout shift. */
 function RadarFallback() {
   return (
-    <div className="neon-glow-sm relative mx-auto mb-16 sm:mb-20 h-[434px] max-w-3xl rounded-2xl border border-primary/50 bg-card/80 backdrop-blur-xl sm:h-[510px]">
-      <div className="grid h-full place-items-center font-mono text-xs text-muted-foreground">
-        loading capability_matrix…
-      </div>
+    <div className="grid h-[380px] place-items-center font-mono text-xs text-muted-foreground sm:h-[420px]">
+      loading capability_matrix…
     </div>
   );
 }
@@ -73,51 +71,54 @@ export function Skills() {
           <div className="w-24 h-1 bg-gradient-to-r from-primary via-accent to-accent-2 mx-auto rounded-full" />
         </motion.div>
 
-        {/* Capability radar */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
-          <Suspense fallback={<RadarFallback />}>
-            <CapabilityRadar />
-          </Suspense>
-        </motion.div>
+        {/* Radar instrument + skill matrix, side by side on wide screens */}
+        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-5 lg:gap-16">
+          <motion.div
+            initial={{ opacity: 0, x: -24 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="lg:col-span-2"
+          >
+            <Suspense fallback={<RadarFallback />}>
+              <CapabilityRadar />
+            </Suspense>
+          </motion.div>
 
-        {/* Skill matrix — open rows, one per category, split by hairlines */}
-        <div className="mx-auto max-w-5xl divide-y divide-border/60">
-          {CATEGORIES.map((category, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ delay: index * 0.06 }}
-              className="flex flex-col gap-3 py-6 sm:flex-row sm:items-start sm:gap-10"
-            >
-              <div className="flex items-center gap-3 sm:w-52 sm:shrink-0 sm:pt-1">
-                <div className="clip-hud-sm grid h-9 w-9 shrink-0 place-items-center bg-primary/12 text-primary">
-                  {category.icon}
+          {/* Skill matrix — open rows, one per category, split by hairlines */}
+          <div className="divide-y divide-border/60 lg:col-span-3">
+            {CATEGORIES.map((category, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ delay: index * 0.06 }}
+                className="flex flex-col gap-3 py-5 sm:flex-row sm:items-start sm:gap-8"
+              >
+                <div className="flex items-center gap-3 sm:w-44 sm:shrink-0 sm:pt-1">
+                  <div className="clip-hud-sm grid h-9 w-9 shrink-0 place-items-center bg-primary/12 text-primary">
+                    {category.icon}
+                  </div>
+                  <h3 className="text-base font-display font-bold text-foreground">{category.title}</h3>
                 </div>
-                <h3 className="text-base font-display font-bold text-foreground">{category.title}</h3>
-              </div>
 
-              <div className="flex flex-wrap gap-2">
-                {category.skills.map((skill, i) => (
-                  <motion.span
-                    key={i}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.04 + i * 0.03 }}
-                    className="clip-hud-sm border border-border/70 bg-secondary/50 px-2.5 py-1.5 font-mono text-xs text-muted-foreground transition-colors hover:border-primary/50 hover:text-primary cursor-default"
-                  >
-                    {skill}
-                  </motion.span>
-                ))}
-              </div>
-            </motion.div>
-          ))}
+                <div className="flex flex-wrap gap-2">
+                  {category.skills.map((skill, i) => (
+                    <motion.span
+                      key={i}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.04 + i * 0.03 }}
+                      className="clip-hud-sm border border-border/70 bg-secondary/50 px-2.5 py-1.5 font-mono text-xs text-muted-foreground transition-colors hover:border-primary/50 hover:text-primary cursor-default"
+                    >
+                      {skill}
+                    </motion.span>
+                  ))}
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

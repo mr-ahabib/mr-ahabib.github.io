@@ -60,22 +60,23 @@ export function Achievements() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="group flex items-start gap-5 border-b border-border/60 py-6 last:border-b-0 sm:gap-7"
+              className="group flex items-start gap-5 border-b border-border/60 py-7 last:border-b-0 sm:gap-8"
             >
-              <span className="w-14 shrink-0 pt-1 font-mono text-sm font-semibold text-primary">
+              <span className="w-20 shrink-0 pt-0.5 font-mono text-xl sm:text-2xl font-bold text-primary/30 transition-colors duration-300 group-hover:text-primary/80">
                 {item.date.match(/\d{4}/)?.[0] ?? item.date}
               </span>
 
-              <div className="clip-hud-sm grid h-11 w-11 shrink-0 place-items-center bg-primary/12 transition-transform duration-300 group-hover:scale-110">
+              <div className="clip-hud-sm grid h-11 w-11 shrink-0 place-items-center bg-primary/12 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary/25">
                 {item.icon}
               </div>
 
-              <div className="min-w-0">
+              <div className="min-w-0 flex-1">
                 <h3 className="text-base sm:text-lg font-display font-bold text-foreground leading-snug transition-colors group-hover:text-primary">
                   {item.title}
                 </h3>
-                <p className="mt-0.5 text-sm font-medium text-muted-foreground">{item.org}</p>
-                <p className="mt-1 text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
+                <p className="mt-0.5 font-mono text-xs uppercase tracking-wider text-muted-foreground">{item.org}</p>
+                <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
+                <span className="mt-3 block h-px w-0 bg-gradient-to-r from-primary via-accent to-accent-2 transition-all duration-500 group-hover:w-28" />
               </div>
             </motion.div>
           ))}

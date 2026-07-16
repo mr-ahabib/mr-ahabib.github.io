@@ -23,22 +23,22 @@ const KEY_SKILLS = [
  */
 export default function CapabilityRadar() {
   return (
-    <div className="neon-glow-sm relative mx-auto mb-16 sm:mb-20 max-w-3xl rounded-2xl border border-primary/50 bg-card/80 backdrop-blur-xl">
-      <div className="relative overflow-hidden rounded-2xl p-5 sm:p-7">
-        {/* HUD corner brackets */}
-        <span className="pointer-events-none absolute left-4 top-4 h-4 w-4 border-l-2 border-t-2 border-primary/40" />
-        <span className="pointer-events-none absolute right-4 top-4 h-4 w-4 border-r-2 border-t-2 border-primary/40" />
-        <span className="pointer-events-none absolute bottom-4 left-4 h-4 w-4 border-b-2 border-l-2 border-primary/40" />
-        <span className="pointer-events-none absolute bottom-4 right-4 h-4 w-4 border-b-2 border-r-2 border-primary/40" />
+    <div className="relative">
+      {/* Open HUD instrument — corner ticks only, no card chrome */}
+      <span className="pointer-events-none absolute -left-1 -top-1 h-5 w-5 border-l-2 border-t-2 border-primary/50" />
+      <span className="pointer-events-none absolute -right-1 -top-1 h-5 w-5 border-r-2 border-t-2 border-primary/50" />
+      <span className="pointer-events-none absolute -bottom-1 -left-1 h-5 w-5 border-b-2 border-l-2 border-primary/50" />
+      <span className="pointer-events-none absolute -bottom-1 -right-1 h-5 w-5 border-b-2 border-r-2 border-primary/50" />
 
-        <div className="mb-2 flex items-center justify-between">
+      <div className="relative px-2 py-1">
+        <div className="mb-1 flex items-center justify-between">
           <span className="eyebrow">capability_matrix</span>
           <span className="hidden sm:inline font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
             6 vectors tracked
           </span>
         </div>
 
-        <div className="h-[320px] w-full sm:h-[380px]">
+        <div className="h-[300px] w-full sm:h-[340px]">
           <ResponsiveContainer width="100%" height="100%">
             <RadarChart data={KEY_SKILLS} outerRadius="65%" margin={{ top: 10, right: 30, bottom: 10, left: 30 }}>
               <defs>

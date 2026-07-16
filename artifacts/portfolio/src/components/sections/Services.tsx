@@ -67,8 +67,13 @@ export function Services() {
               transition={{ delay: index * 0.08 }}
               className="group"
             >
-              <div className="clip-hud-sm mb-5 grid h-14 w-14 place-items-center bg-primary/12 text-primary transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground group-hover:scale-105">
-                {service.icon}
+              <div className="mb-5 flex items-end justify-between">
+                <div className="clip-hud-sm grid h-14 w-14 place-items-center bg-primary/12 text-primary transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground group-hover:scale-105">
+                  {service.icon}
+                </div>
+                <span className="font-mono text-2xl font-bold text-primary/20 transition-colors duration-300 group-hover:text-primary/60">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
               </div>
               <h3 className="text-lg font-display font-bold text-foreground mb-2 transition-colors group-hover:text-primary">
                 {service.title}

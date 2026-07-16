@@ -90,7 +90,7 @@ export function Publications() {
               transition={{ delay: index * 0.1 }}
               className="group flex gap-5 border-b border-border/60 py-7 first:pt-2 last:border-b-0 sm:gap-8"
             >
-              <span className="shrink-0 pt-1 font-mono text-2xl font-bold text-primary/35 transition-colors group-hover:text-primary/70 sm:text-3xl">
+              <span className="text-gradient shrink-0 pt-1 font-mono text-2xl font-bold opacity-40 transition-opacity duration-300 group-hover:opacity-100 sm:text-3xl">
                 {String(index + 1).padStart(2, "0")}
               </span>
 
