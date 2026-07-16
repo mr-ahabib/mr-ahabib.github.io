@@ -19,10 +19,10 @@ type P = {
 
 const Z_NEAR = 0.4;
 const Z_FAR = 2.1;
-const AREA_PER_POINT = 16000; // px² of screen per particle (capped)
-const MAX_POINTS = 120;
-const LINK_PX = 105; // screen-space link distance
-const LINK_DZ = 0.45; // only link points at similar depth
+const AREA_PER_POINT = 30000; // px² of screen per particle (capped)
+const MAX_POINTS = 65;
+const LINK_PX = 90; // screen-space link distance
+const LINK_DZ = 0.38; // only link points at similar depth
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
@@ -124,7 +124,7 @@ export function AnimatedBackground() {
           if (d < LINK_PX) {
             const near = (proj[i].near + proj[j].near) / 2;
             const [r, g, b] = colorAt(near);
-            const alpha = (1 - d / LINK_PX) * (isLight ? 0.1 : 0.14) * (0.4 + 0.6 * near);
+            const alpha = (1 - d / LINK_PX) * (isLight ? 0.08 : 0.11) * (0.4 + 0.6 * near);
             ctx.strokeStyle = `rgba(${r},${g},${b},${alpha})`;
             ctx.lineWidth = isLight ? 0.7 : 0.9;
             ctx.beginPath();

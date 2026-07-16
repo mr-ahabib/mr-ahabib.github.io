@@ -110,10 +110,10 @@ function BugSprite() {
       width={SIZE}
       height={SIZE}
       viewBox="0 0 40 40"
-      className="[filter:drop-shadow(0_0_4px_hsl(var(--destructive)/0.8))]"
+      className="[filter:drop-shadow(0_0_4px_hsl(var(--bug)/0.8))]"
     >
       {/* legs (two alternating groups = scuttle) */}
-      <g stroke="hsl(var(--destructive))" strokeWidth="1.7" strokeLinecap="round">
+      <g stroke="hsl(var(--bug))" strokeWidth="1.7" strokeLinecap="round">
         <g className="bug-legs bug-legs-a">
           <line x1="13" y1="15" x2="4" y2="10" />
           <line x1="27" y1="21" x2="36" y2="21" />
@@ -126,25 +126,25 @@ function BugSprite() {
         </g>
       </g>
       {/* antennae */}
-      <g stroke="hsl(var(--destructive))" strokeWidth="1.4" strokeLinecap="round" fill="none">
+      <g stroke="hsl(var(--bug))" strokeWidth="1.4" strokeLinecap="round" fill="none">
         <path d="M17 9 Q15 4 11 3" />
         <path d="M23 9 Q25 4 29 3" />
       </g>
       {/* head */}
-      <ellipse cx="20" cy="13" rx="5.5" ry="4.5" fill="hsl(var(--card))" stroke="hsl(var(--destructive))" strokeWidth="1.6" />
+      <ellipse cx="20" cy="13" rx="5.5" ry="4.5" fill="hsl(var(--card))" stroke="hsl(var(--bug))" strokeWidth="1.6" />
       {/* eyes */}
-      <circle cx="18" cy="12" r="1.1" fill="hsl(var(--destructive))" />
-      <circle cx="22" cy="12" r="1.1" fill="hsl(var(--destructive))" />
+      <circle cx="18" cy="12" r="1.1" fill="hsl(var(--bug))" />
+      <circle cx="22" cy="12" r="1.1" fill="hsl(var(--bug))" />
       {/* abdomen */}
-      <ellipse cx="20" cy="25" rx="7.5" ry="9.5" fill="hsl(var(--card))" stroke="hsl(var(--destructive))" strokeWidth="1.6" />
+      <ellipse cx="20" cy="25" rx="7.5" ry="9.5" fill="hsl(var(--card))" stroke="hsl(var(--bug))" strokeWidth="1.6" />
       {/* circuit traces */}
-      <g stroke="hsl(var(--destructive)/0.8)" strokeWidth="1.1" strokeLinecap="round">
+      <g stroke="hsl(var(--bug)/0.8)" strokeWidth="1.1" strokeLinecap="round">
         <line x1="20" y1="18" x2="20" y2="32" />
         <line x1="20" y1="22" x2="16" y2="24" />
         <line x1="20" y1="26" x2="24" y2="28" />
       </g>
-      <circle cx="16" cy="24" r="1" fill="hsl(var(--destructive)/0.9)" />
-      <circle cx="24" cy="28" r="1" fill="hsl(var(--destructive)/0.9)" />
+      <circle cx="16" cy="24" r="1" fill="hsl(var(--bug)/0.9)" />
+      <circle cx="24" cy="28" r="1" fill="hsl(var(--bug)/0.9)" />
     </svg>
   );
 }
@@ -171,7 +171,7 @@ function HammerSprite({ swinging }: { swinging: boolean }) {
         fill="hsl(217 25% 30%)"
         stroke="hsl(var(--primary))"
         strokeWidth="1.5"
-        className="[filter:drop-shadow(0_0_3px_hsl(var(--destructive)/0.7))]"
+        className="[filter:drop-shadow(0_0_3px_hsl(var(--bug)/0.7))]"
       />
     </svg>
   );
@@ -180,14 +180,14 @@ function HammerSprite({ swinging }: { swinging: boolean }) {
 /** Splat corpse with X-eyes, droplets and one twitching leg. */
 function SplatSprite() {
   return (
-    <svg width="52" height="52" viewBox="0 0 52 52" className="[filter:drop-shadow(0_0_5px_hsl(var(--destructive)/0.7))]">
+    <svg width="52" height="52" viewBox="0 0 52 52" className="[filter:drop-shadow(0_0_5px_hsl(var(--bug)/0.7))]">
       <path
         d="M26 11 C32 9 38 13 37 19 C44 19 46 27 40 30 C44 35 38 42 32 39 C30 44 21 44 19 39 C12 42 6 35 11 29 C5 25 9 16 17 18 C16 12 21 9 26 11 Z"
-        fill="hsl(var(--destructive)/0.45)"
-        stroke="hsl(var(--destructive))"
+        fill="hsl(var(--bug)/0.45)"
+        stroke="hsl(var(--bug))"
         strokeWidth="1.5"
       />
-      <ellipse cx="26" cy="26" rx="8" ry="7" fill="hsl(var(--destructive)/0.55)" />
+      <ellipse cx="26" cy="26" rx="8" ry="7" fill="hsl(var(--bug)/0.55)" />
       {/* X eyes */}
       <g stroke="hsl(var(--background))" strokeWidth="1.8" strokeLinecap="round">
         <line x1="21" y1="23" x2="25" y2="27" />
@@ -196,12 +196,12 @@ function SplatSprite() {
         <line x1="32" y1="23" x2="28" y2="27" />
       </g>
       {/* droplets */}
-      <circle cx="8" cy="18" r="1.6" fill="hsl(var(--destructive)/0.7)" />
-      <circle cx="45" cy="24" r="1.4" fill="hsl(var(--destructive)/0.7)" />
-      <circle cx="14" cy="43" r="1.7" fill="hsl(var(--destructive)/0.7)" />
-      <circle cx="40" cy="42" r="1.3" fill="hsl(var(--destructive)/0.7)" />
+      <circle cx="8" cy="18" r="1.6" fill="hsl(var(--bug)/0.7)" />
+      <circle cx="45" cy="24" r="1.4" fill="hsl(var(--bug)/0.7)" />
+      <circle cx="14" cy="43" r="1.7" fill="hsl(var(--bug)/0.7)" />
+      <circle cx="40" cy="42" r="1.3" fill="hsl(var(--bug)/0.7)" />
       {/* twitching leg */}
-      <line x1="37" y1="33" x2="46" y2="38" stroke="hsl(var(--destructive))" strokeWidth="1.6" strokeLinecap="round" className="bug-leg-twitch" />
+      <line x1="37" y1="33" x2="46" y2="38" stroke="hsl(var(--bug))" strokeWidth="1.6" strokeLinecap="round" className="bug-leg-twitch" />
     </svg>
   );
 }
@@ -526,9 +526,9 @@ export function BugGame() {
           style={{ transform: `translate3d(${corpse.x - 26}px, ${corpse.y - 26}px, 0)` }}
         >
           <div className="bug-splat relative">
-            <span className="bug-impact absolute inset-1 rounded-full border-2 border-destructive" />
+            <span className="bug-impact absolute inset-1 rounded-full border-2 border-bug" />
             <SplatSprite />
-            <p className="absolute -top-5 left-1/2 -translate-x-1/2 whitespace-nowrap font-mono text-[10px] font-semibold text-destructive">
+            <p className="absolute -top-5 left-1/2 -translate-x-1/2 whitespace-nowrap font-mono text-[10px] font-semibold text-bug">
               {corpse.label}
             </p>
           </div>
@@ -543,7 +543,7 @@ export function BugGame() {
             transform: `translate3d(${bugsRef.current.get(bubble.bugId)!.x}px, ${Math.max(bugsRef.current.get(bubble.bugId)!.y - SIZE / 2 - 6, 34)}px, 0)`,
           }}
         >
-          <span className="bug-bubble neon-glow-sm relative block -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-lg border border-destructive/60 bg-card/95 px-2.5 py-1 font-mono text-[11px] font-medium text-destructive backdrop-blur after:absolute after:left-1/2 after:top-full after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-destructive/60 after:content-['']">
+          <span className="bug-bubble neon-glow-sm relative block -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-lg border border-bug/60 bg-card/95 px-2.5 py-1 font-mono text-[11px] font-medium text-bug backdrop-blur after:absolute after:left-1/2 after:top-full after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-bug/60 after:content-['']">
             {bubble.text}
           </span>
         </div>
