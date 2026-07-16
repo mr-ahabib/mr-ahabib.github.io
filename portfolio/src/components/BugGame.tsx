@@ -25,19 +25,19 @@ const pick = <T,>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
 const TAUNTS = [
   "psst dev, your code has 99 problems 🐛",
   "I saw that TODO you never did 👀",
-  "6 ghonta debug korlen, ami-i chilam 😂",
-  "Ctrl+S diyeo amake thamate parben na",
-  "deploy korei ghumate jaben na 😉",
-  "git commit -m 'fix' … abar? 😏",
-  "your console.log won't save you dev",
-  "ei dev ta amake dhorte pare na 😎",
+  "6 hours debugging? that was me 😂",
+  "Ctrl+S won't stop me, dev",
+  "don't sleep right after deploy 😉",
+  "git commit -m 'fix' … again? 😏",
+  "your console.log won't save you",
+  "this dev can't catch me 😎",
   "works on my machine — not yours 🤷",
-  "aponar unit tests? cute 🐛",
-  "prod-e amake khuje paben, hehe",
+  "your unit tests? cute 🐛",
+  "find me in production, hehe",
   "npm run cry",
-  "ami ekta feature, bug na — boss ke bolben",
-  "Stack Overflow-o apnake bachate parbe na",
-  "code review pass korechi, dev 😌",
+  "I'm a feature, not a bug — tell your boss",
+  "Stack Overflow won't save you either",
+  "I passed code review 😌",
 ];
 /** Announced right after a bug splits in two. */
 const SPLIT_LINES = [
@@ -47,14 +47,16 @@ const SPLIT_LINES = [
   "merge conflict? nah, merge bugs",
   "copy-paste is my love language",
 ];
-/** Yelled while running from the cursor. */
+/** Yelled while you're trying to squash it (cursor closing in / hover). */
 const PANICS = [
-  "not today, junior dev! 🏃",
-  "ctrl+Z won't save you",
-  "you can't catch tech debt",
-  "PANIC: goroutine fleeing 💨",
-  "sudo catch me — still no 😏",
-  "404: bug not found",
+  "MOVE MOVE MOVE 🏃",
+  "too slow, human!",
+  "nope nope nope 💨",
+  "can't touch this",
+  "nice try 😏",
+  "you'll never catch me!",
+  "missed me! 😜",
+  "not today, dev!",
 ];
 /** Random last words on the corpse. */
 const LAST_WORDS = [
@@ -534,6 +536,7 @@ export function BugGame() {
             onMouseEnter={(e) => {
               setHovered(true);
               moveHammer(e.clientX, e.clientY);
+              say(id, pick(PANICS), 1500);
             }}
             onMouseMove={(e) => moveHammer(e.clientX, e.clientY)}
             onMouseLeave={() => setHovered(false)}
