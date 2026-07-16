@@ -8,26 +8,33 @@ import { WireCube } from "@/components/HudDecor";
 /** The solar system: each role is a planet on its own tilted orbit around
  * the avatar-sun — inner orbits run faster, exactly like real planets. */
 const TILT = 0.31; // vertical squash of a circle tilted ~72°
+// each orbit sits on its own inclined plane (tiltZ), like real orbital planes
 const ORBITS = [
-  { text: "AI Engineer", rx: 150, duration: 16, planet: "bg-primary", label: "text-primary", ring: "border-primary/30" },
-  { text: "Software Engineer", rx: 215, duration: 26, planet: "bg-accent", label: "text-accent", ring: "border-accent/25 border-dashed" },
-  { text: "Researcher", rx: 278, duration: 40, planet: "bg-accent-2", label: "text-accent-2", ring: "border-accent-2/25" },
+  { text: "AI Engineer", rx: 150, duration: 16, tiltZ: -9, label: "text-primary", ring: "border-primary/30" },
+  { text: "Software Engineer", rx: 215, duration: 26, tiltZ: 5, label: "text-accent", ring: "border-accent/25 border-dashed" },
+  { text: "Researcher", rx: 278, duration: 40, tiltZ: 13, label: "text-accent-2", ring: "border-accent-2/25" },
 ];
 
-/** One planet riding its orbit — bright in front, dim behind the sun. */
+/** Little shaded sphere — reads as a lit planet, not a flat dot. */
+const PLANET_STYLE: React.CSSProperties = {
+  background: "radial-gradient(circle at 32% 30%, rgba(255,255,255,0.9), currentColor 68%)",
+  boxShadow: "0 0 7px currentColor",
+};
+
+/** One planet riding its inclined orbit — bright in front, dim behind the sun. */
 function OrbitTitle({
   text,
   phase,
   rx,
   duration,
-  planet,
+  tiltZ,
   label,
 }: {
   text: string;
   phase: number;
   rx: number;
   duration: number;
-  planet: string;
+  tiltZ: number;
   label: string;
 }) {
   const time = useTime();
@@ -36,23 +43,33 @@ function OrbitTitle({
   const x = useTransform(angle, (a) => Math.cos(a) * rx);
   const y = useTransform(angle, (a) => Math.sin(a) * ry);
   const depth = useTransform(angle, (a) => (Math.sin(a) + 1) / 2); // 0 = behind, 1 = in front
-  const scale = useTransform(depth, [0, 1], [0.72, 1.06]);
-  const opacity = useTransform(depth, [0, 1], [0.3, 1]);
+  const scale = useTransform(depth, [0, 1], [0.68, 1.08]);
+  const opacity = useTransform(depth, [0, 1], [0.28, 1]);
   const zIndex = useTransform(depth, (d) => (d > 0.5 ? 20 : 5));
 
   return (
-    // no backdrop-blur here — recomputing a blurred backdrop every frame of
-    // the orbit causes visible shimmer; will-change keeps it on the GPU
-    <motion.span
+    // the wrapper rotates the whole orbit onto its inclined plane; the label
+    // counter-rotates so the text stays level while the path is tilted
+    <div
       aria-hidden="true"
-      style={{ x, y, scale, opacity, zIndex }}
-      className="pointer-events-none absolute left-1/2 top-1/2 will-change-transform"
+      className="pointer-events-none absolute inset-0"
+      style={{ transform: `rotate(${tiltZ}deg)` }}
     >
-      <span className={`flex -translate-x-1/2 -translate-y-1/2 items-center gap-1.5 whitespace-nowrap rounded-full border border-border/70 bg-card/95 px-2.5 py-1 font-mono text-[10px] sm:text-xs ${label}`}>
-        <span className={`h-2 w-2 rounded-full ${planet} shadow-[0_0_6px_currentColor]`} />
-        {text}
-      </span>
-    </motion.span>
+      {/* no backdrop-blur here — recomputing a blurred backdrop every frame of
+          the orbit causes visible shimmer; will-change keeps it on the GPU */}
+      <motion.span
+        style={{ x, y, scale, opacity, zIndex }}
+        className="absolute left-1/2 top-1/2 will-change-transform"
+      >
+        <span
+          className={`flex items-center gap-1.5 whitespace-nowrap rounded-full border border-border/70 bg-card/95 px-2.5 py-1 font-mono text-[10px] sm:text-xs ${label}`}
+          style={{ transform: `translate(-50%, -50%) rotate(${-tiltZ}deg)` }}
+        >
+          <span className="h-2.5 w-2.5 rounded-full" style={PLANET_STYLE} />
+          {text}
+        </span>
+      </motion.span>
+    </div>
   );
 }
 
@@ -71,10 +88,14 @@ function SolarSystem() {
 
   return (
     <>
-      {/* Orbit paths — circles tilted into the same plane the planets ride */}
+      {/* Orbit paths — each circle tilted onto its own inclined plane */}
       <div className="pointer-events-none absolute inset-0 grid place-items-center [perspective:1000px]">
         {ORBITS.map((o) => (
-          <div key={o.text} className="col-start-1 row-start-1 [transform:rotateX(72deg)]">
+          <div
+            key={o.text}
+            className="col-start-1 row-start-1"
+            style={{ transform: `rotate(${o.tiltZ}deg) rotateX(72deg)` }}
+          >
             <div
               className={`rounded-full border ${o.ring}`}
               style={{ width: o.rx * 2 * k, height: o.rx * 2 * k }}
@@ -99,7 +120,7 @@ function SolarSystem() {
                 style={{ transform: `translate(${spots[i].x}px, ${spots[i].y}px)` }}
               >
                 <span className={`flex -translate-x-1/2 -translate-y-1/2 items-center gap-1.5 whitespace-nowrap rounded-full border border-border/70 bg-card/80 px-2.5 py-1 font-mono text-[10px] backdrop-blur sm:text-xs ${o.label}`}>
-                  <span className={`h-2 w-2 rounded-full ${o.planet}`} />
+                  <span className="h-2.5 w-2.5 rounded-full" style={PLANET_STYLE} />
                   {o.text}
                 </span>
               </span>
@@ -112,7 +133,7 @@ function SolarSystem() {
               phase={(i * Math.PI * 2) / 3}
               rx={o.rx * k}
               duration={o.duration}
-              planet={o.planet}
+              tiltZ={o.tiltZ}
               label={o.label}
             />
           ))}
@@ -162,6 +183,16 @@ export function Hero() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="order-1 lg:order-2 relative flex items-center justify-center min-h-[420px] sm:min-h-[480px]"
           >
+            {/* the whole system leans with the pointer as one rigid 3D object */}
+            <div
+              className="absolute inset-0 flex items-center justify-center"
+              style={{
+                transform:
+                  "perspective(1200px) rotateY(calc(var(--par-x, 0) * 8deg)) rotateX(calc(var(--par-y, 0) * -6deg))",
+                transformStyle: "preserve-3d",
+                transition: "transform 0.35s ease-out",
+              }}
+            >
             {/* The solar system — orbit rings + role planets around the avatar-sun */}
             <SolarSystem />
 
@@ -221,6 +252,7 @@ export function Hero() {
               </div>
               </Tilt3D>
             </motion.div>
+            </div>
           </motion.div>
 
         </div>
