@@ -1,7 +1,7 @@
 {
-  "buildCommand": "npm run build --workspace=@workspace/portfolio",
+  "buildCommand": "npm run build --workspace=portfolio",
   "installCommand": "npm install",
-  "outputDirectory": "artifacts/portfolio/dist/public",
+  "outputDirectory": "portfolio/dist/public",
   "rewrites": [
     {
       "source": "/(.*)",

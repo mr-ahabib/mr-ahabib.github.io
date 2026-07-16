@@ -32,12 +32,12 @@ jobs:
         run: npm ci
 
       - name: Build
-        run: BASE_PATH=/my-portfolio/ npm run --workspace @workspace/portfolio build
+        run: BASE_PATH=/my-portfolio/ npm run --workspace portfolio build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'artifacts/portfolio/dist/public'
+          path: 'portfolio/dist/public'
 
   deploy:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'

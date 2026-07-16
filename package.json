@@ -1,21 +1,18 @@
 {
-  "name": "workspace",
+  "name": "ahashan-portfolio",
   "version": "0.0.0",
   "license": "MIT",
+  "private": true,
   "workspaces": [
-    "artifacts/*",
-    "lib/*",
-    "scripts"
+    "portfolio"
   ],
   "scripts": {
-    "dev": "PORT=3000 BASE_PATH=/my-portfolio/ npm run --workspace @workspace/portfolio dev",
-    "build": "npm run typecheck && npm run --workspaces --if-present build",
-    "typecheck:libs": "tsc --build",
-    "typecheck": "npm run typecheck:libs && npm run --workspace @workspace/api-server --if-present typecheck && npm run --workspace @workspace/mockup-sandbox --if-present typecheck && npm run --workspace @workspace/portfolio --if-present typecheck && npm run --workspace @workspace/scripts --if-present typecheck"
+    "dev": "PORT=3000 npm run --workspace portfolio dev",
+    "build": "npm run --workspace portfolio build",
+    "typecheck": "npm run --workspace portfolio typecheck",
+    "serve": "npm run --workspace portfolio serve"
   },
-  "private": true,
   "devDependencies": {
-    "typescript": "~5.9.2",
-    "prettier": "^3.8.1"
+    "typescript": "~5.9.2"
   }
 }
