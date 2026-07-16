@@ -64,8 +64,8 @@
   --destructive: 0 72% 55%;
   --destructive-foreground: 210 40% 98%;
 
-  /* the easter-egg bug — alarm red */
-  --bug: 0 90% 60%;
+  /* the easter-egg bug — neon magenta, complementary to the cyan UI */
+  --bug: 328 90% 62%;
 
   --border: 0 0% 14%;
   --input: 0 0% 14%;
@@ -101,7 +101,7 @@
   --destructive: 0 84% 55%;
   --destructive-foreground: 210 40% 98%;
 
-  --bug: 0 80% 48%;
+  --bug: 328 72% 48%;
 
   --border: 214 15% 82%;
   --input: 214 15% 82%;
