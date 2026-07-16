@@ -29,7 +29,7 @@ There is **no test runner and no linter configured** in this repo — do not ass
 
 ## BASE_PATH / routing gotcha
 
-The site can be served under a base path via the `BASE_PATH` env var (`vite.config.ts` reads `process.env.BASE_PATH`, default `/`; Vercel deploys at `/`, the GitHub Pages workflow builds with `/my-portfolio/`). This flows through two places that must stay in sync:
+The site can be served under a base path via the `BASE_PATH` env var (`vite.config.ts` reads `process.env.BASE_PATH`, default `/`). Both Vercel and GitHub Pages (the repo is the user-site `mr-ahabib.github.io`, served at root) deploy at `/`, so no base-path override is needed. This flows through two places that must stay in sync:
 - Vite's `base` option (asset URLs).
 - Wouter's router base in `App.tsx`: `<WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>`.
 

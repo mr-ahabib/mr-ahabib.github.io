@@ -32,7 +32,7 @@ jobs:
         run: npm ci
 
       - name: Build
-        run: BASE_PATH=/my-portfolio/ npm run --workspace portfolio build
+        run: npm run --workspace portfolio build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
