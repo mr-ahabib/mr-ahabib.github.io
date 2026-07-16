@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Mail, MapPin, Github, Globe, Linkedin, Send, GraduationCap } from "lucide-react";
+import { Mail, MapPin, Github, Linkedin, Send, GraduationCap } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { WireCube } from "@/components/HudDecor";
 
@@ -10,7 +10,6 @@ const CHANNELS = [
   { icon: <Github size={16} />, label: "GitHub", value: "github.com/mr-ahabib", href: "https://github.com/mr-ahabib" },
   { icon: <Linkedin size={16} />, label: "LinkedIn", value: "md-ahashan-habib", href: "https://www.linkedin.com/in/md-ahashan-habib-9a81212a5/" },
   { icon: <GraduationCap size={16} />, label: "Google Scholar", value: "scholar.google.com", href: "https://scholar.google.com/citations?user=PSvun2MAAAAJ&hl=en" },
-  { icon: <Globe size={16} />, label: "Website", value: "mr-ahabib.github.io", href: "https://mr-ahabib.github.io/" },
 ];
 
 const INPUT =

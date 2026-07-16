@@ -1,9 +1,9 @@
-import { ArrowUp, Github, Linkedin, Globe, Mail } from "lucide-react";
+import { ArrowUp, Github, Linkedin, GraduationCap, Mail } from "lucide-react";
 
 const SOCIALS = [
   { icon: <Github size={17} />, href: "https://github.com/mr-ahabib", label: "GitHub" },
   { icon: <Linkedin size={17} />, href: "https://www.linkedin.com/in/md-ahashan-habib-9a81212a5/", label: "LinkedIn" },
-  { icon: <Globe size={17} />, href: "https://mr-ahabib.github.io/", label: "Website" },
+  { icon: <GraduationCap size={17} />, href: "https://scholar.google.com/citations?user=PSvun2MAAAAJ&hl=en", label: "Google Scholar" },
   { icon: <Mail size={17} />, href: "mailto:mr.ahashan261@gmail.com", label: "Email" },
 ];
 
