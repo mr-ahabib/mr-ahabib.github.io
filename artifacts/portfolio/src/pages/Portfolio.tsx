@@ -1,20 +1,23 @@
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { AnimatedBackground } from "@/components/AnimatedBackground";
 import { Hero } from "@/components/sections/Hero";
 import { About } from "@/components/sections/About";
-import { Experience } from "@/components/sections/Experience";
-import { Education } from "@/components/sections/Education";
-import { Skills } from "@/components/sections/Skills";
-import { Services } from "@/components/sections/Services";
-import { Projects } from "@/components/sections/Projects";
-import { Achievements } from "@/components/sections/Achievements";
-import { Publications } from "@/components/sections/Publications";
-import { Contact } from "@/components/sections/Contact";
-import { Chatbot } from "@/components/Chatbot";
-import { BugGame } from "@/components/BugGame";
 import { HudRails } from "@/components/HudDecor";
+
+// Everything below the fold loads in its own chunk — the first paint only
+// pays for the hero + about. Named exports are mapped to lazy defaults.
+const Experience = lazy(() => import("@/components/sections/Experience").then((m) => ({ default: m.Experience })));
+const Education = lazy(() => import("@/components/sections/Education").then((m) => ({ default: m.Education })));
+const Skills = lazy(() => import("@/components/sections/Skills").then((m) => ({ default: m.Skills })));
+const Services = lazy(() => import("@/components/sections/Services").then((m) => ({ default: m.Services })));
+const Projects = lazy(() => import("@/components/sections/Projects").then((m) => ({ default: m.Projects })));
+const Achievements = lazy(() => import("@/components/sections/Achievements").then((m) => ({ default: m.Achievements })));
+const Publications = lazy(() => import("@/components/sections/Publications").then((m) => ({ default: m.Publications })));
+const Contact = lazy(() => import("@/components/sections/Contact").then((m) => ({ default: m.Contact })));
+const Chatbot = lazy(() => import("@/components/Chatbot").then((m) => ({ default: m.Chatbot })));
+const BugGame = lazy(() => import("@/components/BugGame").then((m) => ({ default: m.BugGame })));
 
 export default function Portfolio() {
   // Global pointer-parallax vars: the background canvas, wireframe cubes and
@@ -56,21 +59,25 @@ export default function Portfolio() {
         <main>
           <Hero />
           <About />
-          <Experience />
-          <Education />
-          <Skills />
-          <Services />
-          <Projects />
-          <Achievements />
-          <Publications />
-          <Contact />
+          <Suspense fallback={null}>
+            <Experience />
+            <Education />
+            <Skills />
+            <Services />
+            <Projects />
+            <Achievements />
+            <Publications />
+            <Contact />
+          </Suspense>
         </main>
 
         <Footer />
       </div>
 
-      <Chatbot />
-      <BugGame />
+      <Suspense fallback={null}>
+        <Chatbot />
+        <BugGame />
+      </Suspense>
     </div>
   );
 }

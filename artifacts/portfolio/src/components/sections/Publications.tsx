@@ -67,6 +67,16 @@ export function Publications() {
           <p className="text-muted-foreground mt-4 font-mono text-xs uppercase tracking-wider">
             3 peer-reviewed IEEE papers · 2 under review
           </p>
+          <a
+            href="https://scholar.google.com/citations?user=PSvun2MAAAAJ&hl=en"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:border-primary/50 hover:text-primary"
+          >
+            <BookOpen size={15} />
+            View on Google Scholar
+            <ExternalLink size={13} />
+          </a>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 items-stretch">

@@ -8,8 +8,8 @@
       name="description"
       content="Md. Ahashan Habib — AI & Software Engineer building production AI systems with LLMs, RAG, and deep learning. Portfolio, projects, and research publications."
     />
-    <meta name="theme-color" content="#0a0f1c" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#04090b" />
+    <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
 
     <!-- Open Graph / social cards (og:image resolves against the deployed domain) -->
     <meta property="og:type" content="website" />
@@ -18,8 +18,29 @@
       property="og:description"
       content="Building production AI systems with LLMs, RAG, and deep learning."
     />
-    <meta property="og:image" content="/opengraph.jpg" />
+    <meta property="og:image" content="%BASE_URL%opengraph.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Structured data: who this is, for search engines -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Md. Ahashan Habib",
+      "jobTitle": "AI/ML Engineer",
+      "worksFor": { "@type": "Organization", "name": "As-Sunnah Foundation" },
+      "alumniOf": { "@type": "CollegeOrUniversity", "name": "United International University" },
+      "address": { "@type": "PostalAddress", "addressLocality": "Dhaka", "addressCountry": "BD" },
+      "email": "mailto:mr.ahashan261@gmail.com",
+      "knowsAbout": ["Large Language Models", "Retrieval-Augmented Generation", "Deep Learning", "OCR", "Machine Learning", "NLP"],
+      "sameAs": [
+        "https://github.com/mr-ahabib",
+        "https://www.linkedin.com/in/md-ahashan-habib-9a81212a5/",
+        "https://scholar.google.com/citations?user=PSvun2MAAAAJ",
+        "https://mr-ahabib.github.io/"
+      ]
+    }
+    </script>
 
     <!-- Fonts: Sora (display) · Inter (body) · JetBrains Mono (labels) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

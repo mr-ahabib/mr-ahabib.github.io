@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Mail, MapPin, Github, Globe, Linkedin, Send } from "lucide-react";
+import { Mail, MapPin, Github, Globe, Linkedin, Send, GraduationCap } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { WireCube } from "@/components/HudDecor";
 
@@ -9,6 +9,7 @@ const CHANNELS = [
   { icon: <MapPin size={16} />, label: "Location", value: "Uttar Badda, Dhaka, BD", href: null },
   { icon: <Github size={16} />, label: "GitHub", value: "github.com/mr-ahabib", href: "https://github.com/mr-ahabib" },
   { icon: <Linkedin size={16} />, label: "LinkedIn", value: "md-ahashan-habib", href: "https://www.linkedin.com/in/md-ahashan-habib-9a81212a5/" },
+  { icon: <GraduationCap size={16} />, label: "Google Scholar", value: "scholar.google.com", href: "https://scholar.google.com/citations?user=PSvun2MAAAAJ&hl=en" },
   { icon: <Globe size={16} />, label: "Website", value: "mr-ahabib.github.io", href: "https://mr-ahabib.github.io/" },
 ];
 
@@ -18,14 +19,39 @@ const INPUT =
 export function Contact() {
   const { toast } = useToast();
   const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [sending, setSending] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "Message transmitted ✓",
-      description: "Thanks for reaching out — I'll get back to you soon.",
-    });
-    setForm({ name: "", email: "", message: "" });
+    if (sending) return;
+    setSending(true);
+    try {
+      const res = await fetch("https://formsubmit.co/ajax/mr.ahashan261@gmail.com", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          message: form.message,
+          _subject: `Portfolio message from ${form.name}`,
+          _template: "table",
+        }),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      toast({
+        title: "Message transmitted ✓",
+        description: "Thanks for reaching out — I'll get back to you soon.",
+      });
+      setForm({ name: "", email: "", message: "" });
+    } catch {
+      toast({
+        title: "Transmission failed",
+        description: "Something went wrong — please email me directly at mr.ahashan261@gmail.com.",
+        variant: "destructive",
+      });
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -104,11 +130,12 @@ export function Contact() {
 
             <button
               type="submit"
-              className="clip-hud group relative mt-6 inline-flex w-full items-center justify-center gap-2 overflow-hidden bg-gradient-to-r from-primary via-accent to-accent-2 px-7 py-3.5 text-sm font-semibold text-primary-foreground transition-transform duration-300 hover:-translate-y-0.5 [filter:drop-shadow(0_6px_16px_hsl(var(--primary)/0.4))]"
+              disabled={sending}
+              className="clip-hud group relative mt-6 inline-flex w-full items-center justify-center gap-2 overflow-hidden bg-gradient-to-r from-primary via-accent to-accent-2 px-7 py-3.5 text-sm font-semibold text-primary-foreground transition-transform duration-300 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70 [filter:drop-shadow(0_6px_16px_hsl(var(--primary)/0.4))]"
             >
               <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
-              <Send size={17} />
-              Transmit message
+              <Send size={17} className={sending ? "animate-pulse" : undefined} />
+              {sending ? "Transmitting…" : "Transmit message"}
             </button>
           </motion.form>
 

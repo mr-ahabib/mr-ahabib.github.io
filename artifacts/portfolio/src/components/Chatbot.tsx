@@ -64,7 +64,10 @@ export function Chatbot() {
       return "Ahashan completed his B.Sc. in CSE from United International University with a CGPA of 3.62. He also studied at Govt. Azizul Haque College (HSC).";
     }
     if (text.match(/\b(publication|research|paper)\b/)) {
-      return "Ahashan has 3 IEEE publications: Brain Tumor Prediction (INDUSCON 2025, Brazil), ADDomics multiomics fusion (TENSYMP 2025, New Zealand), and PyroVision wildfire detection (ICEEICT 2024, Dhaka) — plus 2 first-author papers under review at EMNLP and Pattern Recognition.";
+      return "Ahashan has 3 IEEE publications: Brain Tumor Prediction (INDUSCON 2025, Brazil), ADDomics multiomics fusion (TENSYMP 2025, New Zealand), and PyroVision wildfire detection (ICEEICT 2024, Dhaka) — plus 2 first-author papers under review at EMNLP and Pattern Recognition. Full profile: scholar.google.com/citations?user=PSvun2MAAAAJ";
+    }
+    if (text.match(/\b(scholar|citation|citations)\b/)) {
+      return "Check out Ahashan's Google Scholar profile: scholar.google.com/citations?user=PSvun2MAAAAJ";
     }
     if (text.match(/\b(achievement|award|champion)\b/)) {
       return "Ahashan is a Kaggle Champion (UIU 2024), Software Lab Project Show Champion (UIU 2024), IEEE TENSYMP 2025 Reviewer, and received the Bangladesh Scouts Award from the Prime Minister (2012).";
