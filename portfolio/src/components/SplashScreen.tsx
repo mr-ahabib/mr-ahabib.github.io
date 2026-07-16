@@ -25,7 +25,7 @@ export function SplashScreen() {
     <motion.div
       initial={{ opacity: 1 }}
       exit={{ opacity: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } }}
-      className="fixed inset-0 z-[9999999] flex flex-col items-center justify-center overflow-hidden bg-[#060809] text-white select-none"
+      className="fixed inset-0 z-[9999999] flex flex-col items-center justify-center overflow-hidden bg-background text-foreground select-none"
     >
       {/* film grain */}
       <div
@@ -78,16 +78,16 @@ export function SplashScreen() {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="max-w-md text-center font-display text-2xl font-bold leading-snug tracking-tight sm:text-4xl"
         >
-          <span className="text-white/60">Loading </span>
+          <span className="text-muted-foreground">Loading </span>
           <span className="bg-gradient-to-r from-primary via-accent to-accent-2 bg-clip-text text-transparent">
             {NAME}
           </span>
-          <span className="text-white/60">&apos;s Profile</span>
+          <span className="text-muted-foreground">&apos;s Profile</span>
         </motion.h1>
 
         {/* progress bar + counter */}
         <div className="mt-10 w-60 sm:w-72">
-          <div className="relative h-[3px] w-full overflow-hidden rounded-full bg-white/10">
+          <div className="relative h-[3px] w-full overflow-hidden rounded-full bg-foreground/10">
             <motion.div
               className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-primary via-accent to-accent-2"
               style={{ width: `${progress}%` }}

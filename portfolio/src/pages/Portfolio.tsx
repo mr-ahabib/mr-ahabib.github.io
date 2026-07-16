@@ -36,6 +36,9 @@ export default function Portfolio() {
       wheelMultiplier: 1.0,
     });
 
+    // Expose for the navbar's anchor links (smooth scroll with header offset).
+    (window as unknown as { __lenis?: Lenis }).__lenis = lenis;
+
     let rafId: number;
     function raf(time: number) {
       lenis.raf(time);
@@ -60,6 +63,7 @@ export default function Portfolio() {
 
     return () => {
       lenis.destroy();
+      delete (window as unknown as { __lenis?: Lenis }).__lenis;
       cancelAnimationFrame(rafId);
       clearTimeout(timer);
       document.body.style.overflow = "";

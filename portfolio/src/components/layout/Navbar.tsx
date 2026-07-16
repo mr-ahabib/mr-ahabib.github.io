@@ -9,11 +9,27 @@ const NAV_LINKS = [
   { name: "Experience", href: "#experience" },
   { name: "Education", href: "#education" },
   { name: "Skills", href: "#skills" },
+  { name: "Services", href: "#services" },
   { name: "Projects", href: "#projects" },
   { name: "Achievements", href: "#achievements" },
   { name: "Publications", href: "#publications" },
   { name: "Contact", href: "#contact" },
 ];
+
+type Lenis = { scrollTo: (target: string | HTMLElement, opts?: { offset?: number; duration?: number }) => void };
+
+/** Smooth-scroll to a section, accounting for the fixed header, via Lenis. */
+function scrollToSection(href: string) {
+  const el = document.querySelector(href);
+  if (!el) return;
+  const lenis = (window as unknown as { __lenis?: Lenis }).__lenis;
+  if (lenis) {
+    lenis.scrollTo(el as HTMLElement, { offset: -72, duration: 1.1 });
+  } else {
+    const y = (el as HTMLElement).getBoundingClientRect().top + window.scrollY - 72;
+    window.scrollTo({ top: y, behavior: "smooth" });
+  }
+}
 
 function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
@@ -77,7 +93,7 @@ export function Navbar() {
 
   // Close menu on resize to desktop
   useEffect(() => {
-    const onResize = () => { if (window.innerWidth >= 1024) setMobileMenuOpen(false); };
+    const onResize = () => { if (window.innerWidth >= 1280) setMobileMenuOpen(false); };
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
@@ -100,6 +116,7 @@ export function Navbar() {
         <div className="flex justify-between items-center">
           <a
             href="#home"
+            onClick={(e) => { e.preventDefault(); scrollToSection("#home"); }}
             className="group flex shrink-0 items-center gap-2.5 font-mono"
             aria-label="Ahashan Habib — home"
           >
@@ -115,7 +132,7 @@ export function Navbar() {
 
           <div className="flex items-center gap-3">
             {/* Desktop Nav — neon panel */}
-            <div className="relative hidden lg:block">
+            <div className="relative hidden xl:block">
               <nav className="neon-glow-sm relative flex gap-1 rounded-xl border border-primary/45 bg-card/50 px-3 py-1.5 backdrop-blur-md">
                 {NAV_LINKS.map((link) => {
                   const isActive = activeSection === link.href.substring(1);
@@ -123,6 +140,7 @@ export function Navbar() {
                     <a
                       key={link.name}
                       href={link.href}
+                      onClick={(e) => { e.preventDefault(); scrollToSection(link.href); }}
                       className={`group relative px-2 py-1.5 text-sm font-medium transition-colors duration-200 ${
                         isActive
                           ? "text-primary"
@@ -147,7 +165,7 @@ export function Navbar() {
 
             {/* Mobile toggle */}
             <button
-              className="lg:hidden p-2 rounded-lg text-foreground hover:text-primary hover:bg-primary/5 transition-all"
+              className="xl:hidden p-2 rounded-lg text-foreground hover:text-primary hover:bg-primary/5 transition-all"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle menu"
             >
@@ -175,7 +193,7 @@ export function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="lg:hidden absolute top-full left-0 w-full bg-background/95 backdrop-blur-xl border-b border-border shadow-xl"
+            className="xl:hidden absolute top-full left-0 w-full bg-background/95 backdrop-blur-xl border-b border-border shadow-xl"
           >
             <nav className="max-w-7xl mx-auto px-4 py-4 grid grid-cols-3 gap-1">
               {NAV_LINKS.map((link, i) => {
@@ -192,7 +210,7 @@ export function Navbar() {
                         ? "text-primary bg-primary/10 font-semibold"
                         : "text-muted-foreground hover:text-primary hover:bg-primary/5"
                     }`}
-                    onClick={() => setMobileMenuOpen(false)}
+                    onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection(link.href); }}
                   >
                     {link.name}
                   </motion.a>
