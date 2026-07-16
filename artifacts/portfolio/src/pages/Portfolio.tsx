@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { AnimatedBackground } from "@/components/AnimatedBackground";
+import { CursorGlow } from "@/components/CursorGlow";
 import { Hero } from "@/components/sections/Hero";
 import { About } from "@/components/sections/About";
 import { HudRails } from "@/components/HudDecor";
@@ -38,6 +39,9 @@ export default function Portfolio() {
     <div className="relative min-h-screen text-foreground selection:bg-primary/20 selection:text-primary" style={{ backgroundColor: "transparent" }}>
       {/* Global animated background — rendered behind everything */}
       <AnimatedBackground />
+
+      {/* Cursor ring + trailing glow (desktop pointers only) */}
+      <CursorGlow />
 
       {/* Fine film grain — barely-there texture that makes the glass read as real */}
       <div

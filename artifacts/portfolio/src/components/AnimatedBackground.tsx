@@ -1,17 +1,22 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Aesthetic dot-matrix background: a fine grid of near-invisible dots that
- * wake up in a soft pool of light around the cursor — the modern developer-
- * site look. Nothing moves on its own except a barely-there breathing, so
- * the page stays calm; the interactivity is the aesthetic.
+ * Constellation background (ayushcmd.me-style): scattered star-points that
+ * twinkle gently, brighten with a tight glow when the cursor comes near,
+ * and link up with hairline lines to close neighbours. The points don't
+ * travel anywhere — all the life comes from the twinkle and the cursor —
+ * so the field stays calm.
  *
- * Theme-aware: cool cyan dots in dark mode, indigo ink dots on paper in
- * light mode. Colour is sampled from probe elements on theme flips.
+ * Theme-aware: reads the primary colour from a probe element, so it's
+ * electric cyan on black in dark mode and indigo ink on paper in light.
  */
 
-const SPACING = 30; // px between dots
-const RADIUS = 230; // spotlight radius around the cursor
+const AREA_PER_POINT = 26000; // px² of screen per star (capped below)
+const MAX_POINTS = 90;
+const LINK_DIST = 140; // px — draw a line when two stars are this close
+const NEAR_DIST = 220; // px — cursor proximity radius
+
+type Star = { x: number; y: number; tw: number };
 
 export function AnimatedBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -29,18 +34,24 @@ export function AnimatedBackground() {
     let width = 0;
     let height = 0;
     let dpr = Math.min(window.devicePixelRatio || 1, 2);
-    let isLight = document.documentElement.classList.contains("light");
-    let rgb: [number, number, number] = [34, 211, 238];
-    // cursor position (offscreen until first move) + smoothed follower
-    const pointer = { x: -9999, y: -9999 };
-    const smooth = { x: -9999, y: -9999, scroll: 0 };
+    let stars: Star[] = [];
+    let rgb = "34, 211, 238";
+    const cursor = { x: -9999, y: -9999 };
 
-    const readTheme = () => {
-      isLight = document.documentElement.classList.contains("light");
+    const readColor = () => {
       const parsed = getComputedStyle(probe)
         .color.match(/\d+(\.\d+)?/g)
         ?.map(Number);
-      if (parsed && parsed.length >= 3) rgb = [parsed[0], parsed[1], parsed[2]];
+      if (parsed && parsed.length >= 3) rgb = `${parsed[0]}, ${parsed[1]}, ${parsed[2]}`;
+    };
+
+    const seed = () => {
+      const count = Math.min(MAX_POINTS, Math.floor((width * height) / AREA_PER_POINT));
+      stars = Array.from({ length: count }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        tw: Math.random() * Math.PI * 2,
+      }));
     };
 
     const resize = () => {
@@ -52,72 +63,75 @@ export function AnimatedBackground() {
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      seed();
     };
 
     const draw = (time: number) => {
       ctx.clearRect(0, 0, width, height);
-      const [r, g, b] = rgb;
-      const base = isLight ? 0.1 : 0.13; // resting dot opacity
-      const boost = isLight ? 0.4 : 0.5; // extra opacity inside the spotlight
-      const t = time * 0.0004;
-      // the grid drifts a hair with scroll so it feels attached to the page
-      const offY = (smooth.scroll * 0.12) % SPACING;
 
-      for (let y = -SPACING; y <= height + SPACING; y += SPACING) {
-        for (let x = 0; x <= width; x += SPACING) {
-          const dy = y - offY;
-          const dist = Math.hypot(x - smooth.x, dy - smooth.y);
-          const glow = Math.exp(-((dist / RADIUS) ** 2)); // soft falloff
-          // barely-there breathing across the field
-          const breathe = 0.5 + 0.5 * Math.sin(t + x * 0.01 + dy * 0.013);
-          const alpha = base * (0.7 + 0.3 * breathe) + boost * glow;
-          const size = 1 + glow * 1.4;
+      // stars — twinkle at rest, flare with a tight glow near the cursor
+      for (const s of stars) {
+        const t = Math.max(0, 1 - Math.hypot(s.x - cursor.x, s.y - cursor.y) / NEAR_DIST);
+        const twinkle = 0.5 + 0.5 * Math.sin(time * 0.002 + s.tw);
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, 1 + 1.8 * t, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${rgb}, ${0.25 * twinkle + 0.7 * t})`;
+        if (t > 0.1) {
+          ctx.shadowBlur = 8 * t;
+          ctx.shadowColor = `rgba(${rgb}, 0.9)`;
+        } else {
+          ctx.shadowBlur = 0;
+        }
+        ctx.fill();
+      }
+      ctx.shadowBlur = 0;
 
-          ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
+      // constellation lines between close neighbours
+      for (let i = 0; i < stars.length; i++) {
+        for (let j = i + 1; j < stars.length; j++) {
+          const a = stars[i];
+          const b = stars[j];
+          const d = Math.hypot(a.x - b.x, a.y - b.y);
+          if (d > LINK_DIST) continue;
           ctx.beginPath();
-          ctx.arc(x, dy, size, 0, Math.PI * 2);
-          ctx.fill();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.strokeStyle = `rgba(${rgb}, ${(1 - d / LINK_DIST) * 0.18})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
         }
       }
     };
 
     let raf = 0;
     const step = (time: number) => {
-      // ease the spotlight toward the cursor — the lag is what feels soft
-      if (smooth.x < -5000 && pointer.x > -5000) {
-        smooth.x = pointer.x;
-        smooth.y = pointer.y;
-      }
-      smooth.x += (pointer.x - smooth.x) * 0.09;
-      smooth.y += (pointer.y - smooth.y) * 0.09;
-      smooth.scroll += (window.scrollY - smooth.scroll) * 0.08;
       draw(time);
       raf = requestAnimationFrame(step);
     };
 
-    const onPointer = (e: MouseEvent) => {
-      pointer.x = e.clientX;
-      pointer.y = e.clientY;
+    const onMove = (e: MouseEvent) => {
+      cursor.x = e.clientX;
+      cursor.y = e.clientY;
     };
     const onLeave = () => {
-      pointer.x = -9999;
-      pointer.y = -9999;
+      cursor.x = -9999;
+      cursor.y = -9999;
     };
 
-    readTheme();
+    readColor();
     resize();
 
     if (reduceMotion) {
       draw(0);
     } else {
-      window.addEventListener("mousemove", onPointer);
-      document.documentElement.addEventListener("mouseleave", onLeave);
+      window.addEventListener("mousemove", onMove, { passive: true });
+      window.addEventListener("mouseleave", onLeave);
       raf = requestAnimationFrame(step);
     }
 
     window.addEventListener("resize", resize);
     const themeObserver = new MutationObserver(() => {
-      readTheme();
+      readColor();
       if (reduceMotion) draw(0);
     });
     themeObserver.observe(document.documentElement, {
@@ -128,8 +142,8 @@ export function AnimatedBackground() {
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
-      window.removeEventListener("mousemove", onPointer);
-      document.documentElement.removeEventListener("mouseleave", onLeave);
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseleave", onLeave);
       themeObserver.disconnect();
     };
   }, []);

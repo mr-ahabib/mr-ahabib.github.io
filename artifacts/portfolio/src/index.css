@@ -32,42 +32,44 @@
   --color-popover-foreground: hsl(var(--popover-foreground));
 }
 
-/* ---- Dark theme (default): neon terminal — electric cyan → teal → green
-   on a deep teal-black. Feels like a live machine. ---- */
+/* ---- Dark theme (default): pure-black minimal — electric cyan on #0a0a0a
+   with violet and amber as the supporting cast (ayushcmd.me-inspired). ---- */
 :root,
 .dark {
-  --background: 198 55% 4%;
-  --foreground: 185 30% 95%;
+  --background: 0 0% 4%;
+  --foreground: 0 0% 100%;
 
-  --card: 198 45% 8%;
-  --card-foreground: 185 30% 95%;
+  --card: 0 0% 7%;
+  --card-foreground: 0 0% 98%;
 
-  --popover: 198 50% 7%;
-  --popover-foreground: 185 30% 95%;
+  --popover: 0 0% 6%;
+  --popover-foreground: 0 0% 98%;
 
-  --primary: 187 95% 55%;
-  --primary-foreground: 200 70% 7%;
+  /* electric cyan #00d9ff */
+  --primary: 189 100% 50%;
+  --primary-foreground: 0 0% 5%;
 
-  --secondary: 194 35% 14%;
-  --secondary-foreground: 185 30% 95%;
+  --secondary: 0 0% 12%;
+  --secondary-foreground: 0 0% 96%;
 
-  --muted: 194 32% 12%;
-  --muted-foreground: 190 22% 62%;
+  --muted: 0 0% 11%;
+  --muted-foreground: 220 9% 64%;
 
-  --accent: 165 85% 48%;
-  --accent-foreground: 200 70% 7%;
-  /* third gradient stop — spring green */
-  --accent-2: 145 80% 50%;
+  /* soft violet #a78bfa */
+  --accent: 255 92% 76%;
+  --accent-foreground: 0 0% 5%;
+  /* third gradient stop — amber #f59e0b */
+  --accent-2: 38 92% 50%;
 
   --destructive: 0 72% 55%;
   --destructive-foreground: 210 40% 98%;
 
-  /* the easter-egg bug — neon red in the dark terminal world */
+  /* the easter-egg bug — neon red on the black terminal */
   --bug: 0 92% 62%;
 
-  --border: 190 40% 19%;
-  --input: 190 40% 19%;
-  --ring: 187 95% 55%;
+  --border: 190 30% 16%;
+  --input: 190 30% 16%;
+  --ring: 189 100% 50%;
 
   --radius: 0.75rem;
 }
