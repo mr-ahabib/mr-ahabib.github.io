@@ -1,28 +1,20 @@
 import { useEffect, useRef } from "react";
 
 /**
- * 3D data-field background: points scattered through real z-depth, projected
- * with perspective, drifting slowly toward the viewer. Nearby points link up
- * into faint constellations. The camera leans with the pointer and glides
- * with page scroll, so the field and the page read as one connected space.
+ * Calm 3D wave-floor background: a perspective plane of smooth signal lines
+ * rolling gently along the bottom of the viewport — like quiet waveforms on
+ * an oscilloscope. One coherent object, lots of empty space, nothing to
+ * chase with your eyes. The camera leans a touch with the pointer and the
+ * floor breathes with scroll, keeping it connected to the page's 3D space.
  *
- * Theme-split rendering: dark mode draws glowing neon motes (cyan→green by
- * depth); light mode draws crisp ink points on paper — plotted data, not neon.
+ * Theme-aware: neon cyan→green lines in dark mode, faint indigo ink contour
+ * lines on paper in light mode.
  */
 
-type P = {
-  x: number; // view-space [-1, 1]
-  y: number;
-  z: number; // depth [Z_NEAR, Z_FAR]
-  drift: number; // per-particle z speed factor
-};
-
-const Z_NEAR = 0.4;
-const Z_FAR = 2.1;
-const AREA_PER_POINT = 30000; // px² of screen per particle (capped)
-const MAX_POINTS = 65;
-const LINK_PX = 90; // screen-space link distance
-const LINK_DZ = 0.38; // only link points at similar depth
+const ROWS = 12; // depth rows of the floor
+const Z_NEAR = 1;
+const Z_FAR = 5.5;
+const X_STEP = 26; // px between curve samples
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
@@ -42,7 +34,6 @@ export function AnimatedBackground() {
     let width = 0;
     let height = 0;
     let dpr = Math.min(window.devicePixelRatio || 1, 2);
-    let points: P[] = [];
     let isLight = document.documentElement.classList.contains("light");
     // gradient stops: [primary, accent, accent-2], re-read on theme change
     let stops: [number, number, number][] = [
@@ -73,18 +64,6 @@ export function AnimatedBackground() {
       return [lerp(c1[0], c2[0], local), lerp(c1[1], c2[1], local), lerp(c1[2], c2[2], local)];
     };
 
-    const spawnPoint = (atFar: boolean): P => ({
-      x: (Math.random() * 2 - 1) * 1.3,
-      y: (Math.random() * 2 - 1) * 1.3,
-      z: atFar ? Z_FAR : Z_NEAR + Math.random() * (Z_FAR - Z_NEAR),
-      drift: 0.6 + Math.random() * 0.8,
-    });
-
-    const seed = () => {
-      const count = Math.min(MAX_POINTS, Math.floor((width * height) / AREA_PER_POINT));
-      points = Array.from({ length: count }, () => spawnPoint(false));
-    };
-
     const resize = () => {
       width = window.innerWidth;
       height = window.innerHeight;
@@ -94,86 +73,56 @@ export function AnimatedBackground() {
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      seed();
     };
 
-    /** Perspective-project a point to screen space with the current camera. */
-    const project = (p: P) => {
-      const camX = smooth.x * 0.14;
-      const camY = smooth.y * 0.09 - smooth.scroll * 0.00012;
-      const cx = width / 2;
-      const cy = height / 2;
-      return {
-        sx: cx + ((p.x - camX) * cx) / p.z,
-        sy: cy + ((p.y - camY) * cy) / p.z,
-        near: 1 - (p.z - Z_NEAR) / (Z_FAR - Z_NEAR), // 0 far → 1 near
-      };
-    };
-
-    const draw = () => {
+    const draw = (time: number) => {
       ctx.clearRect(0, 0, width, height);
-      const proj = points.map(project);
 
-      // constellation links between nearby points at similar depth
-      for (let i = 0; i < points.length; i++) {
-        for (let j = i + 1; j < points.length; j++) {
-          if (Math.abs(points[i].z - points[j].z) > LINK_DZ) continue;
-          const dx = proj[i].sx - proj[j].sx;
-          const dy = proj[i].sy - proj[j].sy;
-          const d = Math.hypot(dx, dy);
-          if (d < LINK_PX) {
-            const near = (proj[i].near + proj[j].near) / 2;
-            const [r, g, b] = colorAt(near);
-            const alpha = (1 - d / LINK_PX) * (isLight ? 0.08 : 0.11) * (0.4 + 0.6 * near);
-            ctx.strokeStyle = `rgba(${r},${g},${b},${alpha})`;
-            ctx.lineWidth = isLight ? 0.7 : 0.9;
-            ctx.beginPath();
-            ctx.moveTo(proj[i].sx, proj[i].sy);
-            ctx.lineTo(proj[j].sx, proj[j].sy);
-            ctx.stroke();
-          }
-        }
-      }
+      const t = time * 0.00028; // slow, tidal pace
+      // horizon sits low so the floor never crowds the content
+      const horizon = height * 0.62 + smooth.y * 14 - (smooth.scroll * 0.03) % 40;
+      const floorDepth = height - horizon;
 
-      // points — glowing motes in dark, crisp plotted ink in light
-      for (let i = 0; i < points.length; i++) {
-        const { sx, sy, near } = proj[i];
-        if (sx < -40 || sx > width + 40 || sy < -40 || sy > height + 40) continue;
-        const [r, g, b] = colorAt(near);
-        const radius = (isLight ? 1.1 : 1.3) + near * (isLight ? 1.6 : 2.4);
+      for (let r = 0; r < ROWS; r++) {
+        const z = lerp(Z_NEAR, Z_FAR, r / (ROWS - 1));
+        const near = 1 - (r / (ROWS - 1)); // 1 = nearest row
+        const rowY = horizon + floorDepth / z; // perspective spacing
+        const amp = lerp(4, 16, near); // near rows swell more
+        const [cr, cg, cb] = colorAt(near);
+        const alpha = (isLight ? 0.05 : 0.06) + near * (isLight ? 0.07 : 0.11);
 
-        if (!isLight) {
-          // soft halo hugging the mote (tight, not a bloom)
-          ctx.fillStyle = `rgba(${r},${g},${b},${0.1 + 0.1 * near})`;
-          ctx.beginPath();
-          ctx.arc(sx, sy, radius * 2.4, 0, Math.PI * 2);
-          ctx.fill();
-        }
-        ctx.fillStyle = `rgba(${r},${g},${b},${isLight ? 0.28 + 0.34 * near : 0.45 + 0.5 * near})`;
+        ctx.strokeStyle = `rgba(${cr},${cg},${cb},${alpha})`;
+        ctx.lineWidth = 0.8 + near * 0.9;
         ctx.beginPath();
-        ctx.arc(sx, sy, radius, 0, Math.PI * 2);
-        ctx.fill();
+        for (let x = -X_STEP; x <= width + X_STEP; x += X_STEP) {
+          // two gentle sine components, phase-shifted per depth row
+          const wx = (x + smooth.x * 30 * near) * 0.006;
+          const y =
+            rowY -
+            amp * Math.sin(wx + t * 1.4 + z * 1.7) -
+            amp * 0.45 * Math.sin(wx * 2.3 - t * 0.9 + z * 0.8);
+          if (x === -X_STEP) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
       }
+
+      // a single hairline horizon glow-line anchors the plane
+      const [hr, hg, hb] = colorAt(0.15);
+      ctx.strokeStyle = `rgba(${hr},${hg},${hb},${isLight ? 0.1 : 0.16})`;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, horizon);
+      ctx.lineTo(width, horizon);
+      ctx.stroke();
     };
 
     let raf = 0;
-    let last = performance.now();
-    const step = (now: number) => {
-      const dt = Math.min(0.05, (now - last) / 1000);
-      last = now;
-
-      smooth.x += (pointer.x - smooth.x) * 0.05;
-      smooth.y += (pointer.y - smooth.y) * 0.05;
-      smooth.scroll += (window.scrollY - smooth.scroll) * 0.08;
-
-      // fly slowly toward the viewer; recycle to the far plane
-      for (let i = 0; i < points.length; i++) {
-        const p = points[i];
-        p.z -= dt * 0.055 * p.drift;
-        if (p.z < Z_NEAR) points[i] = spawnPoint(true);
-      }
-
-      draw();
+    const step = (time: number) => {
+      smooth.x += (pointer.x - smooth.x) * 0.04;
+      smooth.y += (pointer.y - smooth.y) * 0.04;
+      smooth.scroll += (window.scrollY - smooth.scroll) * 0.06;
+      draw(time);
       raf = requestAnimationFrame(step);
     };
 
@@ -186,7 +135,7 @@ export function AnimatedBackground() {
     resize();
 
     if (reduceMotion) {
-      draw();
+      draw(0);
     } else {
       window.addEventListener("mousemove", onPointer);
       raf = requestAnimationFrame(step);
@@ -195,7 +144,7 @@ export function AnimatedBackground() {
     window.addEventListener("resize", resize);
     const themeObserver = new MutationObserver(() => {
       readTheme();
-      if (reduceMotion) draw();
+      if (reduceMotion) draw(0);
     });
     themeObserver.observe(document.documentElement, {
       attributes: true,

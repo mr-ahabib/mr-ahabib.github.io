@@ -79,47 +79,48 @@ export function Publications() {
           </a>
         </motion.div>
 
-        {/* Editorial list — numbered entries with hairline separators */}
-        <div className="mx-auto max-w-4xl">
-          {PUBLICATIONS.map((pub, index) => (
-            <motion.article
-              key={index}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="group flex gap-5 border-b border-border/60 py-7 first:pt-2 last:border-b-0 sm:gap-8"
-            >
-              <span className="text-gradient shrink-0 pt-1 font-mono text-2xl font-bold opacity-40 transition-opacity duration-300 group-hover:opacity-100 sm:text-3xl">
-                {String(index + 1).padStart(2, "0")}
-              </span>
+        {/* IEEE-style reference list — papers rendered the way papers cite them */}
+        <ol className="mx-auto max-w-4xl space-y-7">
+          {PUBLICATIONS.map((pub, index) => {
+            const [names, role] = pub.authors.split(" — ");
+            return (
+              <motion.li
+                key={index}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="group relative pl-14 sm:pl-16"
+              >
+                <span className="absolute left-0 top-0.5 font-mono text-base font-semibold text-primary/60 transition-colors duration-300 group-hover:text-primary">
+                  [{index + 1}]
+                </span>
 
-              <div className="min-w-0">
-                <h3 className="text-base sm:text-lg font-display font-bold text-foreground leading-snug transition-colors group-hover:text-primary">
-                  {pub.title}
-                </h3>
-                <p className="mt-1.5 text-sm text-muted-foreground italic">{pub.authors}</p>
+                <p className="text-sm sm:text-base leading-relaxed text-muted-foreground">
+                  {names},{" "}
+                  <span className="font-display font-semibold text-foreground transition-colors group-hover:text-primary">
+                    "{pub.title},"
+                  </span>{" "}
+                  in <em>{pub.venueFullName} ({pub.venue})</em>, {pub.location}: {pub.publisher},{" "}
+                  <span className="text-primary font-medium">{pub.year}</span>.
+                </p>
 
-                <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2">
-                  <span className="clip-hud-sm border border-primary/30 bg-primary/10 px-2.5 py-1 font-mono text-xs font-semibold text-primary">
+                <div className="mt-2.5 flex flex-wrap items-center gap-2">
+                  <span className="clip-hud-sm border border-primary/30 bg-primary/10 px-2.5 py-0.5 font-mono text-[11px] font-semibold text-primary">
                     {pub.venue}
                   </span>
-                  <span className="text-xs text-muted-foreground">{pub.venueFullName}</span>
+                  {role && (
+                    <span className="clip-hud-sm border border-border/70 bg-secondary/50 px-2.5 py-0.5 font-mono text-[11px] text-muted-foreground">
+                      {role}
+                    </span>
+                  )}
                 </div>
 
-                <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1.5 font-mono text-xs text-muted-foreground">
-                  <span className="flex items-center gap-1">
-                    <span className="text-primary">&gt;</span> {pub.publisher}
-                  </span>
-                  <span className="w-1 h-1 rounded-full bg-primary/50" />
-                  <span>{pub.location}</span>
-                  <span className="w-1 h-1 rounded-full bg-primary/50" />
-                  <span className="text-primary">{pub.year}</span>
-                </div>
-              </div>
-            </motion.article>
-          ))}
-        </div>
+                <span className="mt-4 block h-px w-full bg-gradient-to-r from-border/70 to-transparent" />
+              </motion.li>
+            );
+          })}
+        </ol>
 
         {/* ── Under review ── */}
         <motion.div
