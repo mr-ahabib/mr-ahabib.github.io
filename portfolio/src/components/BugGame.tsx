@@ -21,23 +21,21 @@ const rand = (a: number, b: number) => a + Math.random() * (b - a);
 const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
 const pick = <T,>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
 
-/** Cocky lines the bugs drop while wandering — teasing the developer. */
-const TAUNTS = [
-  "psst dev, your code has 99 problems 🐛",
-  "I saw that TODO you never did 👀",
-  "6 hours debugging? that was me 😂",
-  "Ctrl+S won't stop me, dev",
-  "don't sleep right after deploy 😉",
-  "git commit -m 'fix' … again? 😏",
-  "your console.log won't save you",
-  "this dev can't catch me 😎",
-  "works on my machine — not yours 🤷",
-  "your unit tests? cute 🐛",
-  "find me in production, hehe",
-  "npm run cry",
-  "I'm a feature, not a bug — tell your boss",
-  "Stack Overflow won't save you either",
-  "I passed code review 😌",
+/** A bug line + the developer's matching comeback. They rile each other. */
+type Exchange = { bug: string; dev: string };
+
+/** Banter while the bug wanders. */
+const EXCHANGES: Exchange[] = [
+  { bug: "your code has 99 problems 🐛", dev: "…and every one of them is YOU 😤" },
+  { bug: "I saw that TODO you never did 👀", dev: "don't read my comments!" },
+  { bug: "6 hours debugging? that was me 😂", dev: "I KNEW it was you 🔨" },
+  { bug: "git commit -m 'fix' … again? 😏", dev: "this one actually works. probably." },
+  { bug: "works on my machine, not yours 🤷", dev: "then I'll debug on YOUR machine 😠" },
+  { bug: "I'm a feature, not a bug 😌", dev: "you're getting deprecated, pal" },
+  { bug: "your unit tests? cute 🐛", dev: "writing one with your name on it" },
+  { bug: "find me in production, hehe", dev: "rolling back the deploy NOW" },
+  { bug: "Stack Overflow won't save you", dev: "but this hammer will 🔨" },
+  { bug: "I passed code review 😎", dev: "not on MY branch you didn't" },
 ];
 /** Announced right after a bug splits in two. */
 const SPLIT_LINES = [
@@ -48,25 +46,19 @@ const SPLIT_LINES = [
   "copy-paste is my love language",
 ];
 /** Yelled while you're trying to squash it (cursor closing in / hover). */
-const PANICS = [
-  "MOVE MOVE MOVE 🏃",
-  "too slow, human!",
-  "nope nope nope 💨",
-  "can't touch this",
-  "nice try 😏",
-  "you'll never catch me!",
-  "missed me! 😜",
-  "not today, dev!",
+const PANIC_EX: Exchange[] = [
+  { bug: "too slow, human! 🏃", dev: "come back here! 😤" },
+  { bug: "MOVE MOVE MOVE 💨", dev: "stop wriggling!" },
+  { bug: "can't touch this", dev: "I'll kill -9 you 🔨" },
+  { bug: "missed me! 😜", dev: "next swing's got your name" },
+  { bug: "you'll never catch me!", dev: "wanna bet? 🔨" },
 ];
-/** Said while chewing on the page's content. */
-const EAT_LINES = [
-  "nom nom nom 🍴",
-  "tasty code 😋",
-  "mmm, spaghetti code",
-  "eating your <div>s 🐛",
-  "deleting this line…",
-  "yoink! 🍽️",
-  "this text looks delicious",
+/** While chewing on the page's content. */
+const EAT_EX: Exchange[] = [
+  { bug: "nom nom, eating your <div>s 🐛", dev: "STOP eating my code! 😩" },
+  { bug: "tasty code 😋", dev: "that took me all night 😭" },
+  { bug: "deleting this line…", dev: "Ctrl+Z! Ctrl+Z!" },
+  { bug: "mmm, spaghetti code 🍝", dev: "hey! that was on purpose…" },
 ];
 /** Random last words on the corpse. */
 const LAST_WORDS = [
@@ -269,8 +261,6 @@ export function BugGame() {
 
   /** Make one bug say something for a while (replaces its current line). */
   const say = useCallback((bugId: number, text: string, ms = 2600) => {
-    // let the corner developer overhear and fire back a comeback
-    window.dispatchEvent(new CustomEvent("bug-speak", { detail: text }));
     setBubbles((prev) => [...prev.filter((b) => b.bugId !== bugId), { bugId, text }]);
     const existing = bubbleTimers.current.get(bugId);
     if (existing) clearTimeout(existing);
@@ -281,6 +271,15 @@ export function BugGame() {
     bubbleTimers.current.set(bugId, t);
     pushTimer(t);
   }, []);
+
+  /** Bug says its line; the corner dev overhears and fires back the matching comeback. */
+  const converse = useCallback(
+    (bugId: number, ex: Exchange, ms = 2600) => {
+      say(bugId, ex.bug, ms);
+      window.dispatchEvent(new CustomEvent("bug-speak", { detail: ex.dev }));
+    },
+    [say],
+  );
 
   /** Drop a bug's bubble immediately (on death / flee). */
   const clearBubble = useCallback((bugId: number) => {
@@ -404,7 +403,7 @@ export function BugGame() {
             s.pauseUntil = 0;
             if (now - lastPanic.current > 3500) {
               lastPanic.current = now;
-              say(s.id, pick(PANICS), 1600);
+              converse(s.id, pick(PANIC_EX), 1600);
             }
           }
         }
@@ -426,7 +425,7 @@ export function BugGame() {
         if (!s.fleeing && now - lastBite.current > 2200 && Math.random() < dt * 0.5) {
           if (biteAt(s.x, s.y)) {
             lastBite.current = now;
-            say(s.id, pick(EAT_LINES), 1600);
+            converse(s.id, pick(EAT_EX), 1600);
           }
         }
 
@@ -479,7 +478,7 @@ export function BugGame() {
 
     raf = requestAnimationFrame(step);
     return () => cancelAnimationFrame(raf);
-  }, [anyAlive, scheduleSpawn, spawn, say, clearBubble, biteAt]);
+  }, [anyAlive, scheduleSpawn, spawn, say, converse, clearBubble, biteAt]);
 
   // Track the cursor globally while bugs are alive (they dodge anything close).
   useEffect(() => {
@@ -508,10 +507,10 @@ export function BugGame() {
         const ids = Array.from(bugsRef.current.keys());
         ids.forEach((id, i) => {
           window.setTimeout(() => {
-            if (!cancelled && bugsRef.current.has(id)) say(id, pick(TAUNTS), 2800);
-          }, i * 550);
+            if (!cancelled && bugsRef.current.has(id)) converse(id, pick(EXCHANGES), 2800);
+          }, i * 1600);
         });
-        loop(rand(5500, 9000));
+        loop(rand(6000, 9500));
       }, delay);
     };
     loop(rand(1500, 3000));
@@ -519,7 +518,7 @@ export function BugGame() {
       cancelled = true;
       clearTimeout(t);
     };
-  }, [anyAlive, say]);
+  }, [anyAlive, converse]);
 
   // First spawn + dev hook. Auto-spawns respect prefers-reduced-motion.
   useEffect(() => {
@@ -579,7 +578,7 @@ export function BugGame() {
             onMouseEnter={(e) => {
               setHovered(true);
               moveHammer(e.clientX, e.clientY);
-              say(id, pick(PANICS), 1500);
+              converse(id, pick(PANIC_EX), 1500);
             }}
             onMouseMove={(e) => moveHammer(e.clientX, e.clientY)}
             onMouseLeave={() => setHovered(false)}

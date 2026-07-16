@@ -6,19 +6,11 @@ import { motion, AnimatePresence } from "framer-motion";
  * and fires back comebacks — a little running argument with the bug game.
  */
 
-// comebacks aimed at the bug
-const REPLIES = [
+// fallback comeback if an event arrives without a matched reply
+const FALLBACK_REPLIES = [
   "not again, you little bug 😤",
-  "I'll git revert you",
-  "stop eating my code! 🔨",
   "npm uninstall bug",
-  "that's going in the backlog",
-  "sudo kill -9 you",
-  "catch these hands, bug 🖐️",
-  "writing a unit test for you now",
-  "you again?? 😩",
-  "patch incoming… 🩹",
-  "hold still, I've got a hammer",
+  "hold still, I've got a hammer 🔨",
   "who let you into prod?!",
 ];
 
@@ -86,16 +78,19 @@ export function DevMascot() {
       timers.push(t);
     };
 
-    const onBug = () => {
+    const onBug = (e: Event) => {
       const now = performance.now();
-      if (now - lastReply.current < 3800) return; // don't over-talk
+      if (now - lastReply.current < 3000) return; // don't over-talk
       lastReply.current = now;
+      const reply =
+        (e as CustomEvent<string>).detail ||
+        FALLBACK_REPLIES[Math.floor(Math.random() * FALLBACK_REPLIES.length)];
       const t = window.setTimeout(() => {
-        if (!cancelled) showFor(REPLIES[Math.floor(Math.random() * REPLIES.length)], 3000);
-      }, 850); // beat, like a reply
+        if (!cancelled) showFor(reply, 3000);
+      }, 900); // a beat, so it reads as a reply
       timers.push(t);
     };
-    window.addEventListener("bug-speak", onBug);
+    window.addEventListener("bug-speak", onBug as EventListener);
 
     // occasional idle muttering
     const idle = (delay: number) => {
@@ -112,7 +107,7 @@ export function DevMascot() {
 
     return () => {
       cancelled = true;
-      window.removeEventListener("bug-speak", onBug);
+      window.removeEventListener("bug-speak", onBug as EventListener);
       timers.forEach(clearTimeout);
     };
   }, []);
@@ -120,21 +115,17 @@ export function DevMascot() {
   return (
     <div className="pointer-events-none fixed bottom-5 left-5 z-40 hidden select-none md:block">
       <div className="relative flex items-end gap-2">
-        {/* the coder at the keyboard */}
-        <motion.div
-          animate={{ y: [0, -2.5, 0] }}
-          transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
-          className="clip-hud-sm neon-glow-sm relative grid h-12 w-12 shrink-0 place-items-center border border-primary/40 bg-card/80 backdrop-blur-xl"
-        >
-          <motion.span
-            className="text-2xl leading-none"
-            animate={{ rotate: [0, -3, 0, 3, 0] }}
-            transition={{ duration: 0.5, repeat: Infinity, ease: "easeInOut" }}
-          >
-            🧑‍💻
-          </motion.span>
-          <span className="absolute bottom-1 right-1 h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-        </motion.div>
+        {/* the coder at the keyboard (animated GIF) */}
+        <div className="clip-hud-sm neon-glow-sm relative h-[4.5rem] w-[4.5rem] shrink-0 overflow-hidden border border-primary/40 bg-card/80 backdrop-blur-xl">
+          <img
+            src={`${import.meta.env.BASE_URL}images/coder.gif`}
+            alt="Developer hard at work"
+            className="h-full w-full object-cover"
+            loading="lazy"
+            decoding="async"
+          />
+          <span className="absolute bottom-1.5 right-1.5 h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-pulse" />
+        </div>
 
         {/* live typed code */}
         <div className="mb-0.5 hidden h-4 max-w-[200px] overflow-hidden lg:block">
