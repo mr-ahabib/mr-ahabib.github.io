@@ -43,7 +43,10 @@ export function Navbar() {
     const update = () => {
       raf = 0;
       setIsScrolled(window.scrollY > 50);
-      const line = window.scrollY + 140;
+      // Detection line sits just below the fixed header (~72px) — this matches
+      // where a tapped section lands (scrollTo offset -72), so short sections
+      // near the page bottom that can't scroll to the top still register.
+      const line = window.scrollY + 100;
       let current = "home";
       document.querySelectorAll<HTMLElement>("section[id]").forEach((sec) => {
         const top = sec.getBoundingClientRect().top + window.scrollY;
@@ -95,7 +98,7 @@ export function Navbar() {
         <div className="flex justify-between items-center">
           <a
             href="#home"
-            onClick={(e) => { e.preventDefault(); scrollToSection("#home"); }}
+            onClick={(e) => { e.preventDefault(); setActiveSection("home"); scrollToSection("#home"); }}
             className="group flex shrink-0 items-center gap-2.5 font-mono"
             aria-label="Ahashan Habib — home"
           >
@@ -119,7 +122,7 @@ export function Navbar() {
                     <a
                       key={link.name}
                       href={link.href}
-                      onClick={(e) => { e.preventDefault(); scrollToSection(link.href); }}
+                      onClick={(e) => { e.preventDefault(); setActiveSection(link.href.substring(1)); scrollToSection(link.href); }}
                       className={`group relative px-2 py-1.5 text-sm font-medium transition-colors duration-200 ${
                         isActive
                           ? "text-primary"
@@ -189,7 +192,7 @@ export function Navbar() {
                         ? "border-primary/50 bg-primary/10 text-primary"
                         : "border-border/60 bg-card/40 text-muted-foreground hover:border-primary/40 hover:text-primary"
                     }`}
-                    onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection(link.href); }}
+                    onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); setActiveSection(link.href.substring(1)); scrollToSection(link.href); }}
                   >
                     {/* active left bar */}
                     <span
