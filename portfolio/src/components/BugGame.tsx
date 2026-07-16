@@ -269,6 +269,8 @@ export function BugGame() {
 
   /** Make one bug say something for a while (replaces its current line). */
   const say = useCallback((bugId: number, text: string, ms = 2600) => {
+    // let the corner developer overhear and fire back a comeback
+    window.dispatchEvent(new CustomEvent("bug-speak", { detail: text }));
     setBubbles((prev) => [...prev.filter((b) => b.bugId !== bugId), { bugId, text }]);
     const existing = bubbleTimers.current.get(bugId);
     if (existing) clearTimeout(existing);

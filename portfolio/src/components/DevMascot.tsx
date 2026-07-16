@@ -1,92 +1,150 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 /**
- * A tiny developer sitting in the corner, forever coding. Every so often
- * they pop a funny one-liner. Purely decorative easter-egg.
+ * A tiny developer in the corner, forever typing code. Overhears the bugs
+ * and fires back comebacks — a little running argument with the bug game.
  */
-const LINES = [
-  "just one more commit… 🤏",
-  "who keeps spawning these bugs?! 🐛",
-  "it compiles — ship it 🚀",
-  "99 little bugs in the code… 🎵",
-  "coffee.exe stopped working ☕",
-  "works on my machine 🤷",
-  "TODO: fix later (never)",
-  "git push --force 😬",
-  "rewriting it in Rust, brb",
-  "why is it working now?? 🤔",
-  "one does not simply exit vim",
-  "1 hour of coding = 3 hours debugging",
+
+// comebacks aimed at the bug
+const REPLIES = [
+  "not again, you little bug 😤",
+  "I'll git revert you",
+  "stop eating my code! 🔨",
+  "npm uninstall bug",
+  "that's going in the backlog",
+  "sudo kill -9 you",
+  "catch these hands, bug 🖐️",
+  "writing a unit test for you now",
+  "you again?? 😩",
+  "patch incoming… 🩹",
+  "hold still, I've got a hammer",
+  "who let you into prod?!",
 ];
 
-// little scrolling "code" the dev keeps typing
-const CODE = ["const fix = () => {", "  return bug ? 🔨 : ship;", "}", "// TODO: refactor", "git commit -m 'wip'"];
+// idle mutterings when no bug is talking
+const IDLE = [
+  "just one more commit… 🤏",
+  "it compiles — ship it 🚀",
+  "coffee.exe stopped working ☕",
+  "works on my machine 🤷",
+  "one does not simply exit vim",
+  "why is it working now?? 🤔",
+];
+
+// lines the dev "types", one char at a time
+const CODE = [
+  "while (bug.alive) squash();",
+  "git commit -m 'fix bug'",
+  "npm run build --prod",
+  "const coffee = refill();",
+  "// TODO: catch that bug",
+  "deploy(); pray();",
+];
 
 export function DevMascot() {
   const [line, setLine] = useState<string | null>(null);
-  const [codeIdx, setCodeIdx] = useState(0);
+  const [typed, setTyped] = useState("");
+  const lastReply = useRef(0);
 
+  // typewriter: type a code line, pause, wipe, next line
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const timers: number[] = [];
-    let cancelled = false;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setTyped(CODE[0]);
+      return;
+    }
+    let ci = 0;
+    let pos = 0;
+    let timer: ReturnType<typeof setTimeout>;
+    const tick = () => {
+      const full = CODE[ci];
+      if (pos <= full.length) {
+        setTyped(full.slice(0, pos));
+        pos += 1;
+        timer = setTimeout(tick, 70 + Math.random() * 60);
+      } else {
+        timer = setTimeout(() => {
+          ci = (ci + 1) % CODE.length;
+          pos = 0;
+          tick();
+        }, 1400);
+      }
+    };
+    tick();
+    return () => clearTimeout(timer);
+  }, []);
 
-    const talk = (delay: number) => {
+  // talk: reply to bugs (via event), and mutter when idle
+  useEffect(() => {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let cancelled = false;
+    const timers: number[] = [];
+
+    const showFor = (text: string, ms: number) => {
+      setLine(text);
+      const t = window.setTimeout(() => !cancelled && setLine(null), ms);
+      timers.push(t);
+    };
+
+    const onBug = () => {
+      const now = performance.now();
+      if (now - lastReply.current < 3800) return; // don't over-talk
+      lastReply.current = now;
+      const t = window.setTimeout(() => {
+        if (!cancelled) showFor(REPLIES[Math.floor(Math.random() * REPLIES.length)], 3000);
+      }, 850); // beat, like a reply
+      timers.push(t);
+    };
+    window.addEventListener("bug-speak", onBug);
+
+    // occasional idle muttering
+    const idle = (delay: number) => {
       const t = window.setTimeout(() => {
         if (cancelled) return;
-        setLine(LINES[Math.floor(Math.random() * LINES.length)]);
-        const hide = window.setTimeout(() => !cancelled && setLine(null), 3200);
-        timers.push(hide);
-        talk(6000 + Math.random() * 7000);
+        if (!reduce && performance.now() - lastReply.current > 6000) {
+          showFor(IDLE[Math.floor(Math.random() * IDLE.length)], 3000);
+        }
+        idle(11000 + Math.random() * 9000);
       }, delay);
       timers.push(t);
     };
-    talk(2500);
-
-    const code = window.setInterval(() => {
-      if (!cancelled) setCodeIdx((i) => (i + 1) % CODE.length);
-    }, 1400);
-    timers.push(code);
+    idle(5000);
 
     return () => {
       cancelled = true;
+      window.removeEventListener("bug-speak", onBug);
       timers.forEach(clearTimeout);
-      clearInterval(code);
     };
   }, []);
 
   return (
     <div className="pointer-events-none fixed bottom-5 left-5 z-40 hidden select-none md:block">
       <div className="relative flex items-end gap-2">
-        {/* the coder */}
+        {/* the coder at the keyboard */}
         <motion.div
-          animate={{ y: [0, -3, 0] }}
+          animate={{ y: [0, -2.5, 0] }}
           transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
           className="clip-hud-sm neon-glow-sm relative grid h-12 w-12 shrink-0 place-items-center border border-primary/40 bg-card/80 backdrop-blur-xl"
         >
-          <span className="text-2xl leading-none">🧑‍💻</span>
-          {/* typing caret */}
+          <motion.span
+            className="text-2xl leading-none"
+            animate={{ rotate: [0, -3, 0, 3, 0] }}
+            transition={{ duration: 0.5, repeat: Infinity, ease: "easeInOut" }}
+          >
+            🧑‍💻
+          </motion.span>
           <span className="absolute bottom-1 right-1 h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
         </motion.div>
 
-        {/* tiny code stream */}
-        <div className="mb-0.5 hidden max-w-[180px] overflow-hidden lg:block">
-          <AnimatePresence mode="wait">
-            <motion.p
-              key={codeIdx}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.25 }}
-              className="truncate font-mono text-[10px] text-muted-foreground/70"
-            >
-              <span className="text-primary/60">$</span> {CODE[codeIdx]}
-            </motion.p>
-          </AnimatePresence>
+        {/* live typed code */}
+        <div className="mb-0.5 hidden h-4 max-w-[200px] overflow-hidden lg:block">
+          <p className="truncate font-mono text-[10px] text-muted-foreground/70">
+            <span className="text-primary/60">$</span> {typed}
+            <span className="ml-0.5 inline-block h-[1em] w-[0.5ch] translate-y-[0.15em] bg-emerald-400 align-baseline animate-pulse" />
+          </p>
         </div>
 
-        {/* funny speech bubble */}
+        {/* speech bubble (replies to the bug / idle mutters) */}
         <AnimatePresence>
           {line && (
             <motion.div
