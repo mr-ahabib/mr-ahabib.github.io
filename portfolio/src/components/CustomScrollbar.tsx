@@ -1,36 +1,86 @@
 import { useEffect, useState, useRef } from "react";
 
+type Lenis = {
+  scrollTo: (target: number, opts?: { immediate?: boolean; duration?: number }) => void;
+  on: (event: "scroll", cb: (e: { scroll: number; limit: number; progress: number }) => void) => void;
+  off: (event: "scroll", cb: (e: { scroll: number; limit: number; progress: number }) => void) => void;
+};
+
+function getLenis(): Lenis | undefined {
+  return (window as unknown as { __lenis?: Lenis }).__lenis;
+}
+
 export function CustomScrollbar() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [visible, setVisible] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const trackRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<number | null>(null);
+  // Cached layout metrics — refreshed on resize, never read per scroll frame
+  // (reading scrollHeight/innerHeight every frame forces a synchronous reflow
+  // and is a classic scroll-jank source).
+  const metrics = useRef({ scrollable: 1, viewHeight: 1, docHeight: 1 });
+  const [, force] = useState(0);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const totalScrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
-      if (totalScrollableHeight > 0) {
-        setScrollProgress(window.scrollY / totalScrollableHeight);
-      }
-      
-      // Keep visible while scrolling, fade out after 1.2 seconds of inactivity
+    const measure = () => {
+      const docHeight = document.documentElement.scrollHeight;
+      const viewHeight = window.innerHeight;
+      metrics.current = {
+        docHeight,
+        viewHeight,
+        scrollable: Math.max(1, docHeight - viewHeight),
+      };
+      force((n) => n + 1); // reflect new thumb size
+    };
+    measure();
+
+    const showThenFade = () => {
       setVisible(true);
       if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
       timeoutRef.current = window.setTimeout(() => {
-        if (!isDragging) setVisible(false);
+        if (!isDraggingRef.current) setVisible(false);
       }, 1200);
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    // Initial check
-    handleScroll();
+    // Prefer Lenis's own scroll signal (already computed, no layout read).
+    const lenis = getLenis();
+    const onLenisScroll = (e: { progress: number }) => {
+      setScrollProgress(Number.isFinite(e.progress) ? e.progress : 0);
+      showThenFade();
+    };
+    const onNativeScroll = () => {
+      setScrollProgress(window.scrollY / metrics.current.scrollable);
+      showThenFade();
+    };
+
+    if (lenis) {
+      lenis.on("scroll", onLenisScroll);
+    } else {
+      window.addEventListener("scroll", onNativeScroll, { passive: true });
+    }
+    window.addEventListener("resize", measure, { passive: true });
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      if (lenis) lenis.off("scroll", onLenisScroll);
+      else window.removeEventListener("scroll", onNativeScroll);
+      window.removeEventListener("resize", measure);
       if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
     };
-  }, [isDragging]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Keep a ref in sync so the fade timeout can see the latest drag state.
+  const isDraggingRef = useRef(false);
+  isDraggingRef.current = isDragging;
+
+  const scrollToProgress = (progress: number, immediate: boolean) => {
+    const clamped = Math.max(0, Math.min(1, progress));
+    const target = clamped * metrics.current.scrollable;
+    const lenis = getLenis();
+    if (lenis) lenis.scrollTo(target, immediate ? { immediate: true } : { duration: 0.6 });
+    else window.scrollTo({ top: target, behavior: immediate ? "auto" : "smooth" });
+  };
 
   const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -43,19 +93,9 @@ export function CustomScrollbar() {
     if (!isDragging) return;
 
     const handleMouseMove = (e: MouseEvent) => {
-      const totalScrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
-      if (totalScrollableHeight <= 0) return;
-
-      // Calculate how far down the screen the mouse is
-      const progress = e.clientY / window.innerHeight;
-      const targetScroll = Math.max(0, Math.min(totalScrollableHeight, progress * totalScrollableHeight));
-      
-      window.scrollTo({
-        top: targetScroll,
-        behavior: "auto" // instant response during drag
-      });
+      // Instant, Lenis-synced tracking while dragging — no fight with the RAF loop.
+      scrollToProgress(e.clientY / window.innerHeight, true);
     };
-
     const handleMouseUp = () => {
       setIsDragging(false);
       setVisible(false);
@@ -67,23 +107,16 @@ export function CustomScrollbar() {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", handleMouseUp);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDragging]);
 
   const handleTrackClick = (e: React.MouseEvent) => {
-    // If user clicks on the track itself (but not the thumb), jump scroll there
     if (e.target === trackRef.current) {
-      const totalScrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const clickProgress = e.clientY / window.innerHeight;
-      window.scrollTo({
-        top: clickProgress * totalScrollableHeight,
-        behavior: "smooth"
-      });
+      scrollToProgress(e.clientY / window.innerHeight, false);
     }
   };
 
-  // Calculate thumb height proportionally to content height (min 40px, max 200px)
-  const docHeight = document.documentElement.scrollHeight || 1;
-  const viewHeight = window.innerHeight;
+  const { viewHeight, docHeight } = metrics.current;
   const ratio = viewHeight / docHeight;
   const thumbHeight = Math.max(45, Math.min(200, ratio * viewHeight));
   const thumbTop = scrollProgress * (viewHeight - thumbHeight);
@@ -103,7 +136,7 @@ export function CustomScrollbar() {
     >
       {/* Scrollbar Thumb */}
       <div
-        className="absolute left-1/2 w-1.5 -translate-x-1/2 rounded-full cursor-grab active:cursor-grabbing bg-gradient-to-b from-primary via-accent to-accent-2 transition-all duration-150 hover:w-2 [box-shadow:0_0_8px_hsl(var(--primary)/0.4)]"
+        className="absolute left-1/2 top-0 w-1.5 -translate-x-1/2 rounded-full cursor-grab active:cursor-grabbing bg-gradient-to-b from-primary via-accent to-accent-2 will-change-transform hover:w-2 [box-shadow:0_0_8px_hsl(var(--primary)/0.4)]"
         style={{
           height: thumbHeight,
           transform: `translate3d(-50%, ${thumbTop}px, 0)`,

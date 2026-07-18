@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { AnimatedBackground } from "@/components/AnimatedBackground";
@@ -26,28 +26,53 @@ const DevMascot = lazy(() => import("@/components/DevMascot").then((m) => ({ def
 
 export default function Portfolio() {
   const [loading, setLoading] = useState(true);
+  const lenisRef = useRef<Lenis | null>(null);
 
+  // Init Lenis exactly once. Refresh-rate independence comes from a lerp-based
+  // smoothing (a constant fraction toward the target every animation frame),
+  // which Lenis time-corrects internally — so it feels identical at 60Hz, 120Hz
+  // or 144Hz instead of the fixed-duration easing that felt floaty/laggy.
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // easeOutExpo
+      lerp: 0.1,              // frame-rate-independent smoothing factor
+      wheelMultiplier: 1.0,
+      smoothWheel: true,
+      syncTouch: false,       // native momentum on touch is the smoothest there
       orientation: "vertical",
       gestureOrientation: "vertical",
-      smoothWheel: true,
-      wheelMultiplier: 1.0,
     });
-
+    lenisRef.current = lenis;
     // Expose for the navbar's anchor links (smooth scroll with header offset).
     (window as unknown as { __lenis?: Lenis }).__lenis = lenis;
 
-    let rafId: number;
+    let rafId = 0;
     function raf(time: number) {
       lenis.raf(time);
       rafId = requestAnimationFrame(raf);
     }
     rafId = requestAnimationFrame(raf);
 
-    // Disable scroll while loading
+    // Start stopped — the splash screen is up on first mount.
+    lenis.stop();
+    document.body.style.overflow = "hidden";
+
+    const timer = setTimeout(() => setLoading(false), 2000);
+
+    return () => {
+      lenis.destroy();
+      lenisRef.current = null;
+      delete (window as unknown as { __lenis?: Lenis }).__lenis;
+      cancelAnimationFrame(rafId);
+      clearTimeout(timer);
+      document.body.style.overflow = "";
+    };
+  }, []);
+
+  // Enable/disable scrolling in step with the splash screen without tearing
+  // down and rebuilding the Lenis instance.
+  useEffect(() => {
+    const lenis = lenisRef.current;
+    if (!lenis) return;
     if (loading) {
       lenis.stop();
       document.body.style.overflow = "hidden";
@@ -55,20 +80,6 @@ export default function Portfolio() {
       lenis.start();
       document.body.style.overflow = "";
     }
-
-    const timer = setTimeout(() => {
-      setLoading(false);
-      lenis.start();
-      document.body.style.overflow = "";
-    }, 2000);
-
-    return () => {
-      lenis.destroy();
-      delete (window as unknown as { __lenis?: Lenis }).__lenis;
-      cancelAnimationFrame(rafId);
-      clearTimeout(timer);
-      document.body.style.overflow = "";
-    };
   }, [loading]);
 
   return (

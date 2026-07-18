@@ -120,7 +120,9 @@
     cursor: none !important;
   }
   html {
-    scroll-behavior: smooth;
+    /* NOTE: no `scroll-behavior: smooth` here — Lenis drives scrolling in JS and
+       CSS smooth-scroll fights it, producing the choppy/laggy feel. Lenis toggles
+       `scroll-behavior: auto` via its own classes (see below). */
     background-color: hsl(var(--background));
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -133,6 +135,24 @@
   }
   html::-webkit-scrollbar {
     display: none; /* Hide Chrome/Safari scrollbar */
+  }
+
+  /* --- Lenis smooth-scroll engine hooks (official recommended CSS) --- */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important; /* hand full control to Lenis's RAF loop */
+  }
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain; /* nested scrollers (chatbot, drawers) stay native */
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden; /* used while the splash screen is up */
+  }
+  .lenis.lenis-smooth iframe {
+    pointer-events: none;
   }
   body {
     background: transparent;
