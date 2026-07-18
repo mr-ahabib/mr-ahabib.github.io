@@ -78,7 +78,6 @@ export function SplashScreen() {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="max-w-md text-center font-display text-2xl font-bold leading-snug tracking-tight sm:text-4xl"
         >
-          <span className="text-muted-foreground">Loading </span>
           <span className="bg-gradient-to-r from-primary via-accent to-accent-2 bg-clip-text text-transparent">
             {NAME}
           </span>
