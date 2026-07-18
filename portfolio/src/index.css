@@ -272,10 +272,10 @@
   100% { top: 108%; opacity: 0; }
 }
 
-/* Hide the native cursor while the bespoke glass cursor is active */
-.cursor-none,
-.cursor-none * {
-  cursor: none !important;
+/* Mobile road — flowing lane dashes down the vertical road */
+@keyframes roadDashY {
+  from { background-position-y: 0; }
+  to { background-position-y: 26px; }
 }
 
 /* Radar/road marker ping — a ring pulsing outward from a stop */

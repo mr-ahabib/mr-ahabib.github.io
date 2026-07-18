@@ -113,7 +113,7 @@ export function DevMascot() {
   }, []);
 
   return (
-    <div className="pointer-events-none fixed bottom-5 left-5 z-40 hidden select-none md:block">
+    <div className="pointer-events-none fixed bottom-5 left-5 z-40 select-none">
       <div className="relative flex items-end gap-2">
         {/* the coder at the keyboard (animated GIF) */}
         <div className="clip-hud-sm neon-glow-sm relative h-[4.5rem] w-[4.5rem] shrink-0 overflow-hidden border border-primary/40 bg-card/80 backdrop-blur-xl">

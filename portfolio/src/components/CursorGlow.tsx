@@ -45,8 +45,8 @@ export function CursorGlow() {
     const onMove = (e: MouseEvent) => {
       target.x = e.clientX;
       target.y = e.clientY;
-      // the dot stays exactly on target INSTANTLY
-      dot.style.transform = `translate3d(${target.x - 3}px, ${target.y - 3}px, 0)`;
+      // the dot stays exactly on target INSTANTLY (rotated 45° → diamond)
+      dot.style.transform = `translate3d(${target.x - 4}px, ${target.y - 4}px, 0) rotate(45deg)`;
       
       dot.style.opacity = "1";
       lens.style.opacity = "1";
@@ -80,16 +80,16 @@ export function CursorGlow() {
           position: "fixed",
           top: 0,
           left: 0,
-          width: 6,
-          height: 6,
-          borderRadius: "50%",
+          width: 8,
+          height: 8,
+          borderRadius: "2px",
           pointerEvents: "none",
           zIndex: 999999,
           willChange: "transform",
           opacity: 0,
           transition: "opacity 0.3s ease",
-          background: "hsl(var(--primary) / 0.9)",
-          boxShadow: "0 0 6px hsl(var(--primary) / 0.6)",
+          background: "hsl(38 100% 58%)",
+          boxShadow: "0 0 8px hsl(38 100% 58%), 0 0 2px hsl(38 100% 72%)",
         }}
       />
       {/* soft trailing halo */}

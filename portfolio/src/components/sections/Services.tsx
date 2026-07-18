@@ -9,7 +9,7 @@ const SERVICES = [
     icon: <Smartphone size={32} />
   },
   {
-    title: "Research",
+    title: "Research & Development",
     description: "Conducting rigorous academic and technical research to uncover new insights in technology.",
     icon: <Microscope size={32} />
   },

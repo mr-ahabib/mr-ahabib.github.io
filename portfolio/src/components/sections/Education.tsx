@@ -144,35 +144,66 @@ export function Education() {
           ))}
         </div>
 
-        {/* ── Mobile / tablet: a vertical road with stops ── */}
-        <div className="relative ml-2 space-y-9 border-l-2 border-dashed border-primary/30 pl-8 lg:hidden">
-          {EDUCATION_DATA.map((item, index) => {
-            const tone = item.perfect ? "accent-2" : "primary";
-            return (
-              <motion.div
-                key={item.degree}
-                initial={{ opacity: 0, x: -16 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-120px 0px" }}
-                transition={{ delay: index * 0.08, duration: 0.7 }}
-                className="relative"
-              >
-                <span
-                  className={`absolute -left-[41px] top-1 grid h-6 w-6 place-items-center rounded-full border-2 bg-background ${
-                    item.perfect ? "border-accent-2 text-accent-2 neon-glow-sm" : "border-primary text-primary"
-                  } [&>svg]:h-3.5 [&>svg]:w-3.5`}
+        {/* ── Mobile / tablet: a vertical road running down the left ── */}
+        <div className="relative pl-16 lg:hidden">
+          {/* the road itself, in the left gutter */}
+          <div className="pointer-events-none absolute bottom-2 left-6 top-2 w-9 -translate-x-1/2" aria-hidden="true">
+            {/* glowing edges */}
+            <div
+              className="absolute inset-0 rounded-full"
+              style={{
+                background:
+                  "linear-gradient(to bottom, hsl(var(--primary) / 0.5), hsl(var(--accent) / 0.85), hsl(var(--accent-2) / 0.7))",
+              }}
+            />
+            {/* tarmac surface */}
+            <div className="absolute inset-y-0 inset-x-[3px] rounded-full" style={{ background: "hsl(210 30% 9%)" }} />
+            {/* flowing dashed centre lane */}
+            <div
+              className="absolute inset-y-0 left-1/2 w-[2px] -translate-x-1/2 motion-reduce:hidden"
+              style={{
+                background:
+                  "repeating-linear-gradient(to bottom, hsl(48 96% 62%) 0 9px, transparent 9px 26px)",
+                animation: "roadDashY 3.2s linear infinite",
+              }}
+            />
+            {/* static lane for reduced motion */}
+            <div
+              className="absolute inset-y-0 left-1/2 hidden w-[2px] -translate-x-1/2 motion-reduce:block"
+              style={{ background: "repeating-linear-gradient(to bottom, hsl(48 96% 62% / 0.7) 0 9px, transparent 9px 26px)" }}
+            />
+          </div>
+
+          <div className="space-y-9">
+            {EDUCATION_DATA.map((item, index) => {
+              const tone = item.perfect ? "accent-2" : "primary";
+              return (
+                <motion.div
+                  key={item.degree}
+                  initial={{ opacity: 0, x: 16 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: "-120px 0px" }}
+                  transition={{ delay: index * 0.08, duration: 0.7 }}
+                  className="relative"
                 >
-                  {item.icon}
-                </span>
-                <span className={`font-mono text-xs font-semibold uppercase tracking-wider text-${tone}`}>{item.period}</span>
-                <h3 className="mt-1 text-base font-display font-bold text-foreground">{item.degree}</h3>
-                <p className={`mt-0.5 text-sm font-semibold text-${tone}`}>{item.field}</p>
-                <p className="mt-0.5 font-mono text-[11px] uppercase tracking-wider text-muted-foreground">{item.institution}</p>
-                <p className={`mt-1 font-mono text-xs text-${tone}`}>GPA {item.grade} / {item.scale} · {item.meta}</p>
-                {item.thesis && <p className="mt-2 text-sm italic leading-relaxed text-foreground/80">"{item.thesis}"</p>}
-              </motion.div>
-            );
-          })}
+                  {/* marker pin sitting on the road */}
+                  <span
+                    className={`absolute -left-10 top-0.5 grid h-8 w-8 -translate-x-1/2 place-items-center rounded-full border-2 bg-background ${
+                      item.perfect ? "border-accent-2 text-accent-2 neon-glow-sm" : "border-primary text-primary"
+                    } [&>svg]:h-4 [&>svg]:w-4`}
+                  >
+                    {item.icon}
+                  </span>
+                  <span className={`font-mono text-xs font-semibold uppercase tracking-wider text-${tone}`}>{item.period}</span>
+                  <h3 className="mt-1 text-base font-display font-bold text-foreground">{item.degree}</h3>
+                  <p className={`mt-0.5 text-sm font-semibold text-${tone}`}>{item.field}</p>
+                  <p className="mt-0.5 font-mono text-[11px] uppercase tracking-wider text-muted-foreground">{item.institution}</p>
+                  <p className={`mt-1 font-mono text-xs text-${tone}`}>GPA {item.grade} / {item.scale} · {item.meta}</p>
+                  {item.thesis && <p className="mt-2 text-sm italic leading-relaxed text-foreground/80">"{item.thesis}"</p>}
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>
