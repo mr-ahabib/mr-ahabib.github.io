@@ -100,7 +100,7 @@ export default function Portfolio() {
 
 
       {/* Page content sits above the background */}
-      <div className="relative z-10">
+      <div className="relative z-10 overflow-x-clip">
         <Navbar />
 
         <main>

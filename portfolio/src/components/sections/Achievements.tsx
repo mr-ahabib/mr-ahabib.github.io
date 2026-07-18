@@ -21,7 +21,7 @@ const ACHIEVEMENTS = [
     title: "Software Lab Champion",
     org: "United International University",
     year: "2024",
-    desc: "First place at the CSE Project Show Fall '24 — Software Lab competition.",
+    desc: "First place at the CSE Project Show Fall '24 - Software Lab competition.",
     icon: <Medal size={20} className="text-primary" />,
   },
   {
@@ -67,8 +67,8 @@ export function Achievements() {
           <div className="w-24 h-1 bg-gradient-to-r from-primary via-accent to-accent-2 mx-auto rounded-full" />
         </motion.div>
 
-        {/* ── Desktop: horizontal milestone line, entries alternating above/below ── */}
-        <div className="relative hidden md:block">
+        {/* ── Desktop (lg+): horizontal milestone line, entries alternating above/below ── */}
+        <div className="relative hidden lg:block">
           {/* the line itself */}
           <span className="pointer-events-none absolute left-0 right-0 top-1/2 h-px bg-gradient-to-r from-primary/10 via-primary/50 to-accent-2/40" />
 
@@ -111,8 +111,8 @@ export function Achievements() {
           </div>
         </div>
 
-        {/* ── Mobile: compact vertical rail ── */}
-        <div className="md:hidden">
+        {/* ── Mobile / tablet: compact vertical rail ── */}
+        <div className="lg:hidden">
           {ACHIEVEMENTS.map((item, index) => (
             <motion.div
               key={item.title}

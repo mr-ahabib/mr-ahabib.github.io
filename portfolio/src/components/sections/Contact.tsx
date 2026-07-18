@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Mail, MapPin, Github, Linkedin, Send, GraduationCap } from "lucide-react";
+import { Mail, MapPin, Phone, Github, Linkedin, Send, GraduationCap } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 
@@ -71,7 +71,7 @@ export function Contact() {
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-primary via-accent to-accent-2 mx-auto rounded-full mb-5" />
           <p className="text-muted-foreground text-sm sm:text-base leading-relaxed max-w-xl mx-auto">
-            Whether you have a question, a project idea, or just want to say hi — I'd love to hear from you.
+            Whether you have a question, a project idea, or just want to say hi - I'd love to hear from you.
           </p>
         </motion.div>
 
@@ -89,7 +89,7 @@ export function Contact() {
                 Let&apos;s build something <span className="text-gradient">worth shipping.</span>
               </h3>
               <p className="mt-4 max-w-md text-sm leading-relaxed text-muted-foreground">
-                Fastest way to reach me is email — or drop a message on the right. I usually reply within a day.
+                Fastest way to reach me is email - or drop a message on the right. I usually reply within a day.
               </p>
 
               {/* big email CTA */}
@@ -103,6 +103,20 @@ export function Contact() {
                 <div className="min-w-0">
                   <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">Email me</p>
                   <p className="truncate font-medium text-foreground transition-colors group-hover:text-primary">mr.ahashan261@gmail.com</p>
+                </div>
+              </a>
+
+              {/* phone CTA */}
+              <a
+                href="tel:+8801709180782"
+                className="group mt-4 flex items-center gap-4 rounded-2xl border border-primary/45 bg-card/60 p-4 backdrop-blur-xl transition-colors hover:border-primary neon-glow-sm"
+              >
+                <span className="clip-hud-sm grid h-11 w-11 shrink-0 place-items-center bg-primary/12 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                  <Phone size={18} />
+                </span>
+                <div className="min-w-0">
+                  <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">Call me</p>
+                  <p className="truncate font-medium text-foreground transition-colors group-hover:text-primary">+880 1709-180782</p>
                 </div>
               </a>
 

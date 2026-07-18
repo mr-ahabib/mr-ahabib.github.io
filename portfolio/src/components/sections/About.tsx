@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
 
 const STATS = [
-  { value: "1+", label: "Years Production AI" },
-  { value: "5+", label: "LLM / RAG Systems" },
-  { value: "3", label: "Medical AI Platforms" },
+  { value: "1.5+", label: "Years Production AI" },
+  { value: "3", label: "LLM / AI Systems" },
+  { value: "3", label: "Publications" },
   { value: "10+", label: "Projects Shipped" },
 ];
 
@@ -81,7 +81,7 @@ export function About() {
             {/* Bio paragraphs */}
             <motion.div {...fadeLeft(0.3)} className="space-y-4">
               <p className="text-muted-foreground leading-relaxed text-base sm:text-lg">
-                I'm an AI/ML engineer who cares about the part most people skip —
+                I'm an AI/ML engineer who cares about the part most people skip -
                 getting models out of the notebook and into production. Over the past
                 year I've worked hands-on with LLMs, retrieval-augmented generation,
                 and deep learning, including medical AI platforms, while building and
@@ -90,7 +90,7 @@ export function About() {
               <p className="text-muted-foreground leading-relaxed text-base sm:text-lg">
                 What keeps me interested is the distance between a promising result
                 and a product someone can actually depend on. I like owning that whole
-                path — shaping the data, training and evaluating the model, and
+                path - shaping the data, training and evaluating the model, and
                 building the APIs and interfaces that put it in front of real users.
               </p>
             </motion.div>
@@ -159,7 +159,7 @@ export function About() {
                     As-Sunnah Foundation · Full-time
                   </p>
                   <p className="text-xs font-mono text-primary/70 mt-1">
-                    2024 – Present
+                    May 2026 – Present
                   </p>
                 </div>
               </div>

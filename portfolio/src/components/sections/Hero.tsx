@@ -133,11 +133,11 @@ export function Hero() {
             </a>
           </div>
 
-          <div className="mt-10 flex gap-12 border-t border-border/60 pt-8">
+          <div className="mt-10 flex flex-wrap gap-x-8 gap-y-6 sm:gap-12 border-t border-border/60 pt-8">
             {[
               { label: "IEEE Publications", value: "3" },
               { label: "Live Products", value: "3" },
-              { label: "Experience", value: "2yr+" },
+              { label: "Experience", value: "1.5yr+" },
             ].map((stat) => (
               <div key={stat.label}>
                 <div className="text-xl sm:text-2xl font-display font-bold text-primary">{stat.value}</div>

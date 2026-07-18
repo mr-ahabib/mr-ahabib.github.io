@@ -9,19 +9,19 @@ const EXPERIENCES = [
     location: "Dhaka, Bangladesh",
     current: true,
     bullets: [
-      "Building AI-powered products and internal tools — from LLM/RAG features to full-stack web applications.",
+      "Building AI-powered products and internal tools - from LLM/RAG features to full-stack web applications.",
       "Developing, deploying, and maintaining machine learning models integrated into production systems.",
       "Owning backend services and APIs that power the organisation's software platforms.",
     ],
   },
   {
     role: "AI Project Co-ordinator",
-    company: "Qanun Limited",
+    company: "Qanun Limited (Contractual)",
     date: "Feb 2026 – Apr 2026",
     location: "Dhaka, Bangladesh",
     current: false,
     bullets: [
-      "Managed AI-based legal tech projects, including chatbot, OCR, and contract systems.",
+      "Managed AI-based legal tech projects, including enterprise knowledge base, OCR, Legal Research, and contract systems.",
       "Coordinated teams and ensured smooth project execution and delivery.",
       "Monitored AI performance, quality, and compliance with legal standards.",
     ],
@@ -40,7 +40,7 @@ const EXPERIENCES = [
   },
   {
     role: "Research Assistant",
-    company: "United International University",
+    company: "LUT University, Finland",
     date: "Aug 2024 – Jan 2025",
     location: "Dhaka, Bangladesh",
     current: false,

@@ -52,7 +52,7 @@ export function Chatbot() {
       return "Hi there! 👋 I'm Ahashan's assistant. You can ask me about his experience, skills, projects, publications, education, or contact info!";
     }
     if (text.match(/\b(experience|work|job)\b/)) {
-      return "Ahashan is currently an AI & Software Engineer at As-Sunnah Foundation (May 2026 – Present). Previously he was an AI Project Co-ordinator at Qanun Limited (Feb–Apr 2026), an AI/ML Engineer at Ethics Advance Innovation Hub Ltd. (Feb 2025 – Jan 2026), and a Research Assistant at United International University (Aug 2024 – Jan 2025).";
+      return "Ahashan is currently an AI & Software Engineer at As-Sunnah Foundation (May 2026 – Present). Previously he was an AI Project Co-ordinator at Qanun Limited (Feb–Apr 2026), an AI/ML Engineer at Ethics Advance Innovation Hub Ltd. (Feb 2025 – Jan 2026), and a Research Assistant at LUT University, Finland (Aug 2024 – Jan 2025).";
     }
     if (text.match(/\b(skills|technology|tech)\b/)) {
       return "Ahashan specializes in AI/ML: LLMs, NLP, RAG, PyTorch, TensorFlow, Transformers, LangChain, plus OCR and computer vision. Languages: Python, TypeScript, Java, C++. Frameworks: FastAPI, Django, React, React Native, Node.js. Also Docker, CI/CD, PostgreSQL, FAISS, and PgVector.";

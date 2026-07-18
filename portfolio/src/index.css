@@ -272,6 +272,18 @@
   100% { top: 108%; opacity: 0; }
 }
 
+/* Hide the native cursor while the bespoke glass cursor is active */
+.cursor-none,
+.cursor-none * {
+  cursor: none !important;
+}
+
+/* Radar/road marker ping — a ring pulsing outward from a stop */
+@keyframes acadPing {
+  0% { box-shadow: 0 0 0 0 currentColor; opacity: 0.5; }
+  70%, 100% { box-shadow: 0 0 0 12px currentColor; opacity: 0; }
+}
+
 /* Slow left↔right sweep for gradient text */
 @keyframes gradient-pan {
   0%, 100% { background-position: 0% 50%; }

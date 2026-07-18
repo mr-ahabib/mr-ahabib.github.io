@@ -31,7 +31,7 @@ const LIVE_PROJECTS: Project[] = [
     domain: "gpt-dev.asf.sh",
     link: "https://gpt-dev.asf.sh/",
     description:
-      "AI-powered Islamic knowledge assistant — answers in Bangla & English with verified references from the Qur'an, Hadith, and scholars.",
+      "AI-powered Islamic knowledge assistant - answers in Bangla & English with verified references from the Qur'an, Hadith, and scholars.",
     tags: ["LLM", "RAG", "FastAPI", "React", "PgVector"],
     icon: <Bot size={22} />,
   },
@@ -40,7 +40,7 @@ const LIVE_PROJECTS: Project[] = [
     domain: "doceanai.cloud",
     link: "https://doceanai.cloud/",
     description:
-      "Cloud-based document intelligence — advanced OCR, document understanding, and NLP that turn scanned files into AI-ready knowledge bases.",
+      "Cloud-based document intelligence - advanced OCR, document understanding, and NLP that turn scanned files into AI-ready knowledge bases.",
     tags: ["OCR", "LLM", "Knowledge Base", "FastAPI", "React"],
     icon: <ScanText size={22} />,
   },
